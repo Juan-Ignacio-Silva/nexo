@@ -40,7 +40,7 @@ class Router
         $this->params = $url;
     }
 
-    public function run()
+    public function run(): void
     {
         call_user_func_array([$this->controller, $this->method], $this->params);
     }

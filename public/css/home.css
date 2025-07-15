@@ -1,0 +1,90 @@
+/* Contenido principal */
+.contenido-principal {
+  min-height: calc(100vh - 120px);
+  position: relative;
+  overflow: hidden;
+}
+
+.contenido-principal::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-image: radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 20%, rgba(255, 107, 53, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 40% 40%, rgba(44, 90, 160, 0.05) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.contenedor-principal {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 20px;
+  position: relative;
+  z-index: 1;
+}
+
+/* Sección hero */
+.seccion-hero {
+  max-width: 600px;
+}
+
+.insignia {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #b8e6ff;
+  color: #1976d2;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-size: 14px;
+  font-weight: 500;
+  margin-bottom: 24px;
+}
+
+.icono-carrito {
+  width: 16px;
+  height: 16px;
+}
+
+.titulo-principal {
+  font-size: 48px;
+  font-weight: 700;
+  color: #2c3e50;
+  line-height: 1.2;
+  margin-bottom: 20px;
+}
+
+.descripcion {
+  font-size: 16px;
+  color: #6c757d;
+  line-height: 1.6;
+  margin-bottom: 32px;
+}
+
+.boton-comprar {
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  padding: 14px 28px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  transition: background-color 0.2s, transform 0.1s;
+}
+
+.boton-comprar:hover {
+  background-color: #1565c0;
+  transform: translateY(-1px);
+}
+
+.icono-flecha {
+  width: 18px;
+  height: 18px;
+}

@@ -3,7 +3,7 @@ USE nexodb;
 DROP TABLE IF EXISTS usuarios;
 
 CREATE TABLE usuarios (
-  idusuarios VARCHAR(256) NOT NULL,
+  idusuarios VARCHAR(36) NOT NULL,
   nombre VARCHAR(45) NOT NULL,
   apellido VARCHAR(45) NOT NULL,
   email VARCHAR(80) NOT NULL,
@@ -16,5 +16,5 @@ CREATE TABLE usuarios (
   PRIMARY KEY (idusuarios),
   UNIQUE (email),
   INDEX (ciudad),
-  INDEX (role)
+  INDEX (role)-
 );

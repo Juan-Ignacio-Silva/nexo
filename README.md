@@ -23,7 +23,6 @@ El proyecto está organizado siguiendo el patrón MVC:
   - `/config` Configuración de base de datos y parámetros globales.
 - `/public`  
   Archivos públicos: CSS, JS, imágenes.
-- `index.php` Archivo principal.
 
 ## Instalación y configuración
 

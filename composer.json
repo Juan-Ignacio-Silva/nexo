@@ -1,0 +1,17 @@
+{
+    "name": "veck6/nexo",
+    "autoload": {
+        "psr-4": {
+            "Veck6\\Nexo\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Juan Ignacio Silva",
+            "email": "juan.ignacio.sil12@gmail.com"
+        }
+    ],
+    "require": {
+        "ramsey/uuid": "^4.9"
+    }
+}

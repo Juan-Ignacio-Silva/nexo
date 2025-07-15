@@ -3,6 +3,7 @@ class HomeController
 {
     public function index()
     {
-        echo "<h1>Página del home</h1>";
+        include ROOT . 'app/views/templates/header.php';
+        include ROOT . 'app/views/home.php';
     }
 }
