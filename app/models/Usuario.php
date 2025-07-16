@@ -8,7 +8,7 @@ class Usuario
     {
         $id = \Ramsey\Uuid\Uuid::uuid4()->toString();
         $password = password_hash(trim($password), PASSWORD_DEFAULT); // Seguridad
-        $stmt = $conexion->prepare("INSERT INTO usuarios(idusuarios, nombre, apellido, email, password) VALUES (?, ?, ?, ?, ?)");
+        $stmt = $conexion->prepare("INSERT INTO usuarios(id_usuario, nombre, apellido, email, password) VALUES (?, ?, ?, ?, ?)");
 
         if (!$stmt) return false;
 
