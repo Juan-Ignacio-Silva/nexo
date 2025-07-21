@@ -126,3 +126,10 @@
     </div>
 </main>
 <script src="<?= URL_PUBLIC ?>js/carrusel-categorias.js"></script>
+<?php
+require_once ROOT . 'core/Auth.php';
+
+Auth::restringir();
+?>
+
+<h1>Bienvenido, <?= htmlspecialchars(Auth::usuario()) ?></h1>
