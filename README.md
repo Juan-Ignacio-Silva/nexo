@@ -1,58 +1,101 @@
-# Nombre del Proyecto MVC
+# Nexo — Tienda Online (MVC en PHP)
 
 ## Descripción
 
-Este proyecto es una aplicación web desarrollada siguiendo el patrón MVC (Modelo-Vista-Controlador). Esta misma es una tienda online de tipo eCommerce (Mercado Libre).
+Nexo es una aplicación web tipo tienda online construida en PHP utilizando el patrón de arquitectura MVC. Permite la gestión de usuarios, productos, carritos de compra, pedidos, favoritos, reseñas y perfiles de vendedor.
+
+---
 
 ## Tecnologías utilizadas
 
-- PHP 8.x  
-- MySQL 
-- HTML5, CSS3, JavaScript  
-- Servidor Apache (XAMPP)
+- PHP 8.x
+- MySQL
+- HTML5 / CSS3 / JavaScript
+- Apache (XAMPP recomendado)
+
+---
 
 ## Estructura del proyecto
+`/`
+- `app/`
+	- `config/` # Configuración general y de base de datos
+	- `controllers/` # Controladores que manejan la lógica de negocio
+	- `db/` # Scripts de la base de datos
+	- `models/` # Clases de acceso a datos
+	- `views/` # Vistas HTML/PHP organizadas por módulos
+		- `admin/`
+		- `home/`
+		- `templates/` # Fragmentos reutilizables (header, footer, etc.)
+		- `usuario/`
+	- `core/` # Clases del núcleo: router, sesiones, autenticación, etc
+- `public/` # Archivos públicos y punto de entrada del sitio
+	- `css/`
+	- `js/`
+	- `images/`
+	- `index.php`
+-	`README.md`
 
-El proyecto está organizado siguiendo el patrón MVC:
+> Nota: El directorio `vendor/` ha sido excluido porque contiene dependencias locales de Composer.
 
-- `/app`  
-  Carpeta principal con:  
-  - `/models` (modelos, acceso a datos)  
-  - `/views` (plantillas o vistas)  
-  - `/controllers` (controladores que gestionan la lógica y peticiones)
-  - `/config` Configuración de base de datos y parámetros globales.
-- `/public`  
-  Archivos públicos: CSS, JS, imágenes.
+---
 
-## Instalación y configuración
+## Base de datos
+
+La base de datos `nexodb` incluye las siguientes tablas:
+
+- `usuarios`: contiene la información del usuario y su dirección.
+- `producto`: productos disponibles en la tienda.
+- `pedido`: pedidos realizados por usuarios, relacionados con productos.
+- `carrito`: carritos asociados a usuarios.
+- `carrito_items`: ítems dentro de un carrito (producto + cantidad).
+- `favoritos`: productos marcados como favoritos por los usuarios.
+- `reseña`: comentarios y calificaciones de productos por los usuarios.
+- `vendedor`: información adicional de usuarios con perfil vendedor.
+
+La estructura permite relaciones como:
+- Un usuario puede tener muchos pedidos, carritos, reseñas y productos favoritos.
+- Cada producto puede estar en múltiples carritos y pedidos.
+- Un vendedor está asociado a una  cuenta de usuario.
+
+> Ver archivo `app/db/` para el script de creación completo.
+
+---
+
+## Instalación
 
 1. Clonar el repositorio:
-`git clone https://github.com/tuusuario/tu-proyecto.git`
+```bash
+  git clone juan-dev https://github.com/Juan-Ignacio-Silva/nexo.git
+```
+2. Copiar el proyecto dentro de la carpeta htdocs/ (si usás XAMPP).
 
-2. Copiar el proyecto a la carpeta raíz de tu servidor local (ej: `htdocs` en XAMPP).
+3. Importar la base de datos:
+	- Crear una base de datos llamada nexodb.
+	- Importar el script SQL disponible en app/db/.
 
-3. Crear la base de datos en MySQL (usar MySQL WorkBench O phpMyAdmin).
+4. Configurar las credenciales de conexión en:
+```bash
+   app/config/database.php
+```
+5. Acceder desde el navegador:
+```bash
+   http://localhost/nexo/public
+```
+---
+##Módulos implementados
+- Autenticación de usuarios
+- Gestión de productos
+- Carrito de compras
+- Pedidos
+- Favoritos
+- Sistema de reseñas
+- Perfil de vendedor
 
-4. Importar el archivo `nexodb.sql` que contiene la estructura y datos iniciales.
+---
 
-5. Configurar los datos de conexión a la base en `/config/conexion.php`.
-
-6. Iniciar el servidor Apache y MySQL desde XAMPP.
-
-7. Abrir en el navegador:
-
-## Estructura MVC explicada (breve)
-
-- **Modelo**: Gestiona datos y acceso a la base (consultas SQL).  
-- **Vista**: Presenta la información al usuario (HTML + CSS).  
-- **Controlador**: Recibe las peticiones, procesa la lógica y llama a modelo y vista.
-
-## Créditos / Autor
-
-- Autores: Juan Ignacio Silva, Lautaro Caballero, Santiago Peraza y Marcos Rodriguez. 
-- Materia: Programación
-- Fecha: 21/06/2025 (Creación del repo)
-
-## Licencia (opcional)
-
-Este proyecto está bajo licencia MIT / GPL / etc.
+##Créditos
+Proyecto desarrollado para la materia Programación (2025) por:
+- Juan Ignacio Silva
+- Lautaro Caballero
+- Santiago Peraza
+- Marcos Rodríguez
