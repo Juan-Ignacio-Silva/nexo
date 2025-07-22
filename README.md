@@ -82,7 +82,7 @@ La estructura permite relaciones como:
    http://localhost/nexo/public
 ```
 ---
-##Módulos implementados
+## Módulos implementados
 - Autenticación de usuarios
 - Gestión de productos
 - Carrito de compras
@@ -93,7 +93,7 @@ La estructura permite relaciones como:
 
 ---
 
-##Créditos
+## Créditos
 Proyecto desarrollado para la materia Programación (2025) por:
 - Juan Ignacio Silva
 - Lautaro Caballero
