@@ -6,12 +6,12 @@ class Auth
     public static function restringir() {
 
         if (!Session::has('usuario_id')) {
-            header("Location: /usuario/login");
+            header("Location: usuario/login");
             exit;
         }
     }
 
     public static function usuario() {
-        return Session::get('usuario_nombre') ?? 'Invitado';
+        return Session::get(key: 'usuario_nombre') ?? 'Invitado';
     }
 }
