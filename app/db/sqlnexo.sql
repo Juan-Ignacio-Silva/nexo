@@ -69,7 +69,6 @@ CREATE TABLE pedido_items (
     id_pedido VARCHAR(36) NOT NULL,
     id_producto VARCHAR(36) NOT NULL,
     cantidad INT NOT NULL,
-    precio_unitario DECIMAL(10,2) NOT NULL,
     PRIMARY KEY (id_pedido_item),
     FOREIGN KEY (id_pedido) REFERENCES pedido(id_pedido),
     FOREIGN KEY (id_producto) REFERENCES producto(id_producto)
