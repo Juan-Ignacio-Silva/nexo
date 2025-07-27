@@ -16,10 +16,27 @@
             </button>
         </div>
 
+        <div class="seccion-buttons-header">
+            <a href="../home"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-store-icon lucide-store">
+                    <path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7" />
+                    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
+                    <path d="M15 22v-4a2 2 0 0 0-2-2h-2a2 2 0 0 0-2 2v4" />
+                    <path d="M2 7h20" />
+                    <path d="M22 7v3a2 2 0 0 1-2 2a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 16 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 12 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 8 12a2.7 2.7 0 0 1-1.59-.63.7.7 0 0 0-.82 0A2.7 2.7 0 0 1 4 12a2 2 0 0 1-2-2V7" />
+                </svg>
+            </a>
+            <a href="">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-log-out-icon lucide-log-out">
+                    <path d="m16 17 5-5-5-5" />
+                    <path d="M21 12H9" />
+                    <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                </svg>
+            </a>
+        </div>
+
         <div class="seccion-usuario">
-            <a href="usuario/registro" class="enlace-usuario">Crear cuenta</a>
-            <a href="usuario/login" class="enlace-usuario">Ingresar</a>
-            <a href="#" class="enlace-usuario">Mis compras</a>
+            <p class="nombre-usuario">Ignacio Silva</p>
+            <p class="role">Administrador</p>
         </div>
     </div>
 
@@ -108,18 +125,33 @@
     /* Sección de usuario */
     .seccion-usuario {
         display: flex;
+        flex-direction: column;
+    }
+
+    .nombre-usuario {
+        color: #EEF8FF;
+        font-size: 18px;
+    }
+
+    .role {
+        color: #1b2d3aff;
+        font-size: 13px;
+    }
+
+    .seccion-buttons-header {
+        display: flex;
+        padding: 20px;
         gap: 20px;
     }
 
-    .enlace-usuario {
-        color: white;
+    .seccion-buttons-header a {
+        color: #EEF8FF;
+        width: 15px;
         text-decoration: none;
-        font-size: 14px;
-        white-space: nowrap;
     }
 
-    .enlace-usuario:hover {
-        text-decoration: underline;
+    .seccion-buttons-header a:hover {
+        color: #284356;
     }
 
     /* Navegación */
