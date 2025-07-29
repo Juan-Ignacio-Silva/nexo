@@ -22,8 +22,8 @@
         </div>
         
         <div class="seccion-usuario">
-            <a href="#" class="enlace-usuario">Crear cuenta</a>
-            <a href="#" class="enlace-usuario">Ingresar</a>
+            <a href="usuario/registro" class="enlace-usuario">Crear cuenta</a>
+            <a href="usuario/login" class="enlace-usuario">Ingresar</a>
             <a href="#" class="enlace-usuario">Mis compras</a>
         </div>
     </div>

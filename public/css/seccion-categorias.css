@@ -1,0 +1,295 @@
+.container {
+    width: 100%;
+    background-color: #CCDCE6;
+    padding: 3rem 1rem;
+}
+
+.max-width {
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Header Styles */
+.header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.header p {
+    color: #64748b;
+    font-size: 1.125rem;
+    margin-bottom: 0.5rem;
+}
+
+.header h2 {
+    font-size: 1.875rem;
+    font-weight: bold;
+    color: #1e293b;
+}
+
+.header .highlight {
+    color: #ef4444;
+}
+
+/* Categories Styles */
+.categories {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 3rem;
+  overflow-x: auto;
+  padding-bottom: 1rem;
+}
+
+.category {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-width: 100px;
+}
+
+.category-icon {
+  width: 4.5rem;
+  height: 4.5rem;
+  background-color: #94a3b8;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.category-icon:hover {
+  background-color: #64748b;
+}
+
+.category-icon img {
+  width: 2.5rem;
+  height: 2.5rem;
+  object-fit: contain;
+}
+
+.category h3 {
+  color: #374151;
+  font-weight: 500;
+  font-size: 0.75rem;
+  text-align: center;
+  margin-bottom: 0.75rem;
+}
+
+.category p {
+  color: #6b7280;
+  font-size: 0.75rem;
+  margin-bottom: 1rem;
+}
+
+.categories-desktop {
+  display: none;
+}
+
+/* Cards Grid */
+.cards-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  padding: 0 1rem;
+}
+
+.card {
+  border-radius: 0.5rem;
+  overflow: hidden;
+  position: relative;
+}
+
+.card-blue {
+  background-color: #94a3b8;
+}
+
+.card-red {
+  background-color: #ef4444;
+}
+
+.card-content {
+  padding: 1rem;
+  position: relative;
+}
+
+.discount-badge {
+  display: inline-block;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
+}
+
+.badge-blue {
+  background-color: #cbd5e1;
+  color: #374151;
+}
+
+.badge-red {
+  background-color: #f87171;
+  color: white;
+}
+
+.card h3 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 0.75rem;
+  line-height: 1.2;
+}
+
+.card-blue h3 {
+  color: #1e293b;
+}
+
+.card-red h3 {
+  color: white;
+}
+
+.card p {
+  font-size: 0.75rem;
+  margin-bottom: 1rem;
+  max-width: 20rem;
+}
+
+.card-blue p {
+  color: #475569;
+}
+
+.card-red p {
+  color: #fecaca;
+}
+
+.btn {
+  background-color: #2563eb;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  font-size: 0.875rem;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.btn:hover {
+  background-color: #1d4ed8;
+}
+
+.card-image {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.card-image img {
+  width: 150px;
+  height: 150px;
+  object-fit: contain;
+}
+
+/* Desktop Styles */
+@media (min-width: 768px) {
+  .container {
+    padding: 4rem 1rem;
+  }
+
+  .max-width {
+    padding: 0 2rem;
+  }
+
+  .header {
+    margin-bottom: 3rem;
+  }
+
+  .header h2 {
+    font-size: 2.25rem;
+  }
+
+  .categories {
+    gap: 2rem;
+    margin-bottom: 4rem;
+  }
+
+  .category {
+    min-width: 120px;
+  }
+
+  .category-icon {
+    width: 6rem;
+    height: 6rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .category-icon img {
+    width: 3.125rem;
+    height: 3.125rem;
+  }
+
+  .category h3 {
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
+  }
+
+  .category p {
+    font-size: 0.875rem;
+    margin-bottom: 2rem;
+  }
+
+  .categories-desktop {
+    display: flex;
+    gap: 2rem;
+  }
+
+  .cards-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    padding: 0;
+  }
+
+  .card-content {
+    padding: 2rem;
+  }
+
+  .discount-badge {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .card h3 {
+    font-size: 1.875rem;
+    margin-bottom: 1rem;
+  }
+
+  .card p {
+    font-size: 0.875rem;
+    margin-bottom: 2rem;
+  }
+
+  .btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+  }
+
+  .card-image {
+    right: 1rem;
+  }
+
+  .card-image img {
+    width: 250px;
+    height: 150px;
+  }
+
+  .card-red .card-image img {
+    width: 150px;
+    height: 150px;
+  }
+}

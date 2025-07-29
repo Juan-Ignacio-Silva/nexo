@@ -53,8 +53,7 @@ class Router
     private function error404($msg)
     {
         http_response_code(404);
-        echo "<h1>404 - Página no encontrada</h1>";
-        echo "<p>$msg</p>";
+        include ROOT . 'app/views/templates/404.php';
         exit;
     }
 }

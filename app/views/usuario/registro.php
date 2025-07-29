@@ -47,13 +47,12 @@
                 <div class="form-group">
                     <input type="password" name="passwordConfirm" placeholder="Repita la contraseña" required>
                 </div>
-                
+                <?php if (isset($error)): ?>
+                    <p style="color:red;"><?= htmlspecialchars($error) ?></p>
+                <?php endif; ?>
                 <button type="submit" class="submit-btn" name="register">Registrarse</button>
             </form>
         </div>
     </div>
 </body>
 </html>
-<?php if (isset($error)): ?>
-    <p style="color:red;"><?= htmlspecialchars($error) ?></p>
-<?php endif; ?>
