@@ -30,15 +30,16 @@
             
             <p class="email-hint">o ingrese su dirección email</p>
             
-            <form>
+            <form method="post">
                 <div class="form-group">
-                    <input type="email" placeholder="Email" required>
+                    <input type="email" placeholder="Email" name="email" required>
                 </div>
-                
                 <div class="form-group">
-                    <input type="password" placeholder="Contraseña" required>
+                    <input type="password" placeholder="Contraseña" name="password" required>
                 </div>
-                
+                <?php if (isset($error)): ?>
+                    <p style="color:red;"><?= htmlspecialchars($error) ?></p>
+                <?php endif; ?>
                 <button type="submit" class="submit-btn">Iniciar sesión</button>
             </form>
         </div>
