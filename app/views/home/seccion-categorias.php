@@ -1,98 +1,73 @@
 <link rel="stylesheet" href="<?= URL_PUBLIC ?>css/seccion-categorias.css">
-<main class="main-categorias">
-    <div class="contenedor-seccion-categorias">
-        <!-- Encabezado de categorías -->
-        <header class="encabezado-seccion-categorias">
-            <h2 class="subtitulo-categorias">Categorías</h2>
-            <h1 class="titulo-seccion-categorias">
-                <span class="texto-azul-categorias">Categorías</span> 
-                <span class="texto-naranja-categorias">Destacadas</span>
-            </h1>
-        </header>
-        <!-- Sección de categorías circulares -->
-        <section class="seccion-categorias-circulares">
-            <div class="contenedor-carrusel-categorias">
-                <button class="flecha-carrusel-categorias flecha-izquierda-categorias" id="flechaIzquierdaCategorias">
-                    <svg class="icono-flecha-carrusel-categorias" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="m15 18-6-6 6-6"/>
-                    </svg>
-                </button>
+<div class="container">
+    <div class="max-width">
+        <!-- Header -->
+        <div class="header">
+            <p>Categorías</p>
+            <h2>Categorías <span class="highlight">Destacadas</span></h2>
+        </div>
 
-                <div class="contenedor-circulos-categorias" id="contenedorCirculosCategorias">
-                    <div class="categoria-circular">
-                        <div class="circulo-categoria">
-                            <img src="/placeholder.svg?height=80&width=80" alt="Laptop" class="imagen-categoria">
-                        </div>
-                        <h3 class="nombre-categoria">Electrodomésticos</h3>
-                        <p class="cantidad-productos-categoria">40 Productos</p>
+        <!-- Categories -->
+        <div class="categories">
+            <div class="categories-desktop">
+                <div class="category">
+                    <div class="category-icon">
+                        <img src="https://via.placeholder.com/80x80/94a3b8/ffffff?text=📱" alt="Electrodomésticos">
                     </div>
-                    <div class="categoria-circular">
-                        <div class="circulo-categoria">
-                            <img src="/placeholder.svg?height=80&width=80" alt="Olla de cocina" class="imagen-categoria">
-                        </div>
-                        <h3 class="nombre-categoria">Cocina</h3>
-                        <p class="cantidad-productos-categoria">40 Productos</p>
-                    </div>
+                    <h3>Electrodomésticos</h3>
+                    <p>40 Productos</p>
                 </div>
-
-                <button class="flecha-carrusel-categorias flecha-derecha-categorias" id="flechaDerechaCategorias">
-                    <svg class="icono-flecha-carrusel-categorias" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="m9 18 6-6-6-6"/>
-                    </svg>
-                </button>
+                <div class="category">
+                    <div class="category-icon">
+                        <img src="https://via.placeholder.com/80x80/94a3b8/ffffff?text=🏠" alt="Electrodomésticos">
+                    </div>
+                    <h3>Electrodomésticos</h3>
+                    <p>40 Productos</p>
+                </div>
+                <div class="category">
+                    <div class="category-icon">
+                        <img src="https://via.placeholder.com/80x80/94a3b8/ffffff?text=⚡" alt="Electrodomésticos">
+                    </div>
+                    <h3>Electrodomésticos</h3>
+                    <p>40 Productos</p>
+                </div>
+                <div class="category">
+                    <div class="category-icon">
+                        <img src="https://via.placeholder.com/80x80/94a3b8/ffffff?text=🔌" alt="Electrodomésticos">
+                    </div>
+                    <h3>Electrodomésticos</h3>
+                    <p>40 Productos</p>
+                </div>
             </div>
-        </section>
-        <!-- Sección de tarjetas promocionales -->
-        <section class="seccion-promociones-categorias">
-            <div class="contenedor-tarjetas-categorias">
-                <!-- Tarjeta azul -->
-                <div class="tarjeta-promocional-categorias tarjeta-azul-categorias">
-                    <div class="contenido-tarjeta-categorias">
-                        <div class="informacion-tarjeta-categorias">
-                            <span class="etiqueta-descuento-categorias">25% de Descuento</span>
-                            <h3 class="titulo-producto-categorias">Texto acá del producto</h3>
-                            <p class="descripcion-producto-categorias">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-                                sed do eiusmod tempor incididunt ut labore et dolore.
-                            </p>
-                            <button class="boton-comprar-promocion-categorias">
-                                Comprar Ahora
-                                <svg class="icono-flecha-promocion-categorias" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M5 12h14"></path>
-                                    <path d="m12 5 7 7-7 7"></path>
-                                </svg>
-                            </button>
-                        </div>
-                        <div class="imagen-tarjeta-categorias">
-                            <img src="/placeholder.svg?height=200&width=250" alt="Laptop promocional" class="producto-imagen-categorias">
-                        </div>
-                    </div>
-                </div>
-                <!-- Tarjeta roja -->
-                <div class="tarjeta-promocional-categorias tarjeta-roja-categorias">
-                    <div class="contenido-tarjeta-categorias">
-                        <div class="informacion-tarjeta-categorias">
-                            <span class="etiqueta-descuento-categorias">25% de Descuento</span>
-                            <h3 class="titulo-producto-categorias">Texto acá del producto</h3>
-                            <p class="descripcion-producto-categorias">
-                                Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
-                                sed do eiusmod tempor incididunt ut labore et dolore.
-                            </p>
-                            <button class="boton-comprar-promocion-categorias">
-                                Comprar Ahora
-                                <svg class="icono-flecha-promocion-categorias" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="M5 12h14"></path>
-                                    <path d="m12 5 7 7-7 7"></path>
-                                </svg>
-                            </button>
-                        </div>
-                        <div class="imagen-tarjeta-categorias">
-                            <img src="/placeholder.svg?height=200&width=250" alt="Olla de cocina promocional" class="producto-imagen-categorias">
-                        </div>
+        </div>
+
+        <!-- Promotional Cards -->
+        <div class="cards-grid">
+            <!-- Blue Card - Laptop -->
+            <div class="card card-blue">
+                <div class="card-content">
+                    <div class="discount-badge badge-blue">25% de Descuento</div>
+                    <h3>Texto aca<br>del producto</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.</p>
+                    <button class="btn">Comprar Ahora →</button>
+                    <div class="card-image">
+                        <img src="https://via.placeholder.com/250x150/2563eb/ffffff?text=💻" alt="Laptop">
                     </div>
                 </div>
             </div>
-        </section>
+
+            <!-- Red Card - Kitchen Pot -->
+            <div class="card card-red">
+                <div class="card-content">
+                    <div class="discount-badge badge-red">25% de Descuento</div>
+                    <h3>Texto aca<br>del producto</h3>
+                    <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.</p>
+                    <button class="btn">Comprar Ahora →</button>
+                    <div class="card-image">
+                        <img src="https://via.placeholder.com/150x150/ef4444/ffffff?text=🍳" alt="Cooking Pot">
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-</main>
-<script src="<?= URL_PUBLIC ?>js/carrusel-categorias.js"></script>
+</div>

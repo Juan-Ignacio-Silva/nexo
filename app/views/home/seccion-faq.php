@@ -17,10 +17,10 @@
                 </div>
             </div>
 
-            <div class="faq-item active">
+            <div class="faq-item">
                 <div class="faq-question">
                     <span>Preguntas</span>
-                    <span class="faq-toggle">−</span>
+                    <span class="faq-toggle">+</span>
                 </div>
                 <div class="faq-answer">
                     <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.</p>

@@ -1,523 +1,295 @@
-.main-categorias {
-  width: 100%;
-  height: 100vh;
+.container {
+    width: 100%;
+    background-color: #CCDCE6;
+    padding: 3rem 1rem;
+}
+
+.max-width {
+    max-width: 80rem;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+
+/* Header Styles */
+.header {
+    text-align: center;
+    margin-bottom: 2rem;
+}
+
+.header p {
+    color: #64748b;
+    font-size: 1.125rem;
+    margin-bottom: 0.5rem;
+}
+
+.header h2 {
+    font-size: 1.875rem;
+    font-weight: bold;
+    color: #1e293b;
+}
+
+.header .highlight {
+    color: #ef4444;
+}
+
+/* Categories Styles */
+.categories {
   display: flex;
-  align-items: center;
-  background-color: #CCDCE6;
-}
-
-.contenido-categorias * {
-  box-sizing: border-box;
-}
-
-.contenido-categorias {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-  background-color: #e8f4f8;
-  color: #333;
-  min-height: 100vh;
-  padding: 40px 20px;
-
-}
-
-.contenedor-seccion-categorias {
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-/* Encabezado de categorías */
-.encabezado-seccion-categorias {
-  text-align: center;
-  margin-bottom: 50px;
-}
-
-.subtitulo-categorias {
-  font-size: 18px;
-  color: #01203A;
-  font-weight: 400;
-  margin-bottom: 10px;
-}
-
-.titulo-seccion-categorias {
-  font-size: 42px;
-  font-weight: 700;
-  line-height: 1.2;
-}
-
-.texto-azul-categorias {
-  color: #2c3e50;
-}
-
-.texto-naranja-categorias {
-  color: #e74c3c;
-}
-
-/* Sección de categorías circulares */
-.seccion-categorias-circulares {
-  margin-bottom: 60px;
-}
-
-.contenedor-carrusel-categorias {
-  position: relative;
-  display: flex;
-  align-items: center;
-  gap: 20px;
-}
-
-.flecha-carrusel-categorias {
-  background-color: white;
-  border: 2px solid #e0e0e0;
-  border-radius: 50%;
-  width: 50px;
-  height: 50px;
-  display: flex;
-  align-items: center;
   justify-content: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  z-index: 10;
-  flex-shrink: 0;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 3rem;
+  overflow-x: auto;
+  padding-bottom: 1rem;
 }
 
-.flecha-carrusel-categorias:hover {
-  background-color: #2c5aa0;
-  border-color: #2c5aa0;
-  transform: scale(1.1);
-}
-
-.flecha-carrusel-categorias:hover .icono-flecha-carrusel-categorias {
-  color: white;
-}
-
-.flecha-carrusel-categorias:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-  transform: none;
-}
-
-.flecha-carrusel-categorias:disabled:hover {
-  background-color: white;
-  border-color: #e0e0e0;
-}
-
-.flecha-carrusel-categorias:disabled:hover .icono-flecha-carrusel-categorias {
-  color: #666;
-}
-
-.icono-flecha-carrusel-categorias {
-  width: 24px;
-  height: 24px;
-  color: #666;
-  transition: color 0.3s ease;
-}
-
-.contenedor-circulos-categorias {
+.category {
   display: flex;
-  gap: 30px;
-  overflow: hidden;
-  padding: 20px 0;
-  scroll-behavior: smooth;
-  flex: 1;
+  flex-direction: column;
+  align-items: center;
+  min-width: 100px;
 }
 
-.categoria-circular {
-  flex: 0 0 auto;
-  text-align: center;
-  min-width: 120px;
-  transition: transform 0.3s ease;
-}
-
-.categoria-circular:hover {
-  transform: translateY(-5px);
-}
-
-.circulo-categoria {
-  width: 120px;
-  height: 120px;
-  background-color: #9AB8CD;
+.category-icon {
+  width: 4.5rem;
+  height: 4.5rem;
+  background-color: #94a3b8;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin: 0 auto 15px;
-  transition: transform 0.2s, box-shadow 0.2s;
+  margin-bottom: 1rem;
   cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
-.circulo-categoria:hover {
-  transform: translateY(-3px);
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+.category-icon:hover {
+  background-color: #64748b;
 }
 
-.imagen-categoria {
-  width: 60px;
-  height: 60px;
+.category-icon img {
+  width: 2.5rem;
+  height: 2.5rem;
   object-fit: contain;
 }
 
-.nombre-categoria {
-  font-size: 16px;
-  font-weight: 600;
-  color: #2c3e50;
-  margin-bottom: 5px;
+.category h3 {
+  color: #374151;
+  font-weight: 500;
+  font-size: 0.75rem;
+  text-align: center;
+  margin-bottom: 0.75rem;
 }
 
-.cantidad-productos-categoria {
-  font-size: 14px;
-  color: #666;
-  font-weight: 400;
+.category p {
+  color: #6b7280;
+  font-size: 0.75rem;
+  margin-bottom: 1rem;
 }
 
-/* Sección de promociones */
-.seccion-promociones-categorias {
-  margin-top: 40px;
+.categories-desktop {
+  display: none;
 }
 
-.contenedor-tarjetas-categorias {
+/* Cards Grid */
+.cards-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 30px;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+  padding: 0 1rem;
 }
 
-.tarjeta-promocional-categorias {
-  border-radius: 20px;
-  padding: 30px;
-  position: relative;
+.card {
+  border-radius: 0.5rem;
   overflow: hidden;
-}
-
-.tarjeta-azul-categorias {
-  background-color: #9AB8CD;
-}
-
-.tarjeta-roja-categorias {
-  background-color: #DE411E;
-}
-
-.contenido-tarjeta-categorias {
-  display: flex;
-  align-items: center;
-  gap: 30px;
   position: relative;
-  z-index: 2;
 }
 
-.informacion-tarjeta-categorias {
-  flex: 1;
+.card-blue {
+  background-color: #94a3b8;
 }
 
-.etiqueta-descuento-categorias {
+.card-red {
+  background-color: #ef4444;
+}
+
+.card-content {
+  padding: 1rem;
+  position: relative;
+}
+
+.discount-badge {
   display: inline-block;
-  background-color: rgba(255, 255, 255, 0.9);
-  color: #2c3e50;
-  padding: 8px 16px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 600;
-  margin-bottom: 20px;
+  padding: 0.25rem 0.75rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+  margin-bottom: 1rem;
 }
 
-.titulo-producto-categorias {
-  font-size: 28px;
-  font-weight: 700;
+.badge-blue {
+  background-color: #cbd5e1;
+  color: #374151;
+}
+
+.badge-red {
+  background-color: #f87171;
   color: white;
-  margin-bottom: 15px;
+}
+
+.card h3 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin-bottom: 0.75rem;
   line-height: 1.2;
 }
 
-.descripcion-producto-categorias {
-  font-size: 16px;
-  color: rgba(255, 255, 255, 0.9);
-  line-height: 1.5;
-  margin-bottom: 25px;
+.card-blue h3 {
+  color: #1e293b;
 }
 
-.boton-comprar-promocion-categorias {
-  background-color: #1976d2;
+.card-red h3 {
   color: white;
+}
+
+.card p {
+  font-size: 0.75rem;
+  margin-bottom: 1rem;
+  max-width: 20rem;
+}
+
+.card-blue p {
+  color: #475569;
+}
+
+.card-red p {
+  color: #fecaca;
+}
+
+.btn {
+  background-color: #2563eb;
+  color: white;
+  padding: 0.5rem 1rem;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  font-size: 0.875rem;
   border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
   cursor: pointer;
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  transition: background-color 0.2s, transform 0.1s;
+  transition: background-color 0.3s ease;
 }
 
-.boton-comprar-promocion-categorias:hover {
-  background-color: #1565c0;
-  transform: translateY(-2px);
+.btn:hover {
+  background-color: #1d4ed8;
 }
 
-.icono-flecha-promocion-categorias {
-  width: 16px;
-  height: 16px;
+.card-image {
+  position: absolute;
+  right: 0.5rem;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
-.imagen-tarjeta-categorias {
-  flex: 0 0 auto;
-}
-
-.producto-imagen-categorias {
-  width: 200px;
+.card-image img {
+  width: 150px;
   height: 150px;
   object-fit: contain;
-  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.1));
 }
 
-/* Responsive para categorías */
-@media (max-width: 1024px) {
-  .contenedor-circulos-categorias {
-    gap: 20px;
+/* Desktop Styles */
+@media (min-width: 768px) {
+  .container {
+    padding: 4rem 1rem;
   }
 
-  .categoria-circular {
-    min-width: 100px;
+  .max-width {
+    padding: 0 2rem;
   }
 
-  .circulo-categoria {
-    width: 100px;
-    height: 100px;
+  .header {
+    margin-bottom: 3rem;
   }
 
-  .imagen-categoria {
-    width: 50px;
-    height: 50px;
+  .header h2 {
+    font-size: 2.25rem;
   }
 
-  .contenedor-tarjetas-categorias {
-    gap: 20px;
+  .categories {
+    gap: 2rem;
+    margin-bottom: 4rem;
   }
 
-  .contenido-tarjeta-categorias {
-    gap: 20px;
+  .category {
+    min-width: 120px;
   }
 
-  .producto-imagen-categorias {
-    width: 160px;
-    height: 120px;
+  .category-icon {
+    width: 6rem;
+    height: 6rem;
+    margin-bottom: 1.5rem;
   }
 
-  .contenedor-carrusel-categorias {
-    gap: 15px;
+  .category-icon img {
+    width: 3.125rem;
+    height: 3.125rem;
   }
 
-  .flecha-carrusel-categorias {
-    width: 45px;
-    height: 45px;
+  .category h3 {
+    font-size: 0.875rem;
+    margin-bottom: 1rem;
   }
 
-  .icono-flecha-carrusel-categorias {
-    width: 20px;
-    height: 20px;
-  }
-}
-
-@media (max-width: 768px) {
-  .contenido-categorias {
-    padding: 30px 15px;
+  .category p {
+    font-size: 0.875rem;
+    margin-bottom: 2rem;
   }
 
-  .titulo-seccion-categorias {
-    font-size: 32px;
+  .categories-desktop {
+    display: flex;
+    gap: 2rem;
   }
 
-  .contenedor-circulos-categorias {
-    gap: 15px;
-    padding: 15px 0;
+  .cards-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    padding: 0;
   }
 
-  .categoria-circular {
-    min-width: 90px;
+  .card-content {
+    padding: 2rem;
   }
 
-  .circulo-categoria {
-    width: 90px;
-    height: 90px;
+  .discount-badge {
+    padding: 0.5rem 1rem;
+    font-size: 0.875rem;
+    margin-bottom: 1.5rem;
   }
 
-  .imagen-categoria {
-    width: 45px;
-    height: 45px;
+  .card h3 {
+    font-size: 1.875rem;
+    margin-bottom: 1rem;
   }
 
-  .nombre-categoria {
-    font-size: 14px;
+  .card p {
+    font-size: 0.875rem;
+    margin-bottom: 2rem;
   }
 
-  .cantidad-productos-categoria {
-    font-size: 12px;
+  .btn {
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
   }
 
-  .contenedor-tarjetas-categorias {
-    grid-template-columns: 1fr;
-    gap: 20px;
+  .card-image {
+    right: 1rem;
   }
 
-  .tarjeta-promocional-categorias {
-    padding: 25px;
+  .card-image img {
+    width: 250px;
+    height: 150px;
   }
 
-  .contenido-tarjeta-categorias {
-    flex-direction: column;
-    text-align: center;
-    gap: 20px;
-  }
-
-  .titulo-producto-categorias {
-    font-size: 24px;
-  }
-
-  .producto-imagen-categorias {
-    width: 180px;
-    height: 140px;
-  }
-
-  .contenedor-carrusel-categorias {
-    gap: 10px;
-  }
-
-  .flecha-carrusel-categorias {
-    width: 40px;
-    height: 40px;
-  }
-
-  .icono-flecha-carrusel-categorias {
-    width: 18px;
-    height: 18px;
-  }
-}
-
-@media (max-width: 640px) {
-  .titulo-seccion-categorias {
-    font-size: 28px;
-  }
-
-  .contenedor-circulos-categorias {
-    gap: 12px;
-  }
-
-  .categoria-circular {
-    min-width: 80px;
-  }
-
-  .circulo-categoria {
-    width: 80px;
-    height: 80px;
-  }
-
-  .imagen-categoria {
-    width: 40px;
-    height: 40px;
-  }
-
-  .tarjeta-promocional-categorias {
-    padding: 20px;
-  }
-
-  .titulo-producto-categorias {
-    font-size: 22px;
-  }
-
-  .descripcion-producto-categorias {
-    font-size: 14px;
-  }
-
-  .boton-comprar-promocion-categorias {
-    padding: 10px 20px;
-    font-size: 14px;
-  }
-
-  .producto-imagen-categorias {
+  .card-red .card-image img {
     width: 150px;
-    height: 110px;
-  }
-
-  .flecha-carrusel-categorias {
-    width: 35px;
-    height: 35px;
-  }
-
-  .icono-flecha-carrusel-categorias {
-    width: 16px;
-    height: 16px;
-  }
-}
-
-@media (max-width: 480px) {
-  .contenido-categorias {
-    padding: 20px 10px;
-  }
-
-  .titulo-seccion-categorias {
-    font-size: 24px;
-  }
-
-  .subtitulo-categorias {
-    font-size: 16px;
-  }
-
-  .encabezado-seccion-categorias {
-    margin-bottom: 30px;
-  }
-
-  .seccion-categorias-circulares {
-    margin-bottom: 40px;
-  }
-
-  .categoria-circular {
-    min-width: 70px;
-  }
-
-  .circulo-categoria {
-    width: 70px;
-    height: 70px;
-  }
-
-  .imagen-categoria {
-    width: 35px;
-    height: 35px;
-  }
-
-  .nombre-categoria {
-    font-size: 12px;
-  }
-
-  .cantidad-productos-categoria {
-    font-size: 11px;
-  }
-
-  .tarjeta-promocional-categorias {
-    padding: 15px;
-  }
-
-  .titulo-producto-categorias {
-    font-size: 20px;
-  }
-
-  .descripcion-producto-categorias {
-    font-size: 13px;
-  }
-
-  .producto-imagen-categorias {
-    width: 130px;
-    height: 100px;
-  }
-
-  .contenedor-carrusel-categorias {
-    gap: 8px;
-  }
-
-  .flecha-carrusel-categorias {
-    width: 32px;
-    height: 32px;
-  }
-
-  .icono-flecha-carrusel-categorias {
-    width: 14px;
-    height: 14px;
+    height: 150px;
   }
 }
