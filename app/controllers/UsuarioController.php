@@ -64,7 +64,11 @@ class UsuarioController
     public function logout() {
         Session::start();
         Session::destroy();
-        header('Location: /usuario/login');
+        header('Location: ../usuario/login');
         exit;
+    }
+
+    public function perfil() {
+        include ROOT . '/app/views/usuario/perfil.php';
     }
 }
