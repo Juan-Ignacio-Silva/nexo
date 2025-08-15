@@ -8,6 +8,7 @@ Session::start();
 define('ROOT', dirname(__DIR__) . '/');
 define('URL_PUBLIC', '/nexo/public/');
 
+require_once '../core/config.php';
 require_once '../core/Router.php';
 // Declaro una varibale $url que sea igual a la variable $_GET con el valor de la url del navegador
 // y si esa url es nulla el valor de la variable sera 'vacio';

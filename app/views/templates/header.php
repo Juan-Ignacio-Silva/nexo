@@ -27,19 +27,19 @@
                 <a href="usuario/login" class="enlace-usuario">Ingresar</a>
             <?php endif; ?>
             <?php if (Auth::restringirAcceso() === true): ?>
-                <a href="../usuario/perfil" class="enlace-usuario">Perfil</a>
+                <a href="<?= BASE_URL ?>usuario/perfil" class="enlace-usuario">Perfil</a>
                 <a href="#" class="enlace-usuario">Mis compras</a>
-                <a href="usuario/logout" class="enlace-usuario">Cerrar sesion</a>
+                <a href="<?= BASE_URL ?>usuario/logout" class="enlace-usuario">Cerrar sesion</a>
             <?php endif; ?>
         </div>
     </div>
     
     <nav class="navegacion">
         <div class="contenedor-navegacion">
-            <a href="../home" class="enlace-navegacion">Inicio</a>
+            <a href="<?= BASE_URL ?>" class="enlace-navegacion">Inicio</a>
             <a href="#" class="enlace-navegacion">Tienda</a>
             <a href="#" class="enlace-navegacion">Ofertas</a>
-            <a href="vender/vender" class="enlace-navegacion">Vender</a>
+            <a href="<?= BASE_URL ?>vender/vender" class="enlace-navegacion">Vender</a>
             <a href="#" class="enlace-navegacion">Ayuda</a>
             <a href="#" class="enlace-navegacion">Categorías</a>
         </div>
