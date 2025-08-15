@@ -1,9 +1,6 @@
 <link rel="stylesheet" href="<?= URL_PUBLIC ?>css/vistaVender/seccion-vender.css">
 <main>
     <div>
-        holakbxcvxckxxkjx
-        xvxjx
-        xcvlxv
-        xcvxlv
+        <h1>hola marcos</h1>
     </div>
 </main>
