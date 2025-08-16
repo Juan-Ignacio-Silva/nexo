@@ -1,3 +1,76 @@
-main {
-    background-color: blue;
+/*Estilo de fondo del body para que se ajuste a los colores de Nexo*/
+body {
+    background-color: #E1E9EF;
+}
+
+/*Clase manual*/
+.manual { 
+    background-color: #CCDCE6;
+    color: #000000;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    padding: 30px;
+    border-radius: 12px;
+    max-width: 900px;
+    margin: 40px auto;
+    line-height: 1.6;
+    box-shadow: 0px 4px 15px rgba(0,0,0,0.2);
+}
+
+/*Estilo para clase manual h1*/
+.manual h1 {  
+    text-align: center;
+    font-size: 30px;
+    color: #000000;
+    margin-bottom: 25px;
+}
+
+.manual h1:hover {
+    color: #003366;
+    background-color: #00000020;
+    padding: 6px;
+    border-radius: 8px;
+    transition: 0.3s ease-in;
+}
+
+/*Estilo para clase manual h2*/
+.manual h2 { 
+    margin-top: 25px;
+    font-size: 22px;
+    color: #003366;
+    border-left: 6px solid #000000;
+    padding-left: 10px;
+    margin-bottom: 10px;
+    border-radius: 6px;
+}
+
+.manual h2:hover {
+     background-color: #00000020;
+     color: #003366;
+     transition: 0.3s ease;
+}
+
+/*Estilo para clase manual p*/
+.manual p { 
+    margin: 12px 0;
+}
+
+/*Estilo para clase manual ul, ol*/
+.manual ul, .manual ol { 
+     margin: 15px 0 15px 30px;
+    text-align: left;
+}
+
+/*Estilo para clase manual li*/
+.manual li { 
+    margin-bottom: 10px;
+    padding: 6px;
+    border-radius: 6px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/*Efectos para animar la web (Este efecto esta en la mayoria de las demas clases*/
+.manual li:hover { 
+    background-color: #00000020;
+    color: #003366;
+    cursor: default;
 }
