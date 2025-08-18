@@ -60,4 +60,20 @@ class Usuario
         }
 
     }
+
+    public static function obtenerInfoUser ($conexion, $id) {
+        $stmt = $conexion->prepare("SELECT * FROM usuarios WHERE id_usuarios = ?");
+        $stmt->bind_param("s", $id);
+        $stmt->execute();
+
+        $resultado = $stmt->get_result();
+
+        if ($resultado->num_rows === 1) {
+            $usuario = $resultado->fetch_assoc();
+            return $usuario;
+        } else { 
+            return 'No se pudo identificar el id del usuario';
+        }
+
+    }
 }

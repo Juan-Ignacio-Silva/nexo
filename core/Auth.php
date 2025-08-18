@@ -40,9 +40,16 @@ class Auth
         return true;
     }
 
-
-
     public static function usuario() {
         return Session::get(key: 'usuario_nombre') ?? 'Invitado';
+    }
+
+    public static function infoUser() {
+        $conexion = require ROOT . 'app/config/database.php';
+
+        $id = Session::get(key: 'usuario_id');
+        $infoUser = Usuario::obtenerInfoUser($conexion, $id);
+
+        return $infoUser;
     }
 }

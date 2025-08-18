@@ -69,6 +69,9 @@ class UsuarioController
     }
 
     public function perfil() {
-        include ROOT . '/app/views/usuario/perfil.php';
+        require_once ROOT . 'core/Auth.php';
+        include ROOT . 'app/views/templates/header.php';
+        include ROOT . 'app/views/usuario/perfil.php';
+        include ROOT . 'app/views/templates/footer.php';
     }
 }
