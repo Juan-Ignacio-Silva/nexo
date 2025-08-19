@@ -4,7 +4,10 @@ class HomeController
     public function index()
     {
         require_once ROOT . 'core/Auth.php';
-        Auth::restringir();
+        
+        ?>
+        <title>Nexo</title>
+        <?php
 
         include ROOT . 'app/views/templates/header.php';
         include ROOT . 'app/views/home/seccion-hero.php';

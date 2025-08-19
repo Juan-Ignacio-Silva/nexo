@@ -10,6 +10,6 @@ $conexion = new mysqli(hostname: $host, username: $usuario, password: $password,
 
 if ($conexion->connect_error) {
     exit("Conexión fallida: " . $conexion->connect_error); // Si hay algun error manda un mensaje con el error.
-} else {
-    return 'OK DB'; // Si no hay error manda un mensaje de estado OK
 }
+
+return $conexion;

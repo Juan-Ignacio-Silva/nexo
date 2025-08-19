@@ -35,7 +35,8 @@
         </div>
 
         <div class="seccion-usuario">
-            <p class="nombre-usuario">Ignacio Silva</p>
+            <?php require_once ROOT . 'core/Auth.php';?>
+            <p class="nombre-usuario"><?= Auth::usuario(); ?></p>
             <p class="role">Administrador</p>
         </div>
     </div>
