@@ -1,3 +1,4 @@
+<link rel="stylesheet" href="<?= URL_PUBLIC ?>/css/vistaUsuario/seccion-usuario.css">
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,6 +8,9 @@
     <title>Perfil de <?= Auth::usuario(); ?></title>
 </head>
 <body>
+<main>
     <h1>Perfil de usuario de <?= Auth::usuario(); ?></h1>
+    </main>
 </body>
 </html>
+
