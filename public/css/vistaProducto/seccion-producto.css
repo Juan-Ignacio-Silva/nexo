@@ -26,7 +26,6 @@ body {
     background: #FFFFFF;
     border-radius: 12px;
     padding: 40px;
-    box-shadow: 0 4px 20px rgba(1, 35, 58, 0.1);
     margin-bottom: 40px;
 }
 
@@ -224,7 +223,6 @@ body {
     background: #FFFFFF;
     border-radius: 12px;
     padding: 40px;
-    box-shadow: 0 4px 20px rgba(1, 35, 58, 0.1);
     margin-bottom: 40px;
 }
 
@@ -305,7 +303,6 @@ body {
     color: #14334C;
     transition: all 0.3s ease;
     z-index: 2;
-    box-shadow: 0 4px 12px rgba(1, 35, 58, 0.1);
 }
 
 .carousel-btn:hover:not(:disabled) {
@@ -353,7 +350,6 @@ body {
 
 .product-card:hover {
     transform: translateY(-8px);
-    box-shadow: 0 12px 30px rgba(1, 35, 58, 0.15);
 }
 
 .product-image {
