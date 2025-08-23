@@ -57,8 +57,8 @@
                         <span class="meta-value">Calzado, Laptops & Escritorios</span>
                     </div>
                     <div class="meta-item">
-                        <span class="meta-label">Etiqueta:</span>
-                        <span class="meta-value">deportivo</span>
+                        <span class="meta-label">Vende:</span>
+                        <span class="meta-value">Tienda Tech</span>
                     </div>
                 </div>
             </div>
