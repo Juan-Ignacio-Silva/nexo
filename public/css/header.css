@@ -28,9 +28,9 @@
   gap: 12px;
 }
 
-.logo img{
-  width: 50px;
-  height: 50px;
+.logo-header img{
+  width: 40px;
+  height: 40px;
   border-radius: 8px;
 }
 
@@ -130,4 +130,66 @@
 
 .enlace-navegacion:hover {
   border-bottom-color: #ff6b35;
+}
+
+.navegacion-header-mobil {
+  display: none;
+}
+
+/* Cosas de vista mobil */
+
+.menu-hamburguesa {
+  display: none;
+}
+
+.carrito-compras {
+  display: flex;
+  cursor: pointer;
+}
+
+@media (max-width: 768px) {
+  .navegacion-header-mobil {
+    display: flex;
+  }
+
+  .menu-hamburguesa {
+    display: flex;
+    align-items: center;
+  }
+
+  .hamburguesa-close {
+    cursor: pointer;
+  }
+
+  .hamburguesa-open {
+    display: none;
+    cursor: pointer;
+  }
+
+  .ubicacion {
+    display: none;
+  }
+
+  .barra-busqueda {
+    padding: 10px 50px 10px 13px;
+    font-size: 12px;
+  }
+
+  .enlace-usuario {
+    display: none;
+  }
+
+  .modal-menu-hamburguesa {
+    display: none;
+    position: absolute;
+    top: 64px;
+    width: 100%;
+    height: 500px;
+    background-color: #ff6b35;
+    z-index: 1000;
+  }
+}
+
+@media (max-width: 480px) {
+  
 }
