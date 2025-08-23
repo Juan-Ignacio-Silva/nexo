@@ -13,7 +13,9 @@ $infoUser = Auth::infoUser();
             <li>Mis compras</li>
             <li>Mis ventas</li>
             <li>Configuración</li>
-            <li>Dashboard</li>
+            <?php if (Auth::esAdmin() === true): ?>
+            <a href="<?= BASE_URL ?>admin/dashboard">Dashboard</a>
+            <?php endif; ?>
         </ul>
     </div>
     <div class="vista-informacion-perfil">

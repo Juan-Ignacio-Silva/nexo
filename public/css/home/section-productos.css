@@ -64,13 +64,45 @@
 .card-productos {
     width: 350px;
     height: 100%;
-    background-color: #64748b;
     border-radius: 5px;
 }
 
 .card-header {
     width: 100%;
-    height: 200px;
+    height: 325px;
     background-color: #1d4ed8;
     border-radius: 5px 5px 0px 0px;
+}
+
+.cuerpo-card {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.header-cuerpo-card {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    margin-top: 5px;
+}
+
+.header-cuerpo-card p {
+    color: #1e293b;
+    font-family: sans-serif, monospace;
+    font-size: 14px;
+}
+
+.nombre-producto {
+    color: #1e293b;
+    font-family: sans-serif, monospace;
+}
+
+.footer-card {
+    display: flex;
+    margin-top: 10px;
+}
+
+.precio {
+    margin-right: 10px;
 }

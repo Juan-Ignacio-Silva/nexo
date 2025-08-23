@@ -10,51 +10,28 @@
         </div>
 
         <div class="contenedor-cards-productos">
+            <?php
+            for ($i=1;$i <= 3; $i++) {
+            ?>
             <div class="card-productos">
                 <div class="card-header">
                     <img src="" alt="">
                 </div>
                 <div class="cuerpo-card">
-                    <h3>OFERTA DEL DÍA</h3>
-                    <h4>Producto</h4>
-                    <p>Descripcion</p>
-                    <p>Vendedor</p>
-                    <div class="calificacion-producto">
-                        5.0
+                    <div class="header-cuerpo-card">
+                        <p>Categoria</p>
+                        <p>⭐⭐⭐⭐⭐</p>
                     </div>
-                    <h2>$ 3000</h2>
+                    <p class="nombre-producto">Nombre producto</p>
+                    <div class="footer-card">
+                        <p class="precio">US$ 30</p>
+                        <p class="precio-oferta">US$ 25</p>
+                    </div>
                 </div>
             </div>
-            <div class="card-productos">
-                <div class="card-header">
-                    <img src="" alt="">
-                </div>
-                <div class="cuerpo-card">
-                    <h3>OFERTA DEL DÍA</h3>
-                    <h4>Producto</h4>
-                    <p>Descripcion</p>
-                    <p>Vendedor</p>
-                    <div class="calificacion-producto">
-                        5.0
-                    </div>
-                    <h2>$ 3000</h2>
-                </div>
-            </div>
-            <div class="card-productos">
-                <div class="card-header">
-                    <img src="" alt="">
-                </div>
-                <div class="cuerpo-card">
-                    <h3>OFERTA DEL DÍA</h3>
-                    <h4>Producto</h4>
-                    <p>Descripcion</p>
-                    <p>Vendedor</p>
-                    <div class="calificacion-producto">
-                        5.0
-                    </div>
-                    <h2>$ 3000</h2>
-                </div>
-            </div>
+            <?php
+            }
+            ?>
         </div>
     </div>
 </section>
