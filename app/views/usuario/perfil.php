@@ -2,9 +2,9 @@
 <?php
 $infoUser = Auth::infoUser();
 ?>
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Perfil de <?= Auth::usuario(); ?></title>
-<link rel="stylesheet" href="<?= URL_PUBLIC ?>css/usuario/seccion-vista-perfil.css">
+<link rel="stylesheet" href="/css/usuario/seccion-vista-perfil.css">
 <section class="section-perfil-usuario">
     <div class="sidebar-opciones">
         <h2>Mi cuenta</h2>

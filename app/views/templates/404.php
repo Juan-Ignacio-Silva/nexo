@@ -1,3 +1,4 @@
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <main class="">
     <div class="">
         <h1>404</h1>

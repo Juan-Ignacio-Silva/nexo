@@ -1,3 +1,3 @@
 <?php
-// Ruta base de tu proyecto
-define('BASE_URL', '/nexo/public/');
+// Detecta automáticamente la URL base
+define('BASE_URL', 'http://localhost:8080/');// Cambiar el valor si se esta en produccion

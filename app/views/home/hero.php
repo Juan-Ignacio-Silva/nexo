@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="<?= URL_PUBLIC ?>css/seccion-hero.css">
+<link rel="stylesheet" href="css/seccion-hero.css">
 <main class="contenido-principal">
     <div class="contenedor-principal">
         <div class="seccion-hero">
@@ -14,7 +14,7 @@
             <h1 class="titulo-principal">Tu tienda en un solo lugar</h1>
             
             <p class="descripcion">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit, 
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit,
                 sed do eiusmod tempor incididunt ut labore et dolore.
             </p>
             

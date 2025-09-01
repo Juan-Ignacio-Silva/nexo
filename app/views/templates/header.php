@@ -1,9 +1,10 @@
-<link rel="stylesheet" href="<?= URL_PUBLIC ?>css/header.css">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="/css/header.css">
 <header class="encabezado">
     <div class="contenedor-encabezado">
         <div class="seccion-logo">
             <div class="logo-header">
-                <img src="<?= URL_PUBLIC ?>images/nexo_logo.png" alt="Nexo">
+                <img src="/images/nexo_logo.png" alt="Nexo">
             </div>
             <div class="ubicacion">
                 <span class="texto-ubicacion">Ubicación</span>
@@ -60,20 +61,35 @@
 
     <nav class="navegacion">
         <div class="contenedor-navegacion">
-            <a href="<?= BASE_URL ?>" class="enlace-navegacion">Inicio</a>
-            <a href="#" class="enlace-navegacion">Tienda</a>
-            <a href="#" class="enlace-navegacion">Ofertas</a>
-            <a href="<?= BASE_URL ?>vender/vender" class="enlace-navegacion">Vender</a>
-            <a href="#" class="enlace-navegacion">Ayuda</a>
+            <a href="<?= BASE_URL ?>home" class="enlace-navegacion">Inicio</a>
             <a href="#" class="enlace-navegacion">Categorías</a>
+            <a href="#" class="enlace-navegacion">Ofertas</a>
+            <a href="#" class="enlace-navegacion">Vender</a>
+            <a href="#" class="enlace-navegacion">Ayuda</a>
         </div>
     </nav>
 </header>
 
 <div class="modal-menu-hamburguesa" id="modalMenuHamburguesa">
-    
+    <div class="contenedor-menu-modal">
+        <div class="contenedor-navegacion-usuario">
+            <div class="contenedor-foto-usuario"></div>
+            <div class="contenedor-info-user">
+                <h3>Bienvenido</h3>
+                <p></p>
+                <p></p>
+            </div>
+        </div>
+        <?php if (Auth::restringirAcceso() === false): ?>
+        <div class="contenedor-acciones-usuario">
+            <a href="usuario/login" class="botones-acciones-user">Iniciar sesion</a>
+            <a href="usuario/registro" class="botones-acciones-user">Crear cuenta</a>
+        </div>
+        <?php endif; ?>
+    </div>
 </div>
 
+<!-- Script para modal Menu Hamburguesa -->
 <script>
     const modal = document.getElementById('modalMenuHamburguesa');
     const buttonMenuOpen = document.getElementById('menuHopen');
@@ -90,4 +106,9 @@
         buttonMenuClose.style.display = 'flex';
         buttonMenuOpen.style.display = 'none'
     })
+</script>
+
+<!-- Script para Modal Categorias -->
+<script>
+
 </script>

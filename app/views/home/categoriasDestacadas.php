@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="<?= URL_PUBLIC ?>css/seccion-categorias.css">
+<link rel="stylesheet" href="css/seccion-categorias.css">
 <div class="container">
     <div class="max-width">
         <!-- Header -->

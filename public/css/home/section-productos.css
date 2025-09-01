@@ -1,7 +1,7 @@
 .section-productos-home {
     width: 100%;
-    height: 100vh;
-    background-color: #EEF8FF;
+    min-height: 100vh;
+    background-color: #E1E9EF;
 }
 
 .contenedor-productos-home {
@@ -65,13 +65,22 @@
     width: 350px;
     height: 100%;
     border-radius: 5px;
+    cursor: pointer;
 }
 
 .card-header {
     width: 100%;
     height: 325px;
-    background-color: #1d4ed8;
+    background-color: #cfdee9;
     border-radius: 5px 5px 0px 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-header img {
+    width: 250px;
+    height: 200px;
 }
 
 .cuerpo-card {
@@ -105,4 +114,11 @@
 
 .precio {
     margin-right: 10px;
+}
+
+@media (max-width: 768px) {
+    .contenedor-cards-productos {
+        flex-direction: column;
+        gap: 20px;
+    }
 }

@@ -2,20 +2,9 @@
     <div class="contenedor-encabezado">
         <div class="seccion-logo">
             <div class="logo">
-                <img src="<?= URL_PUBLIC ?>images/nexo_logo.png" alt="Nexo">
+                <img src="/images/nexo_logo.png" alt="Nexo">
             </div>
         </div>
-
-        <div class="seccion-busqueda">
-            <input type="text" class="barra-busqueda" placeholder="Buscar algo???">
-            <button class="boton-busqueda">
-                <svg class="icono-busqueda" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <path d="m21 21-4.35-4.35"></path>
-                </svg>
-            </button>
-        </div>
-
         <div class="seccion-buttons-header">
             <a href="../home"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-store-icon lucide-store">
                     <path d="m2 7 4.41-4.41A2 2 0 0 1 7.83 2h8.34a2 2 0 0 1 1.42.59L22 7" />

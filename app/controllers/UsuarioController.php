@@ -4,7 +4,7 @@ class UsuarioController
     public function login()
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            require_once ROOT . 'app/config/database.php';
+            require_once ROOT . 'core/database.php';
             require_once ROOT . 'app/models/Usuario.php';
             require_once ROOT . 'core/Session.php';
 
@@ -35,7 +35,7 @@ class UsuarioController
     {
         // Si se envió el formulario (POST)
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            require_once ROOT . 'app/config/database.php';
+            require_once ROOT . 'core/database.php';
             require_once ROOT . 'app/models/Usuario.php';
 
             // Obtener datos y validarlos

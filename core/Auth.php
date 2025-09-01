@@ -4,7 +4,7 @@ require_once ROOT . 'app/models/Usuario.php';
 class Auth
 {
     public static function restringirDashboard() {
-        $conexion = require ROOT . 'app/config/database.php';
+        $conexion = require ROOT . 'core/database.php';
         
         if (!Session::has('usuario_id')) {
             header('Location: ../home');
@@ -20,7 +20,7 @@ class Auth
     }
 
     public static function esAdmin() {
-        $conexion = require ROOT . 'app/config/database.php';
+        $conexion = require ROOT . 'core/database.php';
 
         $id = Session::get(key: 'usuario_id');
         $roleIdentificado = Usuario::verificarRole($conexion, $id);
@@ -45,7 +45,7 @@ class Auth
     }
 
     public static function infoUser() {
-        $conexion = require ROOT . 'app/config/database.php';
+        $conexion = require ROOT . 'core/database.php';
 
         $id = Session::get(key: 'usuario_id');
         $infoUser = Usuario::obtenerInfoUser($conexion, $id);

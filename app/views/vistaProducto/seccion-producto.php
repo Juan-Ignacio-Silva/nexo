@@ -1,5 +1,5 @@
- <link rel="stylesheet" href="<?= URL_PUBLIC ?>css/vistaProducto/seccion-producto.css">
-
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="<?= URL_PUBLIC ?>css/vistaProducto/seccion-producto.css">
 <main class="producto">   
     <div class="container">
         <!-- Sección del Producto general -->

@@ -4,12 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Crear cuenta</title>
-    <link rel="stylesheet" href="<?= URL_PUBLIC ?>css/login.css">
+    <link rel="stylesheet" href="/css/login.css">
 </head>
 <body>
     <div class="left-panel">
         <div class="logo">
-            <img src="<?= URL_PUBLIC ?>images/nexo_logo.png" alt="Logo">
+            <img src="/images/nexo_logo.png" alt="Logo">
         </div>
         <h1 class="welcome-title">Bienvenido</h1>
         <p class="welcome-subtitle">
@@ -23,12 +23,6 @@
     <div class="right-panel">
         <div class="form-container">
             <h2 class="form-title">Crear cuenta</h2>
-            
-            <div class="avatar-section">
-                <div class="avatar"></div>
-            </div>
-            
-            <p class="email-hint">o ingrese su dirección email</p>
             
             <form method="post">
                 <div class="form-row">
@@ -51,6 +45,9 @@
                     <p style="color:red;"><?= htmlspecialchars($error) ?></p>
                 <?php endif; ?>
                 <button type="submit" class="submit-btn" name="register">Registrarse</button>
+                <p class="enlace-registro-mobil">
+                    Ya tiene una cuenta? <a href="login">Iniciar sesion</a>
+                </p>
             </form>
         </div>
     </div>

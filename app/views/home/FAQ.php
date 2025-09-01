@@ -1,4 +1,4 @@
-<link rel="stylesheet" href="<?= URL_PUBLIC ?>css/seccion-faq.css">
+<link rel="stylesheet" href="css/seccion-faq.css">
 <section class="faq-section">
     <div class="faq-container">
         <div class="faq-header">
