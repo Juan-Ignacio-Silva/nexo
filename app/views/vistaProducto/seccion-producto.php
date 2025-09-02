@@ -1,6 +1,10 @@
+<!-- PHP -->
+<?php
+
+?>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="<?= URL_PUBLIC ?>css/vistaProducto/seccion-producto.css">
-<main class="producto">   
+<link rel="stylesheet" href="/css/vistaProducto/seccion-producto.css">
+<main class="producto">
     <div class="container">
         <!-- Sección del Producto general -->
         <div class="product-section">
@@ -23,23 +27,28 @@
 
             <!-- Info del Producto -->
             <div class="product-info">
-                <h1 class="product-title">Zapatillas Deportivas Premium</h1>
+                <h1 class="product-title"><?= $producto['nombre']?></h1>
                 
                 <div class="rating">
                     <div class="stars">
-                        <span class="star filled">★</span>
-                        <span class="star filled">★</span>
-                        <span class="star filled">★</span>
-                        <span class="star filled">★</span>
-                        <span class="star">★</span>
+                        <?php
+                        $promedio = (int) round($producto['promedio']); // Redondeo para mostrar estrellas enteras
+                        for ($i = 1; $i <= 5; $i++):
+                            if ($i <= $promedio): ?>
+                                <span class="star filled">★</span>
+                            <?php else: ?>
+                                <span class="star">★</span>
+                            <?php endif;
+                        endfor;
+                        ?>
                     </div>
                     <span class="rating-count">(1)</span>
                 </div>
 
-                <div class="price">$150.00</div>
+                <div class="price">$<?= $producto['precio']?></div>
 
                 <div class="description">
-                    Experimenta la comodidad y el estilo con estas zapatillas deportivas premium. Diseñadas para el rendimiento y la versatilidad, estas zapatillas son perfectas tanto para entrenamientos intensos como para el uso diario. Con una parte superior transpirable y una suela que brinda excelente tracción.
+                <?= $producto['descripcion']?>
                 </div>
 
                 <div class="purchase-section">
@@ -53,8 +62,8 @@
 
                 <div class="product-meta">
                     <div class="meta-item">
-                        <span class="meta-label">Categorías:</span>
-                        <span class="meta-value">Calzado, Laptops & Escritorios</span>
+                        <span class="meta-label">Categoría:</span>
+                        <span class="meta-value"><?= $producto['categoria']?></span>
                     </div>
                     <div class="meta-item">
                         <span class="meta-label">Vende:</span>
@@ -72,9 +81,7 @@
             </div>
             <div class="tab-content" id="tabContent">
                 <div id="description">
-                    <p>Estas zapatillas deportivas premium combinan tecnología avanzada con un diseño moderno. La parte superior está construida con materiales transpirables de alta calidad que mantienen tus pies frescos y cómodos durante todo el día.</p>
-                    <br>
-                    <p>La suela intermedia ofrece una amortiguación excepcional, perfecta para absorber el impacto durante actividades de alta intensidad. La suela exterior proporciona una tracción superior en diversas superficies, desde asfalto hasta senderos ligeros.</p>
+                <?= $producto['descripcion']?>
                 </div>
                 <div id="reviews" style="display: none;">
                     <p><strong>Reseña de Cliente Verificado</strong></p>
@@ -92,19 +99,19 @@
             </div>
         </div>
 
-        <!-- Productos Relacionados al mismo -->
+        <!-- Productos Relacionados al mismo
         <div class="related-products">
             <h2 class="related-title">Productos Relacionados</h2>
             <div class="carousel-container">
                 <button class="carousel-btn prev" onclick="previousProduct()">‹</button>
                 <div class="products-carousel">
                     <div class="products-grid">
-                        <!-- Los productos se hacen con JS -->
+                        Los productos se hacen con JS 
                     </div>
                 </div>
                 <button class="carousel-btn next" onclick="nextProduct()">›</button>
             </div>
-        </div>
+        </div> -->
     </div>
 
     <script>

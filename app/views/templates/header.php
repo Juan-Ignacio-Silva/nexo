@@ -24,8 +24,8 @@
 
         <div class="seccion-usuario">
             <?php if (Auth::restringirAcceso() === false): ?>
-                <a href="../usuario/registro" class="enlace-usuario">Crear cuenta</a>
-                <a href="usuario/login" class="enlace-usuario">Ingresar</a>
+                <a href="<?= BASE_URL ?>usuario/registro" class="enlace-usuario">Crear cuenta</a>
+                <a href="<?= BASE_URL ?>usuario/login" class="enlace-usuario">Ingresar</a>
             <?php endif; ?>
             <?php if (Auth::restringirAcceso() === true): ?>
                 <a href="<?= BASE_URL ?>usuario/perfil" class="enlace-usuario">Perfil</a>
