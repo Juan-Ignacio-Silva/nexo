@@ -43,7 +43,8 @@ CREATE TABLE producto (
     categoria VARCHAR(50) NOT NULL,
     etiqueta VARCHAR(50) NOT NULL,
     descripcion TEXT NOT NULL,
-    imagen VARCHAR(255) NOT NULL
+    imagen VARCHAR(255) NOT NULL,
+    cantidad INT NOT NULL
 );
 
 -- Tabla de pedidos
