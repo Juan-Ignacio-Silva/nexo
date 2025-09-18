@@ -1,4 +1,5 @@
 <?php
+require_once ROOT . 'core/View.php';
 class UsuarioController
 {
     public function login()
@@ -13,7 +14,7 @@ class UsuarioController
 
             if (!empty($email) && !empty($password)) {
                 $identificado = Usuario::login($conexion, $email, $password);
-                
+
                 if ($identificado) {
                     Session::set('usuario_id', $identificado['id_usuarios']);
                     Session::set('usuario_nombre', $identificado['nombre']);
@@ -28,7 +29,6 @@ class UsuarioController
         }
 
         include ROOT . 'app/views/usuario/login.php';
-    
     }
 
     public function registro()
@@ -37,6 +37,7 @@ class UsuarioController
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             require_once ROOT . 'core/database.php';
             require_once ROOT . 'app/models/Usuario.php';
+            require_once ROOT . 'core/Session.php';
 
             // Obtener datos y validarlos
             $nombre = trim($_POST['nombre'] ?? '');
@@ -48,6 +49,9 @@ class UsuarioController
                 $registrado = Usuario::registrar($conexion, $nombre, $apellido, $email, $password);
 
                 if ($registrado) {
+                    // Esto seria para que al registrar el usuario, a su vez se inicie sesion con ese usuario_id.
+                    // Session::set('usuario_id', $identificado['id_usuarios']);
+                    // Session::set('usuario_nombre', $identificado['nombre']);
                     header("Location: ../home");
                     exit;
                 } else {
@@ -61,17 +65,72 @@ class UsuarioController
         include ROOT . 'app/views/usuario/registro.php';
     }
 
-    public function logout() {
+    public function logout()
+    {
         Session::start();
         Session::destroy();
-        header('Location: ../usuario/login');
+        header('Location: ../home');
         exit;
     }
 
-    public function perfil() {
+    public function perfil()
+    {
         require_once ROOT . 'core/Auth.php';
-        include ROOT . 'app/views/templates/header.php';
-        include ROOT . 'app/views/usuario/perfil.php';
-        include ROOT . 'app/views/templates/footer.php';
+        View::render(view: "usuario/perfil", data: [
+            "title" => "Nexo - Perfil de " . Auth::usuario(),
+            "usuario" => Auth::usuario(),
+            "acceso" => Auth::restringirAccesoWeb()
+        ]);
+    }
+
+    public static function updateInfoUser(){
+        require_once ROOT . 'core/database.php';
+        require_once ROOT . 'app/models/Usuario.php';
+        require_once ROOT . 'core/Session.php';
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $campos = [];
+            $parametros = [];
+            $id_user = Session::get('usuario_id');
+
+            // Obtener datos y validarlos
+            if (!empty($_POST['nombre'])) {
+                $campos[] = "nombre = :nombre";
+                $parametros[':nombre'] = $_POST['nombre'];
+            }
+
+            if (!empty($_POST['apellido'])) {
+                $campos[] = "apellido = :apellido";
+                $parametros[':apellido'] = $_POST['apellido'];
+            }
+
+            if (!empty($_POST['email'])) {
+                $campos[] = "email = :email";
+                $parametros[':email'] = $_POST['email'];
+            }
+
+            if (!empty($_POST['password'])) {
+                $campos[] = "password = :password";
+                $parametros[':password'] = $_POST['password'];
+            }
+
+            if (empty($campos)) {
+                header("Location: /usuario/perfil?error=1");
+                exit;
+            }
+            
+            $actualizado = Usuario::updateInfoUser($conexion,  $id_user, $campos, $parametros);
+
+            if ($actualizado) {
+                header("Location: /usuario/perfil?active=1");
+                exit;
+            } else {
+                header("Location: /usuario/perfil?error=1");
+                exit;
+            } 
+        }
+
+        header("Location: /usuario/perfil");
+        exit;
     }
 }

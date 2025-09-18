@@ -16,11 +16,7 @@
 
         <div class="top-cards">
             <div class="card">
-                <h4>Ventas del Día</h4>
-                <p class="value">$12,450</p>
-            </div>
-            <div class="card">
-                <h4>Órdenes Totales</h4>
+                <h4>Productos Registrados</h4>
                 <p class="value">213</p>
             </div>
             <div class="card">

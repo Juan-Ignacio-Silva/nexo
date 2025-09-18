@@ -50,7 +50,7 @@
 
 .footer-right {
   flex: 2;
-  display: flex;
+  display: none;
   justify-content: space-between;
 }
 

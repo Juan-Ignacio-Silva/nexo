@@ -11,7 +11,6 @@ $productosDestacados = ProductosController::getProductosInfo();
                 <p>Productos</p>
                 <h1>Productos <span>Destacados</span></h1>
             </div>
-            <a href="#">Ver todos los productos →</a>
         </div>
 
         <div class="contenedor-cards-productos">
@@ -25,7 +24,18 @@ $productosDestacados = ProductosController::getProductosInfo();
                     <div class="cuerpo-card">
                         <div class="header-cuerpo-card">
                             <p><?= htmlspecialchars($producto['categoria'] ?? 'Sin categoría') ?></p>
-                            <p><?= str_repeat('⭐', (int) round($producto['calificacion_promedio'] ?? 0)) ?></p>
+                            <div>
+                                <?php
+                                    $promedio = (int) round($producto['calificacion_promedio']); // Redondeo para mostrar estrellas enteras
+                                    for ($i = 1; $i <= 5; $i++):
+                                    if ($i <= $promedio): ?>
+                                        <span class="star filled">★</span>
+                                    <?php else: ?>
+                                        <span class="star">★</span>
+                                    <?php endif;
+                                    endfor;
+                                ?>
+                            </div>
                         </div>
                         <p class="nombre-producto"><?= htmlspecialchars($producto['nombre']) ?></p>
                         <div class="footer-card">

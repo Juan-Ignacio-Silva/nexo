@@ -33,11 +33,13 @@
                 <a href="<?= BASE_URL ?>usuario/logout" class="enlace-usuario">Cerrar sesion</a>
             <?php endif; ?>
             <div class="carrito-compras">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart-icon lucide-shopping-cart">
-                    <circle cx="8" cy="21" r="1" />
-                    <circle cx="19" cy="21" r="1" />
-                    <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
-                </svg>
+                <a href="<?= BASE_URL ?>productos/carrito">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-shopping-cart-icon lucide-shopping-cart">
+                        <circle cx="8" cy="21" r="1" />
+                        <circle cx="19" cy="21" r="1" />
+                        <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
+                    </svg>
+                </a>
             </div>
         </div>
         <div class="navegacion-header-mobil">
@@ -64,7 +66,7 @@
             <a href="<?= BASE_URL ?>home" class="enlace-navegacion">Inicio</a>
             <a href="#" class="enlace-navegacion">Categorías</a>
             <a href="#" class="enlace-navegacion">Ofertas</a>
-            <a href="#" class="enlace-navegacion">Vender</a>
+            <a href="<?= BASE_URL ?>home/vender" class="enlace-navegacion">Vender</a>
             <a href="#" class="enlace-navegacion">Ayuda</a>
         </div>
     </nav>
@@ -72,24 +74,17 @@
 
 <div class="modal-menu-hamburguesa" id="modalMenuHamburguesa">
     <div class="contenedor-menu-modal">
-        <div class="contenedor-navegacion-usuario">
-            <div class="contenedor-foto-usuario"></div>
-            <div class="contenedor-info-user">
-                <h3>Bienvenido</h3>
-                <p></p>
-                <p></p>
-            </div>
-        </div>
         <?php if (Auth::restringirAcceso() === false): ?>
-        <div class="contenedor-acciones-usuario">
-            <a href="usuario/login" class="botones-acciones-user">Iniciar sesion</a>
-            <a href="usuario/registro" class="botones-acciones-user">Crear cuenta</a>
-        </div>
+        <a href="usuario/login" class="botones-acciones-user primario">Iniciar sesion</a>
+        <a href="usuario/registro" class="botones-acciones-user secundario">Crear cuenta</a>
+        <?php endif; ?>
+        <?php if (Auth::restringirAcceso() === true): ?>
+        <a href="usuario/logout" class="botones-acciones-user primario">Cerrar Sesion</a>
         <?php endif; ?>
     </div>
 </div>
 
-<!-- Script para modal Menu Hamburguesa -->
+<!-- Modal Menu Hamburguesa -->
 <script>
     const modal = document.getElementById('modalMenuHamburguesa');
     const buttonMenuOpen = document.getElementById('menuHopen');
@@ -108,7 +103,7 @@
     })
 </script>
 
-<!-- Script para Modal Categorias -->
+<!-- Modal Categorias -->
 <script>
 
 </script>
