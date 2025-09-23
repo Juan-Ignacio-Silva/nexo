@@ -132,9 +132,22 @@ body {
 }
 .summary-row {
   display: flex;
+  flex-direction: column;
   justify-content: space-between;
   margin-bottom: 0.5rem;
   font-size: 0.9rem;
+}
+
+.sub {
+  font-weight: 600;
+}
+
+.summary-row-envio {
+  display: flex;
+  gap: 5px;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem;
+  font-weight: 600;
 }
 .summary-total {
   display: flex;

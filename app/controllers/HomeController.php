@@ -1,6 +1,6 @@
 <?php
 require_once ROOT . "core/View.php";
-require_once ROOT .  'core/auth.php';
+require_once ROOT .  'core/Auth.php';
 class HomeController
 {
     public function index()

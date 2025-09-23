@@ -40,6 +40,7 @@
                         <path d="M2.05 2.05h2l2.66 12.42a2 2 0 0 0 2 1.58h9.78a2 2 0 0 0 1.95-1.57l1.65-7.43H5.12" />
                     </svg>
                 </a>
+                <p id="contador-carrito" class="totalCarrito"></p>
             </div>
         </div>
         <div class="navegacion-header-mobil">
@@ -75,14 +76,32 @@
 <div class="modal-menu-hamburguesa" id="modalMenuHamburguesa">
     <div class="contenedor-menu-modal">
         <?php if (Auth::restringirAcceso() === false): ?>
-        <a href="usuario/login" class="botones-acciones-user primario">Iniciar sesion</a>
-        <a href="usuario/registro" class="botones-acciones-user secundario">Crear cuenta</a>
+            <div class="contenedor-opciones">
+                <p>MENU</p>
+                <div class="separador"></div>
+                <a href="<?= BASE_URL ?>usuario/registro">Crear cuenta</a>
+                <a href="<?= BASE_URL ?>usuario/login">Ingresar</a>
+            </div>
         <?php endif; ?>
         <?php if (Auth::restringirAcceso() === true): ?>
-        <a href="usuario/logout" class="botones-acciones-user primario">Cerrar Sesion</a>
+            <div class="contenedor-opciones">
+                <p>MENU</p>
+                <div class="separador"></div>
+                <a href="<?= BASE_URL ?>usuario/perfil">Perfil</a>
+                <a href="<?= BASE_URL ?>usuario/perfil">Configuración</a>
+                <div class="separador"></div>
+                <a href="<?= BASE_URL ?>usuario/logout">Cerrar sesion</a>
+            </div>
         <?php endif; ?>
     </div>
 </div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        let totalCarrito = parseInt(localStorage.getItem("totalCarrito")) || 0;
+        document.getElementById("contador-carrito").textContent = totalCarrito;
+    });
+</script>
 
 <!-- Modal Menu Hamburguesa -->
 <script>

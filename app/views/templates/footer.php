@@ -45,7 +45,7 @@
         <hr />
 
         <div class="footer-bottom">
-            <p>© Copyright 2025 <span class="highlight">Desarrollado por Bitsur Studio</span>. Todos los derechos reservados.</p>
+            <p>© Copyright 2025 <span class="highlight">Desarrollado por Nexo</span>. Todos los derechos reservados.</p>
             <div class="lang-currency">
                 <span>USD</span>
             </div>

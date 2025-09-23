@@ -53,7 +53,7 @@
 
                 <div class="purchase-section">
                     <input type="number" value="1" min="1" class="quantity-input">
-                    <button class="add-to-cart-btn">AGREGAR AL CARRITO</button>
+                    <button class="add-to-cart-btn" data-id="<?= $producto['id_producto']?>">AGREGAR AL CARRITO</button>
                 </div>
 
                 <button class="wishlist-btn">
@@ -98,21 +98,32 @@
                 </div>
             </div>
         </div>
+    </div> 
 
-        <!-- Productos Relacionados al mismo
-        <div class="related-products">
-            <h2 class="related-title">Productos Relacionados</h2>
-            <div class="carousel-container">
-                <button class="carousel-btn prev" onclick="previousProduct()">‹</button>
-                <div class="products-carousel">
-                    <div class="products-grid">
-                        Los productos se hacen con JS 
-                    </div>
-                </div>
-                <button class="carousel-btn next" onclick="nextProduct()">›</button>
-            </div>
-        </div> -->
-    </div>
+    <script>
+    document.querySelectorAll(".add-to-cart-btn").forEach(boton => {
+        boton.addEventListener("click", async () => {
+            const idProducto = boton.dataset.id;
+
+            const resp = await fetch("<?= BASE_URL ?>carrito/agregar", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id: idProducto })
+            });
+
+            const data = await resp.json();
+
+            if (data.success) {
+                totalCarrito = data.total_productos;
+                localStorage.setItem("totalCarrito", totalCarrito);
+                document.getElementById("contador-carrito").textContent = totalCarrito;
+                alert(data.msg)
+            } else {
+                alert("Error al agregar el producto");
+            }
+        });
+    });
+    </script>
 
     <script>
         // Variables para controlar las imágenes

@@ -82,7 +82,7 @@ class Usuario
         if (isset($parametros[':password'])) {
             $parametros[':password'] = password_hash($parametros[':password'], PASSWORD_DEFAULT);
         }
-
+        
         $stmt = $conexion->prepare($sql);
         $stmt->execute($parametros);
 
