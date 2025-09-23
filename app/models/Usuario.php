@@ -1,5 +1,6 @@
 <?php
 require_once ROOT . '/vendor/autoload.php';
+
 use Ramsey\Uuid\Uuid;
 
 class Usuario
@@ -70,6 +71,26 @@ class Usuario
             return $stmt->fetch(PDO::FETCH_ASSOC);
         } else {
             return 'No se pudo identificar el id del usuario';
+        }
+    }
+
+    public static function updateInfoUser($conexion, $id, $campos, $parametros)
+    {
+        $sql = "UPDATE usuarios SET " . implode(", ", $campos) . " WHERE id_usuarios = :id";
+        $parametros[':id'] = $id;
+        
+        if (isset($parametros[':password'])) {
+            $parametros[':password'] = password_hash($parametros[':password'], PASSWORD_DEFAULT);
+        }
+        
+        $stmt = $conexion->prepare($sql);
+        $stmt->execute($parametros);
+
+        $filasAfectadas = $stmt->rowCount();
+        if ($filasAfectadas > 0) {
+            return true;
+        } else {
+            return false;
         }
     }
 }

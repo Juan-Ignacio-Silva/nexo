@@ -40,6 +40,14 @@ class Auth
         return true;
     }
 
+    public static function restringirAccesoWeb() {
+        if (!Session::has('usuario_id')) {
+            header("Location: ../home");
+        } else {
+            return true;
+        }
+    }
+
     public static function usuario() {
         return Session::get(key: 'usuario_nombre') ?? 'Invitado';
     }
