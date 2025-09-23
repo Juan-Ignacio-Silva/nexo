@@ -17,4 +17,11 @@ class HomeController
             'usuario'=> Auth::usuario()
         ]);
     }
+
+    public function categorias() {
+        View::render(view:'navegation/categorias', data: [
+            'title'=> 'Nexo - Categorias',
+            'usuario'=> Auth::usuario()
+        ]);
+    }
 }
