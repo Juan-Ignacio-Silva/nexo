@@ -10,6 +10,7 @@ class ProductosController {
 
         if (!empty($id)) {
             $producto = Producto::obtenerPorId($conexion, $id);
+            $resenas = Producto::resenasProducto($conexion, $id);
             if (!$producto) {
                 http_response_code(404);
                 include ROOT . 'app/views/templates/404.php';
@@ -55,5 +56,18 @@ class ProductosController {
             return $productos;
         }
 
+    }
+
+    public static function getProductosSoloInfo() {
+        require_once ROOT . 'core/database.php';
+        require_once ROOT . 'app/models/Producto.php';
+
+        $productos = Producto::obtenerInfoProductos($conexion);
+
+        if (!$productos) {
+            return "Error! No se pudieron encontrar los productos";
+        } else {
+            return $productos;
+        }
     }
 }

@@ -27,8 +27,8 @@
 
             <!-- Info del Producto -->
             <div class="product-info">
-                <h1 class="product-title"><?= $producto['nombre']?></h1>
-                
+                <h1 class="product-title"><?= $producto['nombre'] ?></h1>
+
                 <div class="rating">
                     <div class="stars">
                         <?php
@@ -38,22 +38,22 @@
                                 <span class="star filled">★</span>
                             <?php else: ?>
                                 <span class="star">★</span>
-                            <?php endif;
+                        <?php endif;
                         endfor;
                         ?>
                     </div>
                     <span class="rating-count">(1)</span>
                 </div>
 
-                <div class="price">$<?= $producto['precio']?></div>
+                <div class="price">$<?= $producto['precio'] ?></div>
 
                 <div class="description">
-                <?= $producto['descripcion']?>
+                    <?= $producto['descripcion'] ?>
                 </div>
 
                 <div class="purchase-section">
                     <input type="number" value="1" min="1" class="quantity-input">
-                    <button class="add-to-cart-btn" data-id="<?= $producto['id_producto']?>">AGREGAR AL CARRITO</button>
+                    <button class="add-to-cart-btn" data-id="<?= $producto['id_producto'] ?>">AGREGAR AL CARRITO</button>
                 </div>
 
                 <button class="wishlist-btn">
@@ -63,7 +63,7 @@
                 <div class="product-meta">
                     <div class="meta-item">
                         <span class="meta-label">Categoría:</span>
-                        <span class="meta-value"><?= $producto['categoria']?></span>
+                        <span class="meta-value"><?= $producto['categoria'] ?></span>
                     </div>
                     <div class="meta-item">
                         <span class="meta-label">Vende:</span>
@@ -76,53 +76,62 @@
         <!-- Sección de las Pestañas -->
         <div class="tabs-section">
             <div class="tabs">
-                <button class="tab active" onclick="showTab('description')">Descripción</button>
-                <button class="tab" onclick="showTab('reviews')">Reseñas (1)</button>
+                <button class="tab">Reseñas</button>
+                <button>Calificar</button>
             </div>
-            <div class="tab-content" id="tabContent">
-                <div id="description">
-                <?= $producto['descripcion']?>
-                </div>
-                <div id="reviews" style="display: none;">
-                    <p><strong>Reseña de Cliente Verificado</strong></p>
-                    <div class="rating" style="margin: 10px 0;">
-                        <div class="stars">
-                            <span class="star filled">★</span>
-                            <span class="star filled">★</span>
-                            <span class="star filled">★</span>
-                            <span class="star filled">★</span>
-                            <span class="star">★</span>
+            <div class="tab-content">
+                <?php
+                foreach ($resenas as $resena): ?>
+                    <div id="reviews" style="border-bottom: 2px solid #EEF8FF; margin-bottom: 10px;">
+                        <div class="header-resena">
+                            <p><strong><?= $resena['nombre_usuario'] ?></strong></p>
+                            <div class="rating">
+                                <?php
+                                $promedio = (int) round($resena['calificacion']); // Redondeo para mostrar estrellas enteras
+                                for ($i = 1; $i <= 5; $i++):
+                                    if ($i <= $promedio): ?>
+                                        <span class="star filled">★</span>
+                                    <?php else: ?>
+                                        <span class="star">★</span>
+                                <?php endif;
+                                endfor;
+                                ?>
+                            </div>
                         </div>
+                        <p><?= $resena['comentario'] ?></p>
                     </div>
-                    <p>"Excelentes zapatillas, muy cómodas y con gran calidad de materiales. Las uso tanto para el gimnasio como para caminar por la ciudad. Recomendadas."</p>
-                </div>
+                <?php endforeach; ?>
             </div>
         </div>
-    </div> 
+    </div>
 
     <script>
-    document.querySelectorAll(".add-to-cart-btn").forEach(boton => {
-        boton.addEventListener("click", async () => {
-            const idProducto = boton.dataset.id;
+        document.querySelectorAll(".add-to-cart-btn").forEach(boton => {
+            boton.addEventListener("click", async () => {
+                const idProducto = boton.dataset.id;
 
-            const resp = await fetch("<?= BASE_URL ?>carrito/agregar", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ id: idProducto })
+                const resp = await fetch("<?= BASE_URL ?>carrito/agregar", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        id: idProducto
+                    })
+                });
+
+                const data = await resp.json();
+
+                if (data.success) {
+                    totalCarrito = data.total_productos;
+                    localStorage.setItem("totalCarrito", totalCarrito);
+                    document.getElementById("contador-carrito").textContent = totalCarrito;
+                    alert(data.msg)
+                } else {
+                    alert("Error al agregar el producto");
+                }
             });
-
-            const data = await resp.json();
-
-            if (data.success) {
-                totalCarrito = data.total_productos;
-                localStorage.setItem("totalCarrito", totalCarrito);
-                document.getElementById("contador-carrito").textContent = totalCarrito;
-                alert(data.msg)
-            } else {
-                alert("Error al agregar el producto");
-            }
         });
-    });
     </script>
 
     <script>
@@ -136,7 +145,7 @@
         // Función para cambiar la imagen
         function changeImage(index) {
             currentImageIndex = index;
-            
+
             // Actualizar miniaturas activas
             const thumbnails = document.querySelectorAll('.thumbnail');
             thumbnails.forEach((thumb, i) => {
@@ -161,10 +170,10 @@
             // Ocultar todos los contenidos
             document.getElementById('description').style.display = 'none';
             document.getElementById('reviews').style.display = 'none';
-            
+
             // Mostrar el contenido seleccionado
             document.getElementById(tabName).style.display = 'block';
-            
+
             // Actualizar pestañas activas
             const tabs = document.querySelectorAll('.tab');
             tabs.forEach(tab => {
@@ -198,26 +207,81 @@
             const cardWidth = 100 / currentProductsPerView; // Porcentaje que ocupa cada producto visible
             const translateX = -(currentProductIndex * cardWidth);
             carousel.style.transform = `translateX(${translateX}%)`;
-            
+
             // Actualizar estados de los botones
             const prevBtn = document.querySelector('.carousel-btn.prev');
             const nextBtn = document.querySelector('.carousel-btn.next');
-            
+
             prevBtn.disabled = currentProductIndex === 0;
             nextBtn.disabled = currentProductIndex >= totalProducts - currentProductsPerView;
         }
 
         // Generar productos dinámicamente
         function generateProducts() {
-            const productsData = [
-                { name: "Zapatillas Casual Urbanas", category: "Calzado, Laptops & Escritorios", currentPrice: "$80.00", oldPrice: "$120.00", sale: true, rating: 3 },
-                { name: "Cartera de Cuero Premium", category: "Accesorios, Bolsos", currentPrice: "$120.00", oldPrice: null, sale: false, rating: 4 },
-                { name: "Mochila Deportiva", category: "Calzado, Mochilas & Tabletas", currentPrice: "$95.00", oldPrice: null, sale: false, rating: 3 },
-                { name: "Sudadera con Capucha", category: "Ropa, Mochilas & Tabletas", currentPrice: "$180.00", oldPrice: null, sale: false, rating: 4 },
-                { name: "Reloj Deportivo", category: "Accesorios, Tecnología", currentPrice: "$200.00", oldPrice: "$250.00", sale: true, rating: 5 },
-                { name: "Gafas de Sol", category: "Accesorios, Moda", currentPrice: "$75.00", oldPrice: null, sale: false, rating: 4 },
-                { name: "Pantalones Deportivos", category: "Ropa, Deportes", currentPrice: "$65.00", oldPrice: "$85.00", sale: true, rating: 4 },
-                { name: "Auriculares Bluetooth", category: "Tecnología, Audio", currentPrice: "$150.00", oldPrice: null, sale: false, rating: 5 }
+            const productsData = [{
+                    name: "Zapatillas Casual Urbanas",
+                    category: "Calzado, Laptops & Escritorios",
+                    currentPrice: "$80.00",
+                    oldPrice: "$120.00",
+                    sale: true,
+                    rating: 3
+                },
+                {
+                    name: "Cartera de Cuero Premium",
+                    category: "Accesorios, Bolsos",
+                    currentPrice: "$120.00",
+                    oldPrice: null,
+                    sale: false,
+                    rating: 4
+                },
+                {
+                    name: "Mochila Deportiva",
+                    category: "Calzado, Mochilas & Tabletas",
+                    currentPrice: "$95.00",
+                    oldPrice: null,
+                    sale: false,
+                    rating: 3
+                },
+                {
+                    name: "Sudadera con Capucha",
+                    category: "Ropa, Mochilas & Tabletas",
+                    currentPrice: "$180.00",
+                    oldPrice: null,
+                    sale: false,
+                    rating: 4
+                },
+                {
+                    name: "Reloj Deportivo",
+                    category: "Accesorios, Tecnología",
+                    currentPrice: "$200.00",
+                    oldPrice: "$250.00",
+                    sale: true,
+                    rating: 5
+                },
+                {
+                    name: "Gafas de Sol",
+                    category: "Accesorios, Moda",
+                    currentPrice: "$75.00",
+                    oldPrice: null,
+                    sale: false,
+                    rating: 4
+                },
+                {
+                    name: "Pantalones Deportivos",
+                    category: "Ropa, Deportes",
+                    currentPrice: "$65.00",
+                    oldPrice: "$85.00",
+                    sale: true,
+                    rating: 4
+                },
+                {
+                    name: "Auriculares Bluetooth",
+                    category: "Tecnología, Audio",
+                    currentPrice: "$150.00",
+                    oldPrice: null,
+                    sale: false,
+                    rating: 5
+                }
             ];
 
             const grid = document.querySelector('.products-grid');
@@ -226,8 +290,10 @@
             productsData.forEach((product, index) => {
                 const productCard = document.createElement('div');
                 productCard.className = 'product-card';
-                
-                const starsHtml = Array.from({length: 5}, (_, i) => 
+
+                const starsHtml = Array.from({
+                        length: 5
+                    }, (_, i) =>
                     `<span class="star ${i < product.rating ? 'filled' : ''}">★</span>`
                 ).join('');
 
@@ -250,7 +316,7 @@
                         </div>
                     </div>
                 `;
-                
+
                 grid.appendChild(productCard);
             });
         }
@@ -266,7 +332,7 @@
             changeImage(0);
             generateProducts();
             updateCarousel();
-            
+
             // Escuchar cambios de tamaño de ventana
             window.addEventListener('resize', handleResize);
         });

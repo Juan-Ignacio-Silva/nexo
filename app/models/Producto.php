@@ -54,4 +54,38 @@ class Producto {
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
+
+    // Con esto solo obtenemos todos los productos y nada más.
+    public static function obtenerInfoProductos($conexion) {
+        $sql = "
+            SELECT 
+                p.id_producto, 
+                p.nombre, 
+                p.precio, 
+                p.categoria, 
+                p.etiqueta, 
+                p.descripcion, 
+                p.imagen
+            FROM producto p
+        ";
+        $stmt = $conexion->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public static function resenasProducto($conexion, $id) {
+        $sql = "
+            SELECT r.id_resena, r.id_usuarios, u.nombre AS nombre_usuario,
+                r.id_producto, p.nombre AS nombre_producto,
+                r.comentario, r.calificacion
+            FROM resena r
+            JOIN usuarios u ON r.id_usuarios = u.id_usuarios
+            JOIN producto p ON r.id_producto = p.id_producto
+            WHERE r.id_producto = :id
+            ";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

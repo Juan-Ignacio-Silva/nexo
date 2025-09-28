@@ -257,11 +257,6 @@
 </head>
 <body>
     <div class="container">
-        <div class="header">
-            <h1>Categorías de Productos</h1>
-            <p>Explora nuestra amplia selección de productos organizados por categorías</p>
-        </div>
-        
         <div class="categories-container">
             <div class="categories-grid" id="categoriesGrid">
                 <!-- Las categorías se cargarán dinámicamente aquí -->

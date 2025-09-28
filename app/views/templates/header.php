@@ -65,10 +65,10 @@
     <nav class="navegacion">
         <div class="contenedor-navegacion">
             <a href="<?= BASE_URL ?>home" class="enlace-navegacion">Inicio</a>
-            <a href="#" class="enlace-navegacion">Categorías</a>
+            <a href="<?= BASE_URL ?>home/categorias" class="enlace-navegacion">Categorías</a>
             <a href="#" class="enlace-navegacion">Ofertas</a>
             <a href="<?= BASE_URL ?>home/vender" class="enlace-navegacion">Vender</a>
-            <a href="#" class="enlace-navegacion">Ayuda</a>
+            <a href="<?= BASE_URL ?>home/ayuda" class="enlace-navegacion">Ayuda</a>
         </div>
     </nav>
 </header>
