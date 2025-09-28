@@ -24,4 +24,11 @@ class HomeController
             'usuario'=> Auth::usuario()
         ]);
     }
+
+    public function ayuda() {
+        View::render(view:'navegation/ayuda', data: [
+            'title'=> 'Nexo - Ayuda',
+            'usuario'=> Auth::usuario()
+        ]);
+    }
 }
