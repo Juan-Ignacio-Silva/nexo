@@ -133,4 +133,26 @@ class UsuarioController
         header("Location: /usuario/perfil");
         exit;
     }
+
+    public static function getUsuariosRegistrados() {
+        require_once ROOT . 'app/models/Usuario.php';
+        $conexion = require ROOT . 'core/database.php';
+        $usuarios = Usuario::todosLosUsuarios($conexion);
+        if (!$usuarios) {
+            return [];
+        } else {
+            return $usuarios;
+        }
+    }
+
+    public static function getRecienRegistrados() {
+        require_once ROOT . 'app/models/Usuario.php';
+        $conexion = require ROOT . 'core/database.php';
+        $usuarios = Usuario::usuariosPorFecha($conexion);
+        if (!$usuarios) {
+            return [];
+        } else {
+            return $usuarios;
+        }
+    }
 }

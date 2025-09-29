@@ -4,7 +4,7 @@ class ProductosController {
 
     public function Producto($id) {
         
-        require_once ROOT . 'core/database.php';
+        $conexion = require ROOT . 'core/database.php';
         require_once ROOT . 'app/models/Producto.php';
         require_once ROOT . 'core/Auth.php';
 
@@ -45,7 +45,7 @@ class ProductosController {
 
     public static function getProductosInfo(){
         
-        require_once ROOT . 'core/database.php';
+        $conexion = require ROOT . 'core/database.php';
         require_once ROOT . 'app/models/Producto.php';
         
         $productos = Producto::productosInfo($conexion);
@@ -59,13 +59,11 @@ class ProductosController {
     }
 
     public static function getProductosSoloInfo() {
-        require_once ROOT . 'core/database.php';
         require_once ROOT . 'app/models/Producto.php';
-
-        $productos = Producto::obtenerInfoProductos($conexion);
-
+        $conexion = require ROOT . 'core/database.php';
+        $productos = Producto::obtenerTodosProductos($conexion);
         if (!$productos) {
-            return "Error! No se pudieron encontrar los productos";
+            return [];
         } else {
             return $productos;
         }

@@ -93,4 +93,21 @@ class Usuario
             return false;
         }
     }
+
+    public static function todosLosUsuarios($conexion) {
+        $sql = "SELECT * FROM usuarios";
+        $stmt = $conexion->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function usuariosPorFecha($conexion) {
+        $sql = "SELECT * FROM usuarios
+                ORDER BY fecha_registro DESC
+                LIMIT 5;
+                ";
+        $stmt = $conexion->prepare($sql);
+        $stmt->execute();
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
