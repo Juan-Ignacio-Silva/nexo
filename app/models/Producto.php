@@ -78,4 +78,28 @@ class Producto {
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public static function buscarProductos($conexion, $busqueda) {
+        $sql = "SELECT * FROM producto 
+                WHERE LOWER(nombre) LIKE LOWER(:busqueda) 
+                OR LOWER(categoria) LIKE LOWER(:busqueda)
+                ";
+
+        $stmt = $conexion->prepare($sql);
+        $stmt->execute([':busqueda' => "%" . $busqueda . "%"]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function buscarPorIds(array $ids, $conexion) {
+        if (empty($ids)) return [];
+
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+        $sql = "SELECT * FROM producto WHERE id_producto IN ($placeholders)";
+
+        $stmt = $conexion->prepare($sql);
+        $stmt->execute($ids);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

@@ -1,18 +1,26 @@
+<?php
+require_once ROOT . 'app/controllers/ProductosController.php';
+
+$productos = ProductosController::obtenerProductosDeBusqueda();
+?>
+
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Catálogo de Productos</title>
     <link rel="stylesheet" href="/css/producto/catalogo-productos.css">
 </head>
+
 <body>
     <div class="container">
         <!-- Sidebar -->
         <aside class="sidebar">
             <div class="filters">
                 <h3>Filtros</h3>
-                
+
                 <!-- Productos encontrados -->
                 <div class="results-count">
                     <span id="resultsCount">12 productos</span>
@@ -88,10 +96,21 @@
         <main class="main-content">
             <div class="products-grid" id="productsGrid">
                 <!-- Los productos se generarán dinámicamente -->
+                <?php if (!empty($productos)): ?>
+                    <ul>
+                        <?php foreach ($productos as $producto): ?>
+                            <li>
+                                <?= htmlspecialchars($producto['nombre']) ?> -
+                                <?= htmlspecialchars($producto['categoria']) ?>
+                            </li>
+                        <?php endforeach; ?>
+                    </ul>
+                <?php else: ?>
+                    <p>No se encontraron resultados para tu búsqueda.</p>
+                <?php endif; ?>
             </div>
         </main>
-    </div>
-
-    <script src="script.js"></script>
+        </div>
 </body>
+
 </html>

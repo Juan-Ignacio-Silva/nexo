@@ -13,13 +13,15 @@
         </div>
 
         <div class="seccion-busqueda">
-            <input type="text" class="barra-busqueda" placeholder="Buscar productos y más">
-            <button class="boton-busqueda">
-                <svg class="icono-busqueda" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <path d="m21 21-4.35-4.35"></path>
-                </svg>
-            </button>
+            <form id="form-busqueda">
+                <input type="text" id="busqueda" name="q" class="barra-busqueda" placeholder="Buscar productos y más">
+                <button class="boton-busqueda" type="submit">
+                    <svg class="icono-busqueda" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <path d="m21 21-4.35-4.35"></path>
+                    </svg>
+                </button>
+            </form>
         </div>
 
         <div class="seccion-usuario">
@@ -122,7 +124,18 @@
     })
 </script>
 
-<!-- Modal Categorias -->
 <script>
+document.getElementById("form-busqueda").addEventListener("submit", async (e) => {
+    e.preventDefault();
 
+    const termino = document.getElementById("busqueda").value.trim();
+    if (!termino) return;
+
+    // Enviar GET al controlador de búsqueda
+    const url = "<?= BASE_URL ?>productos/buscar?busqueda=" + encodeURIComponent(termino);
+    const resp = await fetch(url);
+
+    // Redirigir al catálogo para mostrar resultados
+    window.location.href = "<?= BASE_URL ?>productos/catalogo";
+});
 </script>
