@@ -68,4 +68,35 @@ class ProductosController {
             return $productos;
         }
     }
+
+    public static function buscar() {
+        require ROOT . 'app/models/Producto.php';
+        $conexion = require ROOT . 'core/database.php';
+        
+        $busqueda = $_GET['busqueda'] ?? '';
+        $busqueda = trim($busqueda);
+
+        if ($busqueda === '') {
+            echo json_encode([]);
+            return;
+        }
+
+        $productos = Producto::buscarProductos($conexion ,$busqueda);
+
+        $_SESSION['ids_busqueda'] = array_map(fn($p) => $p['id_producto'], $productos);
+
+    }
+
+    public static function obtenerProductosDeBusqueda() {
+        require ROOT . 'app/models/Producto.php';
+        $conexion = require ROOT . 'core/database.php';
+
+        if (!isset($_SESSION['ids_busqueda']) || empty($_SESSION['ids_busqueda'])) {
+            return [];
+        }
+
+        $ids = $_SESSION['ids_busqueda'];
+        // Llamamos al modelo para traer los productos por ID
+        return Producto::buscarPorIds($ids, $conexion);
+    }
 }
