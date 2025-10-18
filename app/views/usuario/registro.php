@@ -45,6 +45,12 @@
                     <p style="color:red;"><?= htmlspecialchars($error) ?></p>
                 <?php endif; ?>
                 <button type="submit" class="submit-btn" name="register">Registrarse</button>
+                <div style="text-align:center; margin-top:20px;">
+                    <a href="/usuario/loginGoogle" class="btn btn-google">
+                        <img src="https://developers.google.com/identity/images/g-logo.png" alt="Google" width="20" style="vertical-align:middle; margin-right:8px;">
+                        Registrarse con Google
+                    </a>
+                </div>
                 <p class="enlace-registro-mobil">
                     Ya tiene una cuenta? <a href="login">Iniciar sesion</a>
                 </p>

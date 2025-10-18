@@ -113,13 +113,13 @@
             font-size: 1.5rem;
             font-weight: 700;
             color: #eef8ff;
-            margin-bottom: 1rem;
+            margin-bottom: 10px;
             text-align: center;
         }
 
         .texto-modal {
             color: #eef8ff;
-            margin-bottom: 2rem;
+            margin-bottom: 20px;
             text-align: center;
         }
 
@@ -149,6 +149,81 @@
             background-color: #f1f5f9;
             color: #475569;
             border: 1px solid #e2e8f0;
+        }
+
+        .mercadoPago {
+            border-radius: 5px;
+            cursor: pointer;
+            border: none;
+            background-color: #f0ec11ff;
+            color: #475569;
+            margin-bottom: 15px;
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 200px;
+        }
+
+        .mercadoPago img {
+            width: 100px;
+        }
+
+        .modalForm {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            overflow: hidden;
+        }
+
+        .modalForm.activo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .contenido-modal-form{
+            background-color: #2c5aa0;
+            padding: 2rem;
+            border-radius: 8px;
+            width: 70%;
+            height: 70%;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            
+        }
+
+        .contenido-modal-form::-webkit-scrollbar {
+            display: none;
+        }
+
+        .contenido-modal-form form {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .contenido-modal-form form label {
+            color: #eef8ff;
+        }
+
+        .contenido-modal-form form input {
+            border-radius: 4px;
+            padding: 5px;
+            border: 1px solid #ccc;
+            margin-bottom: 5px;
+        }
+
+        .contenido-modal-form form p {
+            font-size: 15px;
+            color: #eef8ff;
         }
 
         @media (max-width: 768px) {
@@ -192,6 +267,32 @@
         </div>
     </div>
 
+    <div id="modalFormSeller" class="modalForm">
+        <div class="contenido-modal-form">
+            <button class="cerrar-modal" onclick="cerrarModal('modalFormSeller')">&times;</button>
+            <h2 class="titulo-modal">Registrarme como vendedor</h2>
+            <p class="texto-modal">Completa este formulario para poder registrarte como vendedor</p>
+            <form action="">
+                <label for="">Nombre de la tienda</label>
+                <input type="text" id="nombreTienda">
+                <label for="">RUT de la empresa (Opcional)</label>
+                <input type="text" id="rutEmpresa">
+                <label for="">Descripcipón</label>
+                <input name="" id="descripcion">
+                <p>
+                    Para completar el formulario es necesario iniciar sesión con tu cuenta de Mercado Pago.
+                    Esto es obligatorio, ya que cada vendedor recibe sus ganancias directamente en su cuenta de Mercado Pago, garantizando así un proceso seguro y confiable para todos.
+                </p>
+                <a href="<?= BASE_URL ?>vendedor/conectarMercadoPago" class="mercadoPago">
+                    <img src="/images/mercadoPago.svg" alt="">
+                </a>
+            </form>
+            <div class="botones-modal">
+                <a href="<?= BASE_URL ?>usuario/registro" class="boton-modal primario">Registrarme</a>
+            </div>
+        </div>
+    </div>
+
     <script>
         document.getElementById("btn-venta").addEventListener("click", () => {
             fetch("<?= BASE_URL ?>Auth/verificarSession", {
@@ -200,7 +301,8 @@
             .then(res => res.json())
             .then(data => {
                 if (data.ok) {
-                    alert("✅ Acción ejecutada correctamente");
+                    document.getElementById('modalFormSeller').classList.add('activo');
+
                 } else {
                     document.getElementById('modalAuth').classList.add('activo');
                 }
@@ -212,11 +314,12 @@
         }
 
         window.onclick = function(event) {
-            if (event.target.classList.contains('modal')) {
+            if (event.target.classList.contains('modalAuth')) {
                 event.target.classList.remove('activo');
             }
         }
     </script>
+
 </body>
 
 </html>

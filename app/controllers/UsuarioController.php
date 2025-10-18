@@ -1,5 +1,11 @@
 <?php
 require_once ROOT . 'core/View.php';
+require_once ROOT . '/vendor/autoload.php';
+
+use Dotenv\Dotenv;
+use Google\Client as Google_Client;
+use Google\Service\Oauth2 as Google_Service_Oauth2;
+
 class UsuarioController
 {
     public function login()
@@ -46,14 +52,18 @@ class UsuarioController
             $password = trim($_POST['password'] ?? '');
 
             if (!empty($nombre) && !empty($apellido) && !empty($email) && !empty($password)) {
-                $registrado = Usuario::registrar($conexion, $nombre, $apellido, $email, $password);
+                $idUser = Usuario::registrar($conexion, $nombre, $apellido, $email, $password);
 
-                if ($registrado) {
-                    // Esto seria para que al registrar el usuario, a su vez se inicie sesion con ese usuario_id.
-                    // Session::set('usuario_id', $identificado['id_usuarios']);
-                    // Session::set('usuario_nombre', $identificado['nombre']);
-                    header("Location: ../home");
-                    exit;
+                if ($idUser) {
+                    $verificado = Usuario::loginPosRegistro($conexion, $idUser);
+                    if ($verificado) {
+                        Session::set('usuario_id', $verificado['id_usuarios']);
+                        Session::set('usuario_nombre', $verificado['nombre']);
+                        header("Location: ../home");
+                        exit;
+                    } else {
+                        $error = "<script>alert('Error al iniciar sesion automaticamente')</script>";
+                    }
                 } else {
                     $error = "Email ya registrado, intente de nuevo.";
                 }
@@ -83,7 +93,8 @@ class UsuarioController
         ]);
     }
 
-    public static function updateInfoUser(){
+    public static function updateInfoUser()
+    {
         require_once ROOT . 'core/database.php';
         require_once ROOT . 'app/models/Usuario.php';
         require_once ROOT . 'core/Session.php';
@@ -118,7 +129,7 @@ class UsuarioController
                 header("Location: /usuario/perfil?error=1");
                 exit;
             }
-            
+
             $actualizado = Usuario::updateInfoUser($conexion,  $id_user, $campos, $parametros);
 
             if ($actualizado) {
@@ -127,14 +138,15 @@ class UsuarioController
             } else {
                 header("Location: /usuario/perfil?error=1");
                 exit;
-            } 
+            }
         }
 
         header("Location: /usuario/perfil");
         exit;
     }
 
-    public static function getUsuariosRegistrados() {
+    public static function getUsuariosRegistrados()
+    {
         require_once ROOT . 'app/models/Usuario.php';
         $conexion = require ROOT . 'core/database.php';
         $usuarios = Usuario::todosLosUsuarios($conexion);
@@ -145,7 +157,8 @@ class UsuarioController
         }
     }
 
-    public static function getRecienRegistrados() {
+    public static function getRecienRegistrados()
+    {
         require_once ROOT . 'app/models/Usuario.php';
         $conexion = require ROOT . 'core/database.php';
         $usuarios = Usuario::usuariosPorFecha($conexion);
@@ -154,5 +167,76 @@ class UsuarioController
         } else {
             return $usuarios;
         }
+    }
+
+    // Login mediante GOOGLE !!!!!!!!! -_-
+    public static function loginGoogle()
+    {
+        $dotenv = Dotenv::createMutable(__DIR__ . '/../../');
+        $dotenv->safeLoad();
+
+        $client = new Google_Client();
+        $client->setClientId(getenv('GOOGLE_CLIENT_ID'));
+        $client->setClientSecret(getenv('GOOGLE_CLIENT_SECRET'));
+        $client->setRedirectUri(getenv('GOOGLE_REDIRECT_URI'));
+        $client->addScope('email');
+        $client->addScope('profile');
+
+                                                                                                                                                        // Generar URL de autenticación
+                                                                                                                                                        $authUrl = $client->createAuthUrl();
+
+        // Redirigir al usuario a Google
+        header('Location: ' . $authUrl);
+        exit;
+    }
+
+    public static function loginGoogleAuthorized()
+    {
+        require ROOT . 'app/models/Usuario.php';
+        $conexion = require ROOT . 'core/database.php';
+
+        $dotenv = Dotenv::createMutable(__DIR__ . '/../../');
+        $dotenv->safeLoad();
+
+        $client = new Google_Client();
+        $client->setClientId(getenv('GOOGLE_CLIENT_ID'));
+        $client->setClientSecret(getenv('GOOGLE_CLIENT_SECRET'));
+        $client->setRedirectUri(getenv('GOOGLE_REDIRECT_URI'));
+        $client->addScope('email');
+        $client->addScope('profile');
+
+        if (isset($_GET['code'])) {
+            $token = $client->fetchAccessTokenWithAuthCode($_GET['code']);
+            if (isset($token['error'])) {
+                die('Error en auth de Google');
+            }
+
+            $client->setAccessToken($token);
+
+            $oAuth = new Google_Service_Oauth2($client);
+            $userInfo = $oAuth->userinfo->get();
+
+            $usuario = Usuario::registroWithGoogle($conexion, $userInfo);
+
+            if ($usuario) {
+                Session::set('usuario_id', $usuario['id_usuarios']);
+                Session::set('usuario_nombre', $usuario['nombre']);
+                header("Location: ../home");
+                exit;
+            } else {
+                $verificado = Usuario::loginWithGoogle($conexion, $userInfo);
+
+                if ($verificado) {
+                    Session::set('usuario_id', $verificado['id_usuarios']);
+                    Session::set('usuario_nombre', $verificado['nombre']);
+                    header("Location: ../home");
+                    exit;
+                }
+            }
+
+            return false;
+        }
+
+        header("Location: ../login");
     }
 }

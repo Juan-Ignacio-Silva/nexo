@@ -14,7 +14,8 @@ class HomeController
     public function vender() {
         View::render(view:'navegation/vender', data: [
             'title'=> 'Nexo - Vender',
-            'usuario'=> Auth::usuario()
+            'usuario'=> Auth::usuario(),
+            'verificarRole' => Auth::esVendedor()
         ]);
     }
 

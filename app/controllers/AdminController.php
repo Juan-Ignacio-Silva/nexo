@@ -6,7 +6,7 @@ require_once 'UsuarioController.php';
 class AdminController {
     
     public function dashboard() {
-        Auth::restringirDashboard();
+        Auth::restringirDashboard('admin');
         // Total de productos
         $productosRegistrados = ProductosController::getProductosSoloInfo();        
         $totalP = count($productosRegistrados);

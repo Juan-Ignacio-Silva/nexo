@@ -102,4 +102,8 @@ class Producto {
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public static function productosIdVendedor($conexion, $idVendedor) {
+        
+    }
 }

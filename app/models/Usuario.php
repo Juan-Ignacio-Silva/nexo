@@ -19,20 +19,31 @@ class Usuario
         $id = Uuid::uuid4()->toString();
         $passwordHash = password_hash(trim($password), PASSWORD_DEFAULT);
 
-        $stmt = $conexion->prepare("INSERT INTO usuarios(id_usuarios, nombre, apellido, email, password, telefono, ciudad, nombre_calle, numero_casa) 
-                                    VALUES (:id, :nombre, :apellido, :email, :password, :telefono, :ciudad, :nombre_calle, :numero_casa)");
+        $stmt = $conexion->prepare("INSERT INTO usuarios(id_usuarios, nombre, apellido, email, password, telefono) 
+                                    VALUES (:id, :nombre, :apellido, :email, :password, :telefono)");
 
-        return $stmt->execute([ // Aclaracion, role no esta presente ya que esta definido en la base de datos como valor default = "usuario"
+        $resultado = $stmt->execute([ // Aclaracion, role no esta presente ya que esta definido en la base de datos como valor default = "usuario"
             'id' => $id,
             'nombre' => $nombre,
             'apellido' => $apellido,
             'email' => $email,
             'password' => $passwordHash,
-            'telefono' => null,
-            'ciudad' => null,
-            'nombre_calle' => null,
-            'numero_casa' => null
+            'telefono' => null
         ]);
+
+        if ($resultado) {
+            return $id;
+        }
+
+        return false;
+    }
+
+    public static function loginPosRegistro($conexion, $idUser) {
+        $stmt = $conexion->prepare("SELECT * FROM usuarios WHERE id_usuarios = :id");
+        $stmt->execute(['id' => $idUser]);
+        $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        return $usuario;
     }
 
     public static function login($conexion, $email, $password)
@@ -78,11 +89,11 @@ class Usuario
     {
         $sql = "UPDATE usuarios SET " . implode(", ", $campos) . " WHERE id_usuarios = :id";
         $parametros[':id'] = $id;
-        
+
         if (isset($parametros[':password'])) {
             $parametros[':password'] = password_hash($parametros[':password'], PASSWORD_DEFAULT);
         }
-        
+
         $stmt = $conexion->prepare($sql);
         $stmt->execute($parametros);
 
@@ -94,14 +105,16 @@ class Usuario
         }
     }
 
-    public static function todosLosUsuarios($conexion) {
+    public static function todosLosUsuarios($conexion)
+    {
         $sql = "SELECT * FROM usuarios";
         $stmt = $conexion->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public static function usuariosPorFecha($conexion) {
+    public static function usuariosPorFecha($conexion)
+    {
         $sql = "SELECT * FROM usuarios
                 ORDER BY fecha_registro DESC
                 LIMIT 5;
@@ -109,5 +122,56 @@ class Usuario
         $stmt = $conexion->prepare($sql);
         $stmt->execute();
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function registroWithGoogle($conexion, $userInfo)
+    {
+        $email = $userInfo->email;
+
+        $stmt = $conexion->prepare("SELECT * FROM usuarios WHERE email = :email");
+        $stmt->execute(['email' => $email]);
+
+        if ($stmt->rowCount() === 1) {
+            return false;
+        } else {
+            // Crear nuevo usuario
+            $id = Uuid::uuid4()->toString();
+            $nombre = $userInfo->givenName;
+            $apellido = $userInfo->familyName;
+            $stmt = $conexion->prepare("INSERT INTO usuarios(id_usuarios, nombre, apellido, email, password, telefono, tipo_login) 
+                                    VALUES (:id, :nombre, :apellido, :email, :password, :telefono, :tipo_login)");
+
+            $registrado = $stmt->execute([ // Aclaracion, role no esta presente ya que esta definido en la base de datos como valor default = "usuario"
+                'id' => $id,
+                'nombre' => $nombre,
+                'apellido' => $apellido,
+                'email' => $email,
+                'password' => 'google',
+                'telefono' => null,
+                'tipo_login' => 'google'
+            ]);
+
+            if ($registrado) {
+                $stmt = $conexion->prepare("SELECT * FROM usuarios WHERE id_usuarios = :id");
+                $stmt->execute(['id' => $id]);
+                $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+
+                return $usuario;
+            }
+        }
+    }
+
+    public static function loginWithGoogle($conexion, $userInfo) {
+        $email = $userInfo->email;
+
+        $stmt = $conexion->prepare("SELECT * FROM usuarios WHERE email = :email");
+        $stmt->execute(['email' => $email]);
+
+        if ($stmt->rowCount() === 1) {
+            $usuario = $stmt->fetch(PDO::FETCH_ASSOC);
+            return $usuario;
+        }
+
+        return false;
     }
 }
