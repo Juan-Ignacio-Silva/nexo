@@ -97,20 +97,43 @@ $productos = ProductosController::obtenerProductosDeBusqueda();
             <div class="products-grid" id="productsGrid">
                 <!-- Los productos se generarán dinámicamente -->
                 <?php if (!empty($productos)): ?>
-                    <ul>
-                        <?php foreach ($productos as $producto): ?>
-                            <li>
-                                <?= htmlspecialchars($producto['nombre']) ?> -
-                                <?= htmlspecialchars($producto['categoria']) ?>
-                            </li>
-                        <?php endforeach; ?>
-                    </ul>
+                    <?php foreach ($productos as $producto): ?>
+                        <a href="<?= BASE_URL ?>productos/producto/<?= $producto['id_producto'] ?>" class="card-accion">
+                            <div class="card-productos">
+                                <div class="card-header">
+                                    <img src="/images/productos/portatil-samsung.png" alt="">
+                                </div>
+                                <div class="cuerpo-card">
+                                    <div class="header-cuerpo-card">
+                                        <p><?= htmlspecialchars($producto['categoria'] ?? 'Sin categoría') ?></p>
+                                        <div>
+                                            <?php
+                                            $promedio = (int) round($producto['calificacion_promedio']); // Redondeo para mostrar estrellas enteras
+                                            for ($i = 1; $i <= 5; $i++):
+                                                if ($i <= $promedio): ?>
+                                                    <span class="star filled">★</span>
+                                                <?php else: ?>
+                                                    <span class="star">★</span>
+                                            <?php endif;
+                                            endfor;
+                                            ?>
+                                        </div>
+                                    </div>
+                                    <p class="nombre-producto"><?= htmlspecialchars($producto['nombre']) ?></p>
+                                    <div class="footer-card">
+                                        <p class="precio">US$ <?= number_format($producto['precio'] ?? 0, 2) ?></p>
+                                        <p class="precio-oferta"></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </a>
+                    <?php endforeach; ?>
                 <?php else: ?>
                     <p>No se encontraron resultados para tu búsqueda.</p>
                 <?php endif; ?>
             </div>
         </main>
-        </div>
+    </div>
 </body>
 
 </html>

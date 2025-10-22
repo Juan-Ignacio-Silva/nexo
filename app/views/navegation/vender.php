@@ -151,24 +151,6 @@
             border: 1px solid #e2e8f0;
         }
 
-        .mercadoPago {
-            border-radius: 5px;
-            cursor: pointer;
-            border: none;
-            background-color: #f0ec11ff;
-            color: #475569;
-            margin-bottom: 15px;
-            margin-top: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            width: 200px;
-        }
-
-        .mercadoPago img {
-            width: 100px;
-        }
-
         .modalForm {
             display: none;
             position: fixed;
@@ -192,7 +174,7 @@
             padding: 2rem;
             border-radius: 8px;
             width: 70%;
-            height: 70%;
+            height: auto;
             overflow-y: auto;
             position: relative;
             box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
@@ -279,13 +261,6 @@
                 <input type="text" id="rutEmpresa">
                 <label for="">Descripcipón</label>
                 <input name="" id="descripcion">
-                <p>
-                    Para completar el formulario es necesario iniciar sesión con tu cuenta de Mercado Pago.
-                    Esto es obligatorio, ya que cada vendedor recibe sus ganancias directamente en su cuenta de Mercado Pago, garantizando así un proceso seguro y confiable para todos.
-                </p>
-                <a href="<?= BASE_URL ?>vendedor/conectarMercadoPago" class="mercadoPago">
-                    <img src="/images/mercadoPago.svg" alt="">
-                </a>
             </form>
             <div class="botones-modal">
                 <a href="<?= BASE_URL ?>usuario/registro" class="boton-modal primario">Registrarme</a>
@@ -318,6 +293,11 @@
                 event.target.classList.remove('activo');
             }
         }
+
+
+
+        // Resgistro como vendedor:
+        
     </script>
 
 </body>

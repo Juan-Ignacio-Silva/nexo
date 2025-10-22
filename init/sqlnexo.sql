@@ -21,7 +21,7 @@ CREATE TABLE usuarios (
     password VARCHAR(256) NOT NULL,
     telefono VARCHAR(20),
     role VARCHAR(20) NOT NULL DEFAULT 'usuario',
-    tipo_login VARCHAR(20) NOT NULL DEFAULT 'email/password'
+    tipo_login VARCHAR(20) NOT NULL DEFAULT 'email/password',
     fecha_registro TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
