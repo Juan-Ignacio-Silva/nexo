@@ -11,6 +11,9 @@ $data = CarritoController::infoProductoCarrito();
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/producto/carrito.css">
     <title>Carrito de Compras</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+
+
 </head>
 <body>
     <div class="container">
@@ -54,27 +57,67 @@ $data = CarritoController::infoProductoCarrito();
         </div>
     </div>
 
-    <script>
-    function continueShopping(){ 
-        window.location.href="<?= BASE_URL ?>"; 
-    }
+<!-- Librería Toastify -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
-    document.querySelectorAll(".remove-btn").forEach(btn=>{
-        btn.addEventListener("click", async ()=>{
-            const id = btn.dataset.id;
-            const resp = await fetch("<?= BASE_URL ?>carrito/eliminarProductoCarrito",{
-                method:"POST",
-                headers:{"Content-Type":"application/json"},
-                body:JSON.stringify({id})
+<script>
+/*  FUNCIONES DE NOTIFICACIÓN de TOASTIFY*/
+function mostrarToast(mensaje, tipo = "info") {
+    let color = "#0263AA"; 
+    if (tipo === "exito") color = "#28a745"; 
+    if (tipo === "error") color = "#dc3545"; 
+    if (tipo === "aviso") color = "#ffc107";  
+
+    Toastify({
+        text: mensaje,
+        duration: 3000,
+        gravity: "top",      
+        position: "right",    
+        backgroundColor: color,
+        close: true,
+        stopOnFocus: true
+    }).showToast();
+}
+
+/* BOTÓN DE CONTINUAR COMPRANDO */
+function continueShopping() { 
+    window.location.href = "<?= BASE_URL ?>"; 
+}
+
+/* ELIMINAR PRODUCTO DEL CARRITO */
+document.querySelectorAll(".remove-btn").forEach(btn => {
+    btn.addEventListener("click", async () => {
+        const id = btn.dataset.id;
+        if (!id) return mostrarToast("No se encontró el producto", "error");
+
+        try {
+            const resp = await fetch("<?= BASE_URL ?>carrito/eliminarProductoCarrito", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id })
             });
-            const data = await resp.json();
-            if(data.success) window.location.reload();
-            else alert(data.msg);
-        });
-    });
 
-    // ✅ Botón de pago
-    document.getElementById("btn-pagar").addEventListener("click", async () => {
+            const data = await resp.json();
+
+            if (data.success) {
+                mostrarToast("Producto eliminado del carrito..", "exito");
+                setTimeout(() => window.location.reload(), 1000);
+            } else {
+                mostrarToast(data.msg || "Error al eliminar producto", "error");
+            }
+
+        } catch(err) {
+            console.error(err);
+            mostrarToast("Error al comunicarse con el servidor", "error");
+        }
+    });
+});
+
+/*  PROCESAR PAGO*/
+const botonPagar = document.getElementById("btn-pagar");
+if(botonPagar){
+    botonPagar.addEventListener("click", async () => {
         try {
             const res = await fetch("<?= BASE_URL ?>carrito/crearPreferencia", {
                 method: "POST",
@@ -83,20 +126,26 @@ $data = CarritoController::infoProductoCarrito();
 
             const data = await res.json();
 
-            if (!data.success || !data.init_point) {
-                alert("Error al crear la preferencia de pago.");
+            if(!data.success || !data.init_point){
+                mostrarToast("Error al crear la preferencia de pago..", "error");
                 console.error(data);
                 return;
             }
 
-            // Redirigir a Mercado Pago
+            mostrarToast("Redirigiendo a medios de pago...", "aviso");
+
+            // Redirigir al link de pago
             window.location.href = data.init_point;
 
-        } catch (err) {
-            console.error("Error general:", err);
-            alert("Hubo un error al procesar el pago.");
+        } catch(err){
+            console.error(err);
+            mostrarToast("Hubo un error al procesar el pago, intentalo de nuevo mas tarde..", "error");
         }
     });
-    </script>
+}
+</script>
+
+
+
 </body>
 </html>
