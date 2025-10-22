@@ -1,22 +1,34 @@
 <?php
+require_once ROOT . "core/View.php";
+require_once ROOT .  'core/Auth.php';
 class HomeController
 {
     public function index()
     {
-        require_once ROOT . 'core/Auth.php';
-        
-        ?>
-        <title>Nexo</title>
-        <?php
+        View::render(view: "home/index", data: [
+            "title" => "Nexo - Inicio",
+            "usuario" => Auth::usuario()
+        ]);
+    }
 
-        include ROOT . 'app/views/templates/header.php';
-        include ROOT . 'app/views/home/seccion-hero.php';
-        include ROOT . 'app/views/home/seccion-categorias.php';
-        include ROOT . 'app/views/home/seccion-productos.php';
-        include ROOT . 'app/views/home/seccion-faq.php';
-        include ROOT . 'app/views/templates/footer.php';
-        ?>
-        <h1>TEST: Bienvenido, <?= htmlspecialchars(Auth::usuario()) ?></h1><!-- Esto lo puse como una prueba para ver si funcionaba el sistema de sessions-->
-        <?php
+    public function vender() {
+        View::render(view:'navegation/vender', data: [
+            'title'=> 'Nexo - Vender',
+            'usuario'=> Auth::usuario()
+        ]);
+    }
+
+    public function categorias() {
+        View::render(view:'navegation/categorias', data: [
+            'title'=> 'Nexo - Categorias',
+            'usuario'=> Auth::usuario()
+        ]);
+    }
+
+    public function ayuda() {
+        View::render(view:'navegation/ayuda', data: [
+            'title'=> 'Nexo - Ayuda',
+            'usuario'=> Auth::usuario()
+        ]);
     }
 }

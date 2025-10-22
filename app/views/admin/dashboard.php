@@ -1,12 +1,10 @@
-<link rel="stylesheet" href="<?= URL_PUBLIC ?>css/admin/dashboard.css">
+<link rel="stylesheet" href="/css/admin/dashboard.css">
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Panel de administración</title>
-    <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
@@ -18,37 +16,27 @@
 
         <div class="top-cards">
             <div class="card">
-                <h4>Ventas del Día</h4>
-                <p class="value">$12,450</p>
-            </div>
-            <div class="card">
-                <h4>Órdenes Totales</h4>
-                <p class="value">213</p>
+                <h4>Productos Registrados</h4>
+                <p class="value"> <?= $totalP ?> </p>
             </div>
             <div class="card">
                 <h4>Usuarios Registrados</h4>
-                <p class="value">1,847</p>
+                <p class="value"> <?= $totalU ?> </p>
             </div>
         </div>
 
         <div class="section usuarios">
             <h3>Nuevos Usuarios</h3>
-            <p class="sub">Registros recientes</p>
+            <p class="sub">Registros recientes - max 5</p>
             <ul class="lista-usuarios">
+                <?php foreach ($recienRegistrados as $user): ?>
                 <li>
-                    <div>Sofia Chen<br><small>sofia@email.com</small></div><span>2024-01-15</span>
+                    <div> <?= $user['nombre']?> <br><small> <?= $user['email']?> </small></div><span> <?= substr($user['fecha_registro'], 0, 19)?> </span>
                 </li>
-                <li>
-                    <div>Diego Ruiz<br><small>diego@email.com</small></div><span>2024-01-15</span>
-                </li>
-                <li>
-                    <div>Elena Vega<br><small>elena@email.com</small></div><span>2024-01-14</span>
-                </li>
-                <li>
-                    <div>Elena Vega<br><small>elena@email.com</small></div><span>2024-01-14</span>
-                </li>
+                <?php endforeach;?>
             </ul>
-            <div class="search-box">
+                <!-- Esto se puede implementar en caso de ser requerido -->
+            <div class="search-box" style="display: none;">
                 <input type="text" placeholder="Buscar usuarios...">
                 <button>
                     <svg class="icono-busqueda" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -67,16 +55,16 @@
                 <button>Configuración General</button>
                 <button>Gestión de Roles</button>
             </div>
-
-            <div class="panel">
+                <!-- Esto se puede implementar en caso de ser requerido -->
+            <div class="panel" style="display: none;">
                 <h3>Seguridad y Control</h3>
                 <p>Monitoreo de accesos</p>
                 <div class="alert red">Intentos fallidos <span>12</span></div>
                 <div class="alert green">Accesos exitosos <span>847</span></div>
                 <button onclick="verLogs()">Ver Logs Completos</button>
             </div>
-
-            <div class="panel">
+                <!-- Esto se puede implementar en caso de ser requerido -->
+            <div class="panel" style="display: none;">
                 <h3>Actividad Reciente</h3>
                 <p>Últimas acciones del sistema</p>
                 <ul class="actividad">
@@ -89,8 +77,6 @@
         </div>
 
     </div>
-
-    <script src="script.js"></script>
 </body>
 
 </html>

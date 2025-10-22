@@ -1,0 +1,10 @@
+version: "3.9"
+
+services:
+  app:
+    volumes:
+      - ./:/var/www/nexo         # hot reload de tu proyecto
+    environment:
+      APP_ENV: development
+    extra_hosts:
+      - "host.docker.internal:host-gateway"   # para acceder a tu máquina desde dentro (si lo necesitás)

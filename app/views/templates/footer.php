@@ -1,9 +1,9 @@
-<link rel="stylesheet" href="<?= URL_PUBLIC ?>css/footer.css">
+<link rel="stylesheet" href="/css/footer.css">
 <section class="main-container-footer">
     <footer class="footer">
         <div class="footer-container">
             <div class="footer-left">
-                <img src="<?= URL_PUBLIC ?>images/nexo_logo.png" alt="Nexo" class="logo">
+                <img src="/images/nexo_logo.png" alt="Nexo" class="logo">
                 <p class="footer-text">
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore,
                     Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.
