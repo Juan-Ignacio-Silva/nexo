@@ -4,15 +4,18 @@
 ?>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="/css/vistaProducto/seccion-producto.css">
+
+<script>
+    const BASE_URL = "<?= BASE_URL ?>"; // Ajusta si es necesario
+</script>
+
 <main class="producto">
     <div class="container">
         <!-- Sección del Producto general -->
         <div class="product-section">
             <!-- Imágenes del Producto seleccionado-->
             <div class="product-images">
-                <div class="main-image" id="mainImage">
-                    <!-- Aquí es donde va la imagen principal -->
-                </div>
+                <div class="main-image" id="mainImage"></div>
                 <div class="thumbnail-container">
                     <button class="nav-btn" onclick="previousImage()">‹</button>
                     <div class="thumbnails">
@@ -32,33 +35,26 @@
                 <div class="rating">
                     <div class="stars">
                         <?php
-                        $promedio = (int) round($producto['promedio']); // Redondeo para mostrar estrellas enteras
+                        $promedio = (int) round($producto['promedio']);
                         for ($i = 1; $i <= 5; $i++):
                             if ($i <= $promedio): ?>
                                 <span class="star filled">★</span>
                             <?php else: ?>
                                 <span class="star">★</span>
-                        <?php endif;
-                        endfor;
-                        ?>
+                        <?php endif; endfor; ?>
                     </div>
                     <span class="rating-count">(1)</span>
                 </div>
 
                 <div class="price">$<?= $producto['precio'] ?></div>
-
-                <div class="description">
-                    <?= $producto['descripcion'] ?>
-                </div>
+                <div class="description"><?= $producto['descripcion'] ?></div>
 
                 <div class="purchase-section">
                     <input type="number" value="1" min="1" class="quantity-input">
                     <button class="add-to-cart-btn" data-id="<?= $producto['id_producto'] ?>">AGREGAR AL CARRITO</button>
                 </div>
 
-                <button class="wishlist-btn">
-                    ♡ Examinar Lista de Deseos
-                </button>
+                <button class="wishlist-btn">♡ Examinar Lista de Deseos</button>
 
                 <div class="product-meta">
                     <div class="meta-item">
@@ -80,22 +76,19 @@
                 <button id="btn-calificar" class="calificar">Agregar reseña</button>
             </div>
             <div class="tab-content">
-                <?php
-                foreach ($resenas as $resena): ?>
+                <?php foreach ($resenas as $resena): ?>
                     <div id="reviews" style="border-bottom: 2px solid #EEF8FF; margin-bottom: 10px;">
                         <div class="header-resena">
                             <p><strong><?= $resena['nombre_usuario'] ?></strong></p>
                             <div class="rating">
                                 <?php
-                                $promedio = (int) round($resena['calificacion']); // Redondeo para mostrar estrellas enteras
+                                $promedio = (int) round($resena['calificacion']);
                                 for ($i = 1; $i <= 5; $i++):
                                     if ($i <= $promedio): ?>
                                         <span class="star filled">★</span>
                                     <?php else: ?>
                                         <span class="star">★</span>
-                                <?php endif;
-                                endfor;
-                                ?>
+                                <?php endif; endfor; ?>
                             </div>
                         </div>
                         <p><?= $resena['comentario'] ?></p>
@@ -157,21 +150,39 @@
     </script>
 
     <script>
+        // Función para estilo de Toastify 
+     function mostrarToast(mensaje, tipo = "info") {
+    let color = "#0263AA"; 
+    if(tipo === "exito") color = "#28a745"; 
+    if(tipo === "error") color = "#dc3545"; 
+    if(tipo === "aviso") color = "#ffc107"; 
+
+    Toastify({
+        text: mensaje,
+        duration: 3000,
+        close: true,
+        gravity: "top",
+        position: "right",
+        backgroundColor: color
+    }).showToast();
+}
+
+
+        //Agregar al carrito 
         document.querySelectorAll(".add-to-cart-btn").forEach(boton => {
-            boton.addEventListener("click", async () => {
-                const idProducto = boton.dataset.id;
+    boton.addEventListener("click", async () => {
+        const idProducto = boton.dataset.id;
 
-                const resp = await fetch("<?= BASE_URL ?>carrito/agregar", {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json"
-                    },
-                    body: JSON.stringify({
-                        id: idProducto
-                    })
-                });
+        try {
+            const resp = await fetch(BASE_URL + "carrito/agregar", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ id: idProducto })
+            });
 
-                const data = await resp.json();
+            if (!resp.ok) throw new Error("Respuesta inválida del servidor");
+
+            const data = await resp.json();
 
                 if (data.success) {
                     totalCarrito = data.total_productos;
@@ -220,32 +231,22 @@
         });
     </script>
 
-    <script>
-        // Variables para controlar las imágenes
-        let currentImageIndex = 0;
-        let currentProductIndex = 0;
-        const totalImages = 4;
-        const productsPerView = window.innerWidth <= 768 ? 2 : 3; // Responsive products per view
-        const totalProducts = 8; // Total de productos en el carrusel
 
-        // Función para cambiar la imagen
+        // Control de imágenes 
+        let currentImageIndex = 0;
+        const totalImages = 4;
+
         function changeImage(index) {
             currentImageIndex = index;
-
-            // Actualizar miniaturas activas
             const thumbnails = document.querySelectorAll('.thumbnail');
-            thumbnails.forEach((thumb, i) => {
-                thumb.classList.toggle('active', i === index);
-            });
+            thumbnails.forEach((thumb, i) => thumb.classList.toggle('active', i === index));
         }
 
-        // Función para la imagen anterior
         function previousImage() {
             currentImageIndex = currentImageIndex > 0 ? currentImageIndex - 1 : totalImages - 1;
             changeImage(currentImageIndex);
         }
 
-        // Función para la imagen siguiente
         function nextImage() {
             currentImageIndex = currentImageIndex < totalImages - 1 ? currentImageIndex + 1 : 0;
             changeImage(currentImageIndex);
