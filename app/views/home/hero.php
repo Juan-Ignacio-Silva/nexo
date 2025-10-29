@@ -18,13 +18,13 @@
                 sed do eiusmod tempor incididunt ut labore et dolore.
             </p>
             
-            <button class="boton-comprar">
+            <a href="<?= BASE_URL?>home/categorias" class="boton-comprar" style="text-decoration: none;">
                 Comprar Ahora
                 <svg class="icono-flecha" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M5 12h14"></path>
                     <path d="m12 5 7 7-7 7"></path>
                 </svg>
-            </button>
+            </a>
         </div>
     </div>
 </main>
