@@ -32,7 +32,7 @@
             <?php endif; ?>
             <?php if (Auth::restringirAcceso() === true): ?>
                 <a href="<?= BASE_URL ?>usuario/perfil" class="enlace-usuario">Perfil</a>
-                <a href="<?= BASE_URL ?>usuario/logout" class="enlace-usuario">Cerrar sesion</a>
+                <a href="<?= BASE_URL ?>usuario/logout" class="enlace-usuario" id="cerrar-sesion">Cerrar sesion</a>
             <?php endif; ?>
             <div class="carrito-compras">
                 <a href="<?= BASE_URL ?>productos/carrito">
@@ -91,7 +91,7 @@
                 <a href="<?= BASE_URL ?>usuario/perfil">Perfil</a>
                 <a href="<?= BASE_URL ?>usuario/perfil">Configuración</a>
                 <div class="separador"></div>
-                <a href="<?= BASE_URL ?>usuario/logout">Cerrar sesion</a>
+                <a href="<?= BASE_URL ?>usuario/logout" id="cerrar-sesion">Cerrar sesion</a>
             </div>
         <?php endif; ?>
     </div>
@@ -102,7 +102,14 @@
         let totalCarrito = parseInt(localStorage.getItem("totalCarrito")) || 0;
         document.getElementById("contador-carrito").textContent = totalCarrito;
     });
+
+    document.getElementById('cerrar-sesion').addEventListener("click", () => {
+        total_productos = 0;
+        localStorage.setItem("totalCarrito", total_productos);
+        document.getElementById("contador-carrito").textContent = total_productos;
+    })
 </script>
+
 
 <!-- Modal Menu Hamburguesa -->
 <script>

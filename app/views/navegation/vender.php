@@ -271,6 +271,33 @@
             </div>
         </div>
 
+        <!-- Librería Toastify -->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+        <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+        <script>
+            /*  FUNCIONES DE NOTIFICACIÓN de TOASTIFY*/
+            function mostrarToast(mensaje, tipo = "info") {
+                let color = "#0263AA";
+                if (tipo === "exito") color = "#28a745";
+                if (tipo === "error") color = "#dc3545";
+                if (tipo === "aviso") color = "#ffc107";
+
+                Toastify({
+                    text: mensaje,
+                    duration: 3000,
+                    gravity: "top",
+                    position: "right",
+                    backgroundColor: color,
+                    close: true,
+                    stopOnFocus: true,
+                    style: {
+                        borderRadius: "4px",
+
+                    }
+                }).showToast();
+            }
+        </script>
         <script>
             document.getElementById("btn-venta").addEventListener("click", () => {
                 fetch("<?= BASE_URL ?>Auth/verificarSession", {
@@ -320,7 +347,8 @@
                     const data = await resp.json();
 
                     if (data.success) {
-                        window.location.href = '<?= BASE_URL . 'home/vender'?>'
+                        mostrarToast("Registro de vendedor exitoso.", "exito");
+                        setTimeout(() => window.location.reload(), 1000);
                     } else {
                         alert("❌ " + (data.message || "Error al registrar vendedor."));
                     }
