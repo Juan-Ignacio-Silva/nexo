@@ -73,7 +73,7 @@
         <div class="tabs-section">
             <div class="tabs">
                 <button class="tab">Reseñas</button>
-                <button>Calificar</button>
+                <button id="btn-calificar" class="calificar">Agregar reseña</button>
             </div>
             <div class="tab-content">
                 <?php foreach ($resenas as $resena): ?>
@@ -98,10 +98,56 @@
         </div>
     </div>
 
-    <!-- Esta es la libreria de Toastify -->
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
-<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+    <div class="modal-calificar" id="modal-calificar">
+        <div class="contenedor-modal-calificar">
+            <div class="opciones-calificar">
+                <form action="">
+                    <label for="estrellas">Estrellas</label>
+                    <select name="estrellas" id="estrellas-calif">
+                        <option><span class="star filled" disabled selected>Seleccionar estrellas</span></option>
+                        <option value="1"><span class="star filled">★</span></option>
+                        <option value="2"><span class="star filled">★★</span></option>
+                        <option value="3"><span class="star filled">★★★</span></option>
+                        <option value="4"><span class="star filled">★★★★</span></option>
+                        <option value="5"><span class="star filled">★★★★★</span></option>
+                    </select>
+                    <label for="comentario">Comentario</label>
+                    <textarea name="comentario" id="comentario-calif"></textarea>
+                </form>
+            </div>
+            <div class="btns-modal-calificar">
+                <button id="btnCalificarSave" class="btnCalificar primario">Guardar</button>
+                <button id="btnCalificarCancel" class="btnCalificar secundario">Cancelar</button>
+            </div>
+        </div>
+    </div>
+    <!-- Librería Toastify -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
+    <script>
+        /*  FUNCIONES DE NOTIFICACIÓN de TOASTIFY*/
+        function mostrarToast(mensaje, tipo = "info") {
+            let color = "#0263AA";
+            if (tipo === "exito") color = "#28a745";
+            if (tipo === "error") color = "#dc3545";
+            if (tipo === "aviso") color = "#ffc107";
+
+            Toastify({
+                text: mensaje,
+                duration: 3000,
+                gravity: "top",
+                position: "right",
+                backgroundColor: color,
+                close: true,
+                stopOnFocus: true,
+                style: {
+                    borderRadius: "4px",
+                    
+                }
+            }).showToast();
+        }
+    </script>
 
     <script>
         // Función para estilo de Toastify 
@@ -138,20 +184,52 @@
 
             const data = await resp.json();
 
-            if (data.success) {
-                const totalCarrito = data.total_productos;
-                localStorage.setItem("totalCarrito", totalCarrito);
-                document.getElementById("contador-carrito").textContent = totalCarrito;
-                mostrarToast(data.msg, "exito"); 
-            } else {
-                mostrarToast(data.msg || "Error al agregar el producto", "error");
+                if (data.success) {
+                    totalCarrito = data.total_productos;
+                    localStorage.setItem("totalCarrito", totalCarrito);
+                    document.getElementById("contador-carrito").textContent = totalCarrito;
+                    mostrarToast(data.msg, "exito");
+                } else {
+                    mostrarToast(data.msg || "Error al agregar el producto", "error");
+                }
+            });
+        });
+    </script>
+    <script>
+        document.getElementById("btnCalificarSave").addEventListener("click", async () => {
+            const estrellas = document.getElementById('estrellas-calif').value;
+            const comentario = document.getElementById('comentario-calif').value;
+            const idProducto = '<?= $producto['id_producto'] ?>';
+
+            try {
+                // Enviar datos al backend
+                const respR = await fetch("<?= BASE_URL ?>productos/recibirRsena", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        estrellas,
+                        comentario,
+                        idProducto
+                    })
+                });
+
+                const dataR = await respR.json();
+
+                if (dataR.success) {
+                    mostrarToast("Reseña publicada con exito.", "exito");
+                    setTimeout(() => window.location.reload(), 1000);
+                } else {
+                    mostrarToast(dataR.msg, "error");
+                }
+
+            } catch (error) {
+                console.error("Error en la solicitud:", error);
+                alert("Hubo un problema al enviar la reseña!.");
             }
-        } catch(err) {
-            console.error(err);
-            mostrarToast("Error de conexión o JSON inválido", "error");
-        }
-    });
-});
+        });
+    </script>
 
 
         // Control de imágenes 
@@ -174,9 +252,39 @@
             changeImage(currentImageIndex);
         }
 
-        // Inicializar
+        // Funciones del carrusel de productos (Nueva modificacion)
+        function previousProduct() {
+            if (currentProductIndex > 0) {
+                currentProductIndex--;
+                updateCarousel();
+            }
+        }
+
+        function nextProduct() {
+            const currentProductsPerView = window.innerWidth <= 768 ? 2 : 3;
+            const maxIndex = totalProducts - currentProductsPerView;
+            if (currentProductIndex < maxIndex) {
+                currentProductIndex++;
+                updateCarousel();
+            }
+        }
+
+        // Inicializar la página
         document.addEventListener('DOMContentLoaded', function() {
             changeImage(0);
         });
     </script>
-</main>
+
+    <script>
+        const modalCalificar = document.getElementById('modal-calificar');
+        const modalOpen = document.getElementById('btn-calificar');
+        const btnCalificarCancel = document.getElementById('btnCalificarCancel');
+
+        modalOpen.addEventListener('click', (e) => {
+            modalCalificar.style.display = 'flex';
+        });
+
+        btnCalificarCancel.addEventListener('click', (e) => {
+            modalCalificar.style.display = 'none'
+        })
+    </script>

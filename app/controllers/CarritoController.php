@@ -1,6 +1,8 @@
 <?php
-require_once __DIR__ . '/../models/Carrito.php';
+require ROOT . '/vendor/autoload.php';
 
+use MercadoPago\MercadoPagoConfig;
+use MercadoPago\Client\Preference\PreferenceClient;
 
 class CarritoController
 {
@@ -153,10 +155,59 @@ class CarritoController
                 "msg" => "Preferencia creada exitosamente"
             ]);
 
-        } catch (Exception $e) {
-            http_response_code(500);
-            echo json_encode(["success"=>false,"msg"=>"Error: " . $e->getMessage()]);
-        }
-}
+        echo json_encode([
+            "success" => false,
+            "msg" => "El producto no estaba en el carrito"
+        ]);
+    }
+
+    public function pagarConMercadoPago() {
+        // Tu Access Token (usa el de TEST en desarrollo)
+        MercadoPagoConfig::setAccessToken("APP_USR-4560372115561328-101613-68b61a5349c6c6a363db9625082affdf-2929598777");
+
+        // Crear cliente de preferencia
+        $client = new PreferenceClient();
+
+        // Ejemplo de items del carrito (luego los traés de la DB)
+        $items = [
+            [
+                "title" => "Zapatillas Nike",
+                "quantity" => 1,
+                "unit_price" => 50.00
+            ],
+            [
+                "title" => "Camiseta Adidas",
+                "quantity" => 2,
+                "unit_price" => 30.00
+            ]
+        ];
+
+        // Crear la preferencia
+        $preference = $client->create([
+            "items" => $items,
+            "back_urls" => [
+                "success" => "https://tusitio.com/checkout/success",
+                "failure" => "https://tusitio.com/checkout/failure",
+                "pending" => "https://tusitio.com/checkout/pending"
+            ],
+            "auto_return" => "approved"
+        ]);
+
+        // Redirigir al checkout
+        header("Location: " . $preference->init_point);
+        exit;
+    }
+
+    public function success() {
+        echo "✅ Pago aprobado.";
+    }
+
+    public function failure() {
+        echo "❌ Pago fallido.";
+    }
+
+    public function pending() {
+        echo "⏳ Pago pendiente.";
+    }
 }
     

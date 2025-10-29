@@ -3,7 +3,7 @@ require_once 'Session.php';
 require_once ROOT . 'app/models/Usuario.php';
 class Auth
 {
-    public static function restringirDashboard() {
+    public static function restringirDashboard($rolPermitido) {
         $conexion = require ROOT . 'core/database.php';
         
         if (!Session::has('usuario_id')) {
@@ -13,9 +13,9 @@ class Auth
         $id = Session::get(key: 'usuario_id');
         $roleIdentificado = Usuario::verificarRole($conexion, $id);
 
-        if ($roleIdentificado['role'] !== 'admin') {
+        if ($roleIdentificado['role'] !== $rolPermitido) {
             header('Location: ../home');
-            return "No es admin";
+            return "No tienes acceso!!!";
         }
     }
 
@@ -30,6 +30,23 @@ class Auth
         }
 
         return true;
+    }
+
+    public static function esVendedor() {
+        $conexion = require ROOT . 'core/database.php';
+        
+        if (!Session::has('usuario_id')) {
+            return false;
+        }
+        
+        $id = Session::get(key: 'usuario_id');
+        $roleIdentificado = Usuario::verificarRole($conexion, $id);
+
+        if ($roleIdentificado['role'] !== 'vendedor') {
+            return "Registrate como vendedor";
+        } else {
+            header('Location: ../vendedor/dashboard' );
+        }
     }
 
     public static function restringirAcceso() {

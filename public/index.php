@@ -3,7 +3,6 @@
 // salta error.
 require_once '../core/Session.php';
 Session::start();
-
 // Defino dos variables globales con el valor de las rutas de los directorios principales.
 define('ROOT', dirname(__DIR__) . '/');
 define('URL_PUBLIC', '/nexo/public/');

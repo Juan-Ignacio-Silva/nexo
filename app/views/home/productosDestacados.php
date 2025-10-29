@@ -40,7 +40,7 @@ $productosDestacados = ProductosController::getProductosInfo();
                         <p class="nombre-producto"><?= htmlspecialchars($producto['nombre']) ?></p>
                         <div class="footer-card">
                             <p class="precio">US$ <?= number_format($producto['precio'] ?? 0, 2) ?></p>
-                            <p class="precio-oferta">US$ 25</p>
+                            <p class="precio-oferta"></p>
                         </div>
                     </div>
                 </div>

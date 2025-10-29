@@ -6,8 +6,11 @@ DROP TABLE IF EXISTS pedido_items CASCADE;
 DROP TABLE IF EXISTS carrito CASCADE;
 DROP TABLE IF EXISTS pedido CASCADE;
 DROP TABLE IF EXISTS vendedor CASCADE;
+DROP TABLE IF EXISTS producto_imagen CASCADE;
 DROP TABLE IF EXISTS producto CASCADE;
+DROP TABLE IF EXISTS direccion CASCADE;
 DROP TABLE IF EXISTS usuarios CASCADE;
+DROP TABLE IF EXISTS pago CASCADE;
 
 -- Tabla de usuarios
 CREATE TABLE usuarios (
@@ -18,9 +21,8 @@ CREATE TABLE usuarios (
     password VARCHAR(256) NOT NULL,
     telefono VARCHAR(20),
     role VARCHAR(20) NOT NULL DEFAULT 'usuario',
-    ciudad VARCHAR(50),
-    nombre_calle VARCHAR(100),
-    numero_casa INT
+    tipo_login VARCHAR(20) NOT NULL DEFAULT 'email/password',
+    fecha_registro TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
 -- Tabla de vendedores
@@ -31,7 +33,7 @@ CREATE TABLE vendedor (
     rut_empresa VARCHAR(20),
     descripcion TEXT,
     fecha_registro TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    estado_aprobacion VARCHAR(20) DEFAULT 'pendiente' CHECK (estado_aprobacion IN ('pendiente','aprobado','rechazado'))
+    estado_aprobacion VARCHAR(20) DEFAULT 'pendiente' CHECK (estado_aprobacion IN ('pendiente','aprobado','rechazado')),
 );
 
 -- Tabla de productos
@@ -45,6 +47,14 @@ CREATE TABLE producto (
     descripcion TEXT NOT NULL,
     imagen VARCHAR(255) NOT NULL,
     cantidad INT NOT NULL
+);
+
+-- Tabla de imágenes adicionales de productos
+CREATE TABLE producto_imagen (
+    id_imagen VARCHAR(36) NOT NULL PRIMARY KEY,
+    id_producto VARCHAR(36) NOT NULL REFERENCES producto(id_producto),
+    url VARCHAR(255) NOT NULL,
+    orden INT DEFAULT 0
 );
 
 -- Tabla de pedidos
@@ -94,4 +104,31 @@ CREATE TABLE resena (
     id_producto VARCHAR(36) NOT NULL REFERENCES producto(id_producto),
     comentario TEXT NOT NULL,
     calificacion INT CHECK (calificacion BETWEEN 1 AND 5)
+);
+
+-- Tabla de direcciones de usuarios
+CREATE TABLE direccion (
+    id_direccion VARCHAR(36) NOT NULL PRIMARY KEY,
+    id_usuarios VARCHAR(36) NOT NULL REFERENCES usuarios(id_usuarios),
+    calle VARCHAR(100),
+    numero INT,
+    ciudad VARCHAR(50),
+    codigo_postal VARCHAR(20),
+    pais VARCHAR(50)
+);
+
+-- Tabla de pagos
+CREATE TABLE pago (
+    id_pago VARCHAR(36) NOT NULL PRIMARY KEY,
+    id_pedido VARCHAR(36) NOT NULL REFERENCES pedido(id_pedido),
+    metodo_pago VARCHAR(50),
+    monto DECIMAL(10,2) NOT NULL,
+    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    estado_pago VARCHAR(20) DEFAULT 'pendiente' CHECK (estado_pago IN ('pendiente','pagado','fallido'))
+);
+
+-- Tabla de secuencia para idGenerator
+CREATE TABLE secuencias (
+  tipo VARCHAR(50) PRIMARY KEY,
+  ultimo_numero INT NOT NULL
 );
