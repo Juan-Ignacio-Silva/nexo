@@ -108,7 +108,10 @@ $productos = ProductosController::obtenerProductosDeBusqueda();
                                         <p><?= htmlspecialchars($producto['categoria'] ?? 'Sin categoría') ?></p>
                                         <div>
                                             <?php
-                                            $promedio = (int) round($producto['calificacion_promedio']); // Redondeo para mostrar estrellas enteras
+                                            $promedio = isset($producto['calificacion_promedio']) && is_numeric($producto['calificacion_promedio'])
+                                                ? (int) round($producto['calificacion_promedio'])
+                                                : 0; // si es null o no numérico, queda en 0
+
                                             for ($i = 1; $i <= 5; $i++):
                                                 if ($i <= $promedio): ?>
                                                     <span class="star filled">★</span>

@@ -32,7 +32,6 @@
             <?php endif; ?>
             <?php if (Auth::restringirAcceso() === true): ?>
                 <a href="<?= BASE_URL ?>usuario/perfil" class="enlace-usuario">Perfil</a>
-                <a href="#" class="enlace-usuario">Mis compras</a>
                 <a href="<?= BASE_URL ?>usuario/logout" class="enlace-usuario">Cerrar sesion</a>
             <?php endif; ?>
             <div class="carrito-compras">
@@ -69,7 +68,6 @@
         <div class="contenedor-navegacion">
             <a href="<?= BASE_URL ?>home" class="enlace-navegacion">Inicio</a>
             <a href="<?= BASE_URL ?>home/categorias" class="enlace-navegacion">Categorías</a>
-            <a href="#" class="enlace-navegacion">Ofertas</a>
             <a href="<?= BASE_URL ?>home/vender" class="enlace-navegacion">Vender</a>
             <a href="<?= BASE_URL ?>home/ayuda" class="enlace-navegacion">Ayuda</a>
         </div>

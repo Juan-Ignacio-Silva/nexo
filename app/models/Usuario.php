@@ -137,7 +137,7 @@ class Usuario
             // Crear nuevo usuario
             $id = Uuid::uuid4()->toString();
             $nombre = $userInfo->givenName;
-            $apellido = $userInfo->familyName;
+            $apellido = $userInfo->familyName ?? 'Sin Apellido';
             $stmt = $conexion->prepare("INSERT INTO usuarios(id_usuarios, nombre, apellido, email, password, telefono, tipo_login) 
                                     VALUES (:id, :nombre, :apellido, :email, :password, :telefono, :tipo_login)");
 

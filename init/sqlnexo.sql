@@ -34,8 +34,6 @@ CREATE TABLE vendedor (
     descripcion TEXT,
     fecha_registro TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     estado_aprobacion VARCHAR(20) DEFAULT 'pendiente' CHECK (estado_aprobacion IN ('pendiente','aprobado','rechazado')),
-    mp_access_token TEXT,
-    mp_user_id TEXT
 );
 
 -- Tabla de productos
@@ -127,4 +125,10 @@ CREATE TABLE pago (
     monto DECIMAL(10,2) NOT NULL,
     fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     estado_pago VARCHAR(20) DEFAULT 'pendiente' CHECK (estado_pago IN ('pendiente','pagado','fallido'))
+);
+
+-- Tabla de secuencia para idGenerator
+CREATE TABLE secuencias (
+  tipo VARCHAR(50) PRIMARY KEY,
+  ultimo_numero INT NOT NULL
 );

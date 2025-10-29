@@ -178,6 +178,11 @@ body {
     margin-top: 5px;
 }
 
+.star {
+  color: #86a9c5;
+  text-decoration: none;
+}
+
 .star.filled {
     color: #DE411E;
 }

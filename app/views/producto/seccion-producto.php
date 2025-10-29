@@ -77,7 +77,7 @@
         <div class="tabs-section">
             <div class="tabs">
                 <button class="tab">Reseñas</button>
-                <button>Calificar</button>
+                <button id="btn-calificar" class="calificar">Agregar reseña</button>
             </div>
             <div class="tab-content">
                 <?php
@@ -105,6 +105,57 @@
         </div>
     </div>
 
+    <div class="modal-calificar" id="modal-calificar">
+        <div class="contenedor-modal-calificar">
+            <div class="opciones-calificar">
+                <form action="">
+                    <label for="estrellas">Estrellas</label>
+                    <select name="estrellas" id="estrellas-calif">
+                        <option><span class="star filled" disabled selected>Seleccionar estrellas</span></option>
+                        <option value="1"><span class="star filled">★</span></option>
+                        <option value="2"><span class="star filled">★★</span></option>
+                        <option value="3"><span class="star filled">★★★</span></option>
+                        <option value="4"><span class="star filled">★★★★</span></option>
+                        <option value="5"><span class="star filled">★★★★★</span></option>
+                    </select>
+                    <label for="comentario">Comentario</label>
+                    <textarea name="comentario" id="comentario-calif"></textarea>
+                </form>
+            </div>
+            <div class="btns-modal-calificar">
+                <button id="btnCalificarSave" class="btnCalificar primario">Guardar</button>
+                <button id="btnCalificarCancel" class="btnCalificar secundario">Cancelar</button>
+            </div>
+        </div>
+    </div>
+    <!-- Librería Toastify -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+    <script>
+        /*  FUNCIONES DE NOTIFICACIÓN de TOASTIFY*/
+        function mostrarToast(mensaje, tipo = "info") {
+            let color = "#0263AA";
+            if (tipo === "exito") color = "#28a745";
+            if (tipo === "error") color = "#dc3545";
+            if (tipo === "aviso") color = "#ffc107";
+
+            Toastify({
+                text: mensaje,
+                duration: 3000,
+                gravity: "top",
+                position: "right",
+                backgroundColor: color,
+                close: true,
+                stopOnFocus: true,
+                style: {
+                    borderRadius: "4px",
+                    
+                }
+            }).showToast();
+        }
+    </script>
+
     <script>
         document.querySelectorAll(".add-to-cart-btn").forEach(boton => {
             boton.addEventListener("click", async () => {
@@ -126,11 +177,46 @@
                     totalCarrito = data.total_productos;
                     localStorage.setItem("totalCarrito", totalCarrito);
                     document.getElementById("contador-carrito").textContent = totalCarrito;
-                    alert(data.msg)
+                    mostrarToast(data.msg, "exito");
                 } else {
-                    alert("Error al agregar el producto");
+                    mostrarToast(data.msg || "Error al agregar el producto", "error");
                 }
             });
+        });
+    </script>
+    <script>
+        document.getElementById("btnCalificarSave").addEventListener("click", async () => {
+            const estrellas = document.getElementById('estrellas-calif').value;
+            const comentario = document.getElementById('comentario-calif').value;
+            const idProducto = '<?= $producto['id_producto'] ?>';
+
+            try {
+                // Enviar datos al backend
+                const respR = await fetch("<?= BASE_URL ?>productos/recibirRsena", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        estrellas,
+                        comentario,
+                        idProducto
+                    })
+                });
+
+                const dataR = await respR.json();
+
+                if (dataR.success) {
+                    mostrarToast("Reseña publicada con exito.", "exito");
+                    setTimeout(() => window.location.reload(), 1000);
+                } else {
+                    mostrarToast(dataR.msg, "error");
+                }
+
+            } catch (error) {
+                console.error("Error en la solicitud:", error);
+                alert("Hubo un problema al enviar la reseña!.");
+            }
         });
     </script>
 
@@ -165,25 +251,6 @@
             changeImage(currentImageIndex);
         }
 
-        // Función para mostrar las pestañas
-        function showTab(tabName) {
-            // Ocultar todos los contenidos
-            document.getElementById('description').style.display = 'none';
-            document.getElementById('reviews').style.display = 'none';
-
-            // Mostrar el contenido seleccionado
-            document.getElementById(tabName).style.display = 'block';
-
-            // Actualizar pestañas activas
-            const tabs = document.querySelectorAll('.tab');
-            tabs.forEach(tab => {
-                tab.classList.remove('active');
-                if (tab.textContent.toLowerCase().includes(tabName === 'description' ? 'descripción' : 'reseñas')) {
-                    tab.classList.add('active');
-                }
-            });
-        }
-
         // Funciones del carrusel de productos (Nueva modificacion)
         function previousProduct() {
             if (currentProductIndex > 0) {
@@ -201,140 +268,22 @@
             }
         }
 
-        function updateCarousel() {
-            const carousel = document.querySelector('.products-grid');
-            const currentProductsPerView = window.innerWidth <= 768 ? 2 : 3;
-            const cardWidth = 100 / currentProductsPerView; // Porcentaje que ocupa cada producto visible
-            const translateX = -(currentProductIndex * cardWidth);
-            carousel.style.transform = `translateX(${translateX}%)`;
-
-            // Actualizar estados de los botones
-            const prevBtn = document.querySelector('.carousel-btn.prev');
-            const nextBtn = document.querySelector('.carousel-btn.next');
-
-            prevBtn.disabled = currentProductIndex === 0;
-            nextBtn.disabled = currentProductIndex >= totalProducts - currentProductsPerView;
-        }
-
-        // Generar productos dinámicamente
-        function generateProducts() {
-            const productsData = [{
-                    name: "Zapatillas Casual Urbanas",
-                    category: "Calzado, Laptops & Escritorios",
-                    currentPrice: "$80.00",
-                    oldPrice: "$120.00",
-                    sale: true,
-                    rating: 3
-                },
-                {
-                    name: "Cartera de Cuero Premium",
-                    category: "Accesorios, Bolsos",
-                    currentPrice: "$120.00",
-                    oldPrice: null,
-                    sale: false,
-                    rating: 4
-                },
-                {
-                    name: "Mochila Deportiva",
-                    category: "Calzado, Mochilas & Tabletas",
-                    currentPrice: "$95.00",
-                    oldPrice: null,
-                    sale: false,
-                    rating: 3
-                },
-                {
-                    name: "Sudadera con Capucha",
-                    category: "Ropa, Mochilas & Tabletas",
-                    currentPrice: "$180.00",
-                    oldPrice: null,
-                    sale: false,
-                    rating: 4
-                },
-                {
-                    name: "Reloj Deportivo",
-                    category: "Accesorios, Tecnología",
-                    currentPrice: "$200.00",
-                    oldPrice: "$250.00",
-                    sale: true,
-                    rating: 5
-                },
-                {
-                    name: "Gafas de Sol",
-                    category: "Accesorios, Moda",
-                    currentPrice: "$75.00",
-                    oldPrice: null,
-                    sale: false,
-                    rating: 4
-                },
-                {
-                    name: "Pantalones Deportivos",
-                    category: "Ropa, Deportes",
-                    currentPrice: "$65.00",
-                    oldPrice: "$85.00",
-                    sale: true,
-                    rating: 4
-                },
-                {
-                    name: "Auriculares Bluetooth",
-                    category: "Tecnología, Audio",
-                    currentPrice: "$150.00",
-                    oldPrice: null,
-                    sale: false,
-                    rating: 5
-                }
-            ];
-
-            const grid = document.querySelector('.products-grid');
-            grid.innerHTML = '';
-
-            productsData.forEach((product, index) => {
-                const productCard = document.createElement('div');
-                productCard.className = 'product-card';
-
-                const starsHtml = Array.from({
-                        length: 5
-                    }, (_, i) =>
-                    `<span class="star ${i < product.rating ? 'filled' : ''}">★</span>`
-                ).join('');
-
-                const oldPriceHtml = product.oldPrice ? `<span class="old-price">${product.oldPrice}</span>` : '';
-                const saleBadgeHtml = product.sale ? '<div class="sale-badge">OFERTA</div>' : '';
-
-                productCard.innerHTML = `
-                    <div class="product-image">
-                        ${saleBadgeHtml}
-                    </div>
-                    <div class="product-details">
-                        <div class="product-category">${product.category}</div>
-                        <div class="product-rating">
-                            ${starsHtml}
-                        </div>
-                        <div class="product-name">${product.name}</div>
-                        <div class="product-price">
-                            <span class="current-price">${product.currentPrice}</span>
-                            ${oldPriceHtml}
-                        </div>
-                    </div>
-                `;
-
-                grid.appendChild(productCard);
-            });
-        }
-
-        // Manejar redimensionamiento de ventana
-        function handleResize() {
-            currentProductIndex = 0; // Reset al redimensionar
-            updateCarousel();
-        }
-
         // Inicializar la página
         document.addEventListener('DOMContentLoaded', function() {
             changeImage(0);
-            generateProducts();
-            updateCarousel();
-
-            // Escuchar cambios de tamaño de ventana
-            window.addEventListener('resize', handleResize);
         });
     </script>
-</main>
+
+    <script>
+        const modalCalificar = document.getElementById('modal-calificar');
+        const modalOpen = document.getElementById('btn-calificar');
+        const btnCalificarCancel = document.getElementById('btnCalificarCancel');
+
+        modalOpen.addEventListener('click', (e) => {
+            modalCalificar.style.display = 'flex';
+        });
+
+        btnCalificarCancel.addEventListener('click', (e) => {
+            modalCalificar.style.display = 'none'
+        })
+    </script>

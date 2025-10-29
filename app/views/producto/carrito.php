@@ -63,10 +63,40 @@ $data = CarritoController::infoProductoCarrito();
         </div>
     </div>
 </div>
+<!-- Librería Toastify -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
+
+<script>
+    /*  FUNCIONES DE NOTIFICACIÓN de TOASTIFY*/
+    function mostrarToast(mensaje, tipo = "info") {
+        let color = "#0263AA";
+        if (tipo === "exito") color = "#28a745";
+        if (tipo === "error") color = "#dc3545";
+        if (tipo === "aviso") color = "#ffc107";
+
+        Toastify({
+            text: mensaje,
+            duration: 3000,
+            gravity: "top",
+            position: "right",
+            backgroundColor: color,
+            close: true,
+            stopOnFocus: true
+        }).showToast();
+    }
+
+    /* BOTÓN DE CONTINUAR COMPRANDO */
+    function continueShopping() {
+        window.location.href = "<?= BASE_URL ?>";
+    }
+</script>
+
 <script>
     document.querySelectorAll(".remove-btn").forEach(boton => {
         boton.addEventListener("click", async () => {
             const idProducto = boton.dataset.id;
+            if (!idProducto) return mostrarToast("No se encontró el producto", "error");
 
             const resp = await fetch("<?= BASE_URL ?>carrito/eliminarProductoCarrito", {
                 method: "POST",
@@ -81,14 +111,15 @@ $data = CarritoController::infoProductoCarrito();
             const data = await resp.json();
 
             if (data.success) {
+                mostrarToast("Producto eliminado del carrito con exito", "exito");
                 let total_productos = parseInt(localStorage.getItem("totalCarrito")) || 0;
                 total_productos = Math.max(0, total_productos - 1);
                 localStorage.setItem("totalCarrito", total_productos);
 
                 document.getElementById("contador-carrito").textContent = total_productos;
-                window.location.reload();
+                setTimeout(() => window.location.reload(), 1000);
             } else {
-                alert(data.msg);
+                mostrarToast("Error al comunicarse con el servidor", "error");
             }
         });
     });

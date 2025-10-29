@@ -1,11 +1,19 @@
+<?php
+require_once ROOT . 'app/controllers/ProductosController.php';
+$productos = ProductosController::getProductosIdVendedor();
+$productosArray = json_decode(json_encode($productos), true);
+$totalProductos = count($productosArray);
+?>
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/vendedor/dashboard.css">
     <title></title>
 </head>
+
 <body>
     <?php
     include ROOT . 'app/views/vendedor/dashboard-header.php';
@@ -20,11 +28,11 @@
             </div>
             <div class="card">
                 <h4>Productos vendidos</h4>
-                <p class="value">3</p>
+                <p class="value">0</p>
             </div>
             <div class="card">
                 <h4>Total de productos</h4>
-                <p class="value">4</p>
+                <p class="value"><?= $totalProductos ?></p>
             </div>
         </div>
         <div class="products-section">
@@ -43,7 +51,29 @@
                         </tr>
                     </thead>
                     <tbody id="productosBody">
-
+                        <!-- Los productos se generarán dinámicamente -->
+                        <?php if (!empty($productos)): ?>
+                            <?php foreach ($productos as $producto): ?>
+                                <a href="<?= BASE_URL ?>productos/producto/<?= $producto['id_producto'] ?>" class="card-accion">
+                                    <tr>
+                                        <td><strong><?= htmlspecialchars($producto['nombre']) ?></strong></td>
+                                        <td>US$ <?= number_format($producto['precio'] ?? 0, 2) ?></td>
+                                        <td><?= htmlspecialchars($producto['cantidad']) ?></td>
+                                        <td><?= htmlspecialchars($producto['categoria'] ?? 'Sin categoría') ?></td>
+                                        <td>${p.vendidos}</td>
+                                        <td>${getStockBadge(p.stock)}</td>
+                                        <td>
+                                            <button class="btn-edit-p">Editar</button>
+                                            <button class="btn-delete-p">Eliminar</button>
+                                        </td>
+                                    </tr>
+                                </a>
+                            <?php endforeach; ?>
+                        <?php else: ?>
+                            <td colspan="7" class="empty-state">
+                                <div>No hay productos registrados. ¡Agrega tu primer producto!</div>
+                            </td>
+                        <?php endif; ?>
                     </tbody>
                 </table>
             </div>
@@ -60,19 +90,19 @@
         <form id="productForm">
             <div class="form-group">
                 <label for="nombre">Nombre del Producto</label>
-                <input type="text" id="nombre" required>
+                <input type="text" id="nombreProducto" name="nombreProducto" required>
             </div>
             <div class="form-group">
                 <label for="precio">Precio ($)</label>
-                <input type="number" id="precio" step="0.01" min="0" required>
+                <input type="number" id="precio" name="precio" step="0.01" min="0" required>
             </div>
             <div class="form-group">
                 <label for="stock">Stock</label>
-                <input type="number" id="stock" min="0" required>
+                <input type="number" id="stock" name="stock" min="0" required>
             </div>
             <div class="form-group">
                 <label for="categoria">Categoría</label>
-                <select id="categoria" required>
+                <select id="categoria" name="categoria" required>
                     <option value="">Seleccionar...</option>
                     <option value="Electrónica">Electrónica</option>
                     <option value="Ropa">Ropa</option>
@@ -83,77 +113,53 @@
                 </select>
             </div>
             <div class="form-group">
-                <label for="vendidos">Unidades Vendidas</label>
-                <input type="number" id="vendidos" min="0" value="0" required>
+                <label for="etiqueta">Etiqueta del Producto</label>
+                <input type="text" id="etiquetas" name="etiquetas" placeholder="etiqueta1, etiqueta2, etc" required>
             </div>
             <div class="form-group">
                 <label for="descripcion">Descripción</label>
-                <textarea id="descripcion"></textarea>
+                <textarea id="descripcion" name="descripcion"></textarea>
+            </div>
+            <div class="form-group">
+                <label for="etiqueta">Imagen del Producto</label>
+                <input type="file" id="imagen" name="imagen" required>
             </div>
             <div class="modal-actions">
                 <button type="button" class="btn-cancel" onclick="closeModal()">Cancelar</button>
-                <button type="submit" class="btn-save">Guardar</button>
+                <button type="button" id="btn-save-p" class="btn-save">Guardar</button>
             </div>
         </form>
     </div>
 </div>
+<!-- Librería Toastify -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/toastify-js/src/toastify.min.css">
+<script src="https://cdn.jsdelivr.net/npm/toastify-js"></script>
 
 <script>
-    let productos = JSON.parse(localStorage.getItem('productos')) || [];
-    let editingId = null;
+    /*  FUNCIONES DE NOTIFICACIÓN de TOASTIFY*/
+    function mostrarToast(mensaje, tipo = "info") {
+        let color = "#0263AA";
+        if (tipo === "exito") color = "#28a745";
+        if (tipo === "error") color = "#dc3545";
+        if (tipo === "aviso") color = "#ffc107";
 
-    function saveToLocalStorage() {
-        localStorage.setItem('productos', JSON.stringify(productos));
+        Toastify({
+            text: mensaje,
+            duration: 3000,
+            gravity: "top",
+            position: "right",
+            backgroundColor: color,
+            close: true,
+            stopOnFocus: true,
+            style: {
+                borderRadius: "4px",
+            }
+        }).showToast();
     }
+</script>
 
-    function updateStats() {
-        const totalRecaudado = productos.reduce((sum, p) => sum + (p.precio * p.vendidos), 0);
-        const productosVendidos = productos.reduce((sum, p) => sum + p.vendidos, 0);
-        const totalProductos = productos.length;
-
-        document.getElementById('totalRecaudado').textContent = `$${totalRecaudado.toFixed(2)}`;
-        document.getElementById('productosVendidos').textContent = productosVendidos;
-        document.getElementById('totalProductos').textContent = totalProductos;
-    }
-
-    function getStockBadge(stock) {
-        if (stock === 0) return '<span class="badge badge-danger">Sin Stock</span>';
-        if (stock < 10) return '<span class="badge badge-warning">Stock Bajo</span>';
-        return '<span class="badge badge-success">Disponible</span>';
-    }
-
-    function renderProductos() {
-        const tbody = document.getElementById('productosBody');
-
-        if (productos.length === 0) {
-            tbody.innerHTML = `
-                    <tr>
-                        <td colspan="7" class="empty-state">
-                            <div>No hay productos registrados. ¡Agrega tu primer producto!</div>
-                        </td>
-                    </tr>
-                `;
-            return;
-        }
-
-        tbody.innerHTML = productos.map(p => `
-                <tr>
-                    <td><strong>${p.nombre}</strong></td>
-                    <td>$${p.precio.toFixed(2)}</td>
-                    <td>${p.stock}</td>
-                    <td>${p.categoria}</td>
-                    <td>${p.vendidos}</td>
-                    <td>${getStockBadge(p.stock)}</td>
-                    <td>
-                        <button class="btn-edit-p" onclick="editProduct(${p.id})">Editar</button>
-                        <button class="btn-delete-p" onclick="deleteProduct(${p.id})">Eliminar</button>
-                    </td>
-                </tr>
-            `).join('');
-    }
-
+<script>
     function openAddModal() {
-        editingId = null;
         document.getElementById('modalTitle').textContent = 'Agregar Producto';
         document.getElementById('productForm').reset();
         document.getElementById('productModal').classList.add('active');
@@ -180,57 +186,56 @@
         editingId = null;
     }
 
-    function deleteProduct(id) {
-        if (confirm('¿Estás seguro de que deseas eliminar este producto?')) {
-            productos = productos.filter(p => p.id !== id);
-            saveToLocalStorage();
-            renderProductos();
-            updateStats();
-        }
-    }
-
-    document.getElementById('productForm').addEventListener('submit', function(e) {
-        e.preventDefault();
-
-        const productoData = {
-            nombre: document.getElementById('nombre').value,
-            precio: parseFloat(document.getElementById('precio').value),
-            stock: parseInt(document.getElementById('stock').value),
-            categoria: document.getElementById('categoria').value,
-            vendidos: parseInt(document.getElementById('vendidos').value),
-            descripcion: document.getElementById('descripcion').value
-        };
-
-        if (editingId) {
-            const index = productos.findIndex(p => p.id === editingId);
-            productos[index] = {
-                ...productos[index],
-                ...productoData
-            };
-        } else {
-            const newProduct = {
-                id: Date.now(),
-                ...productoData
-            };
-            productos.push(newProduct);
-        }
-
-        saveToLocalStorage();
-        renderProductos();
-        updateStats();
-        closeModal();
-    });
-
     // Cerrar modal al hacer clic fuera
     document.getElementById('productModal').addEventListener('click', function(e) {
         if (e.target === this) {
             closeModal();
         }
     });
+</script>
 
-    // Inicializar
-    renderProductos();
-    updateStats();
+<script>
+    document.getElementById("btn-save-p").addEventListener("click", async () => {
+        const nombreProducto = document.getElementById('nombreProducto').value;
+        const precio = document.getElementById('precio').value;
+        const stock = document.getElementById('stock').value;
+        const categoria = document.getElementById('categoria').value;
+        const etiquetas = document.getElementById('etiquetas').value;
+        const descripcion = document.getElementById('descripcion').value;
+        const imagen = document.getElementById('imagen').value;
+
+        try {
+            // Enviar datos al backend
+            const resp = await fetch("<?= BASE_URL ?>vendedor/publicarProducto", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    nombreProducto,
+                    precio,
+                    stock,
+                    categoria,
+                    etiquetas,
+                    descripcion,
+                    imagen
+                })
+            });
+
+            const data = await resp.json();
+
+            if (data.success) {
+                mostrarToast("Producto publicado con exito.", "exito");
+                    setTimeout(() => window.location.reload(), 1000);
+            } else {
+                mostrarToast("Error al publicar el producto.", "error");
+            }
+
+        } catch (error) {
+            console.error("Error en la solicitud:", error);
+            alert("Hubo un problema al enviar los datos.");
+        }
+    });
 </script>
 
 </html>

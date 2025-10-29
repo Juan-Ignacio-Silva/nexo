@@ -104,7 +104,7 @@ class Producto
         $placeholders = implode(',', array_fill(0, count($ids), '?'));
 
         $sql = "
-        SELECT 
+        SELECT
             p.id_producto,
             p.id_vendedor,
             p.nombre,
@@ -138,5 +138,64 @@ class Producto
     }
 
 
-    public static function productosIdVendedor($conexion, $idVendedor) {}
+    public static function productosIdVendedor($conexion, $idVendedor)
+    {
+        $sql = "SELECT * FROM producto WHERE id_vendedor = :id_vendedor";
+        $stmt = $conexion->prepare($sql);
+        $stmt->execute(['id_vendedor' => $idVendedor]);
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public static function registrarProducto($conexion, $nombreProducto, $precio, $stock, $categoria, $etiquetas, $descripcion, $imagen, $idVendedor)
+    {
+        require_once ROOT . 'core/IdGenerator.php';
+
+        // Generar id único para el producto
+        $id = IdGenerator::generarID('producto', $conexion);
+
+        $stmt = $conexion->prepare("INSERT INTO producto(id_producto, id_vendedor, nombre, precio, categoria, etiqueta, descripcion, imagen, cantidad) 
+                VALUES (:idProducto, :idVendedor, :nombreProducto, :precio, :categoria, :etiquetas, :descripcion, :imagen, :stock)");
+
+        $resultado = $stmt->execute([
+            'idProducto' => $id,
+            'idVendedor' => $idVendedor,
+            'nombreProducto' => $nombreProducto,
+            'precio' => $precio,
+            'categoria' => $categoria,
+            'etiquetas' => $etiquetas,
+            'descripcion' => $descripcion,
+            'imagen' => $imagen,
+            'stock' => $stock
+        ]);
+
+        if ($resultado) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public static function registrarResena($conexion, $calificacion, $comentario, $idProducto, $idUsuario) {
+        require_once ROOT . 'core/IdGenerator.php';
+
+        // Generar id único para el producto
+        $id = IdGenerator::generarID('resena', $conexion);
+
+        $stmt = $conexion->prepare("INSERT INTO resena(id_resena, id_usuarios, id_producto, comentario, calificacion) 
+                VALUES (:id_resena, :id_usuarios, :id_producto, :comentario, :calificacion)");
+
+        $resultado = $stmt->execute([
+            'id_resena' => $id,
+            'id_usuarios' => $idUsuario,
+            'id_producto' => $idProducto,
+            'comentario' => $comentario,
+            'calificacion' => $calificacion
+        ]);
+
+        if ($resultado) {
+            return true;
+        }
+
+        return false;
+    }
 }
