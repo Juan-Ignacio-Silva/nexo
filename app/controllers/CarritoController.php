@@ -1,11 +1,13 @@
 <?php
 require ROOT . '/vendor/autoload.php';
 
+use Dotenv\Dotenv;
 use MercadoPago\MercadoPagoConfig;
 use MercadoPago\Client\Preference\PreferenceClient;
 
 class CarritoController
 {
+    private static $baseUrl = BASE_URL;
     public function agregar()
     {
         $input = json_decode(file_get_contents("php://input"), true);
@@ -108,52 +110,128 @@ class CarritoController
         ]);
     }
 
-    public function pagarConMercadoPago() {
-        // Tu Access Token (usa el de TEST en desarrollo)
-        MercadoPagoConfig::setAccessToken("APP_USR-4560372115561328-101613-68b61a5349c6c6a363db9625082affdf-2929598777");
+    // Crear preferencia Mercado Pago
+    public static function crearPreferencia()
+    {
+        try {
+            require ROOT . 'core/Session.php';
+            $idUsuario = Session::get('usuario_id');
 
-        // Crear cliente de preferencia
-        $client = new PreferenceClient();
+            $dotenv = Dotenv::createMutable(__DIR__ . '/../../');
+            $dotenv->safeLoad();
+            $accessToken = $_ENV['ACCESS_TOKEN_MP'] ?? null;
 
-        // Ejemplo de items del carrito (luego los traés de la DB)
-        $items = [
-            [
-                "title" => "Zapatillas Nike",
-                "quantity" => 1,
-                "unit_price" => 50.00
-            ],
-            [
-                "title" => "Camiseta Adidas",
-                "quantity" => 2,
-                "unit_price" => 30.00
-            ]
-        ];
 
-        // Crear la preferencia
-        $preference = $client->create([
-            "items" => $items,
-            "back_urls" => [
-                "success" => "https://tusitio.com/checkout/success",
-                "failure" => "https://tusitio.com/checkout/failure",
-                "pending" => "https://tusitio.com/checkout/pending"
-            ],
-            "auto_return" => "approved"
-        ]);
+            if (empty($accessToken)) {
+                throw new Exception("Falta configurar el token de Mercado Pago");
+            }
 
-        // Redirigir al checkout
-        header("Location: " . $preference->init_point);
-        exit;
+            $data = self::infoProductoCarrito();
+
+            if (empty($data['productos']) || $data['total'] == 0) {
+                http_response_code(400);
+                echo json_encode(["success" => false, "msg" => "Carrito vacío"]);
+                return;
+            }
+
+            // Construir items
+            $items = [];
+            foreach ($data['productos'] as $p) {
+                $items[] = [
+                    "title" => $p['nombre'],
+                    "quantity" => (int)$p['cantidad_carrito'],
+                    "unit_price" => (float)$p['precio'],
+                    "currency_id" => "UYU"
+                ];
+            }
+
+            // Datos de preferencia
+            $preference = [
+                "items" => $items,
+                "auto_return" => "approved",
+                "back_urls" => [
+                    "success" => "http://localhost:8080/carrito/success",
+                    "failure" => "http://localhost:8080/carrito/failure",
+                    "pending" => "http://localhost:8080/carrito/pending"
+                ],
+                "binary_mode" => true,
+                "statement_descriptor" => "Nexo Store",
+                "external_reference" => json_encode([
+                    "id_usuario" => $idUsuario, // ID del usuario logueado
+                    "productos" => array_column($data['productos'], 'id_producto')
+                ])
+            ];
+
+
+            // Request a Mercado Pago
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, "https://api.mercadopago.com/checkout/preferences");
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_POST, true);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($preference));
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                "Content-Type: application/json",
+                "Authorization: Bearer " . $accessToken
+            ]);
+            $response = curl_exec($ch);
+            $httpCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            $curlError = curl_error($ch);
+            curl_close($ch);
+
+            if ($curlError) {
+                throw new Exception("Error de conexión: " . $curlError);
+            }
+
+            $result = json_decode($response, true);
+
+            if ($httpCode !== 201 && $httpCode !== 200) {
+                $errorMsg = $result['message'] ?? ($result['error'] ?? "Error en Mercado Pago");
+                throw new Exception($errorMsg);
+            }
+
+            if (!isset($result['id']) || !isset($result['init_point'])) {
+                throw new Exception("No se obtuvo información completa de la preferencia");
+            }
+
+            echo json_encode([
+                "success" => true,
+                "preferenceId" => $result['id'],
+                "init_point" => $result['init_point'], // 👈 URL checkout
+                "msg" => "Preferencia creada exitosamente"
+            ]);
+        } catch (Exception $e) {
+            http_response_code(500);
+            echo json_encode(["success" => false, "msg" => "Error: " . $e->getMessage()]);
+        }
     }
 
-    public function success() {
-        echo "✅ Pago aprobado.";
+    public function success()
+    {
+        $externalRef = $_GET['external_reference'] ?? null;
+
+        if ($externalRef) {
+            $data = json_decode($externalRef, true);
+            $idUsuario = $data['id_usuario'] ?? null;
+            $productos = $data['productos'] ?? [];
+
+            // Ejemplo: guardar compra en la base de datos
+            if ($idUsuario && !empty($productos)) {
+                require_once ROOT . 'app/models/Compra.php';
+                Compra::registrarCompra($idUsuario, $productos);
+            }
+        }
+
+        echo "✅ Pago aprobado. Gracias por tu compra.";
     }
 
-    public function failure() {
+    public function failure()
+    {
         echo "❌ Pago fallido.";
+        header('Location:' . BASE_URL);
     }
 
-    public function pending() {
+    public function pending()
+    {
         echo "⏳ Pago pendiente.";
     }
 }

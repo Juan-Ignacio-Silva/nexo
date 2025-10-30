@@ -259,7 +259,7 @@
                     <input type="text" id="nombreTienda" name="nombreTienda">
                     <label for="">RUT de la empresa (Opcional)</label>
                     <input type="text" id="rutEmpresa" name="rutEmpresa">
-                    <label for="">Descripcipón</label>
+                    <label for="">Descripción</label>
                     <input type="text" id="descripcion" name="descripcion">
                 </form>
                 <div class="botones-modal">
