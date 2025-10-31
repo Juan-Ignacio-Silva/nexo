@@ -4,6 +4,7 @@
 
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,17 +15,12 @@
             box-sizing: border-box;
         }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background-color: #F8FAFC;
-            min-height: 100vh;
-            line-height: 1.6;
-        }
-
         .container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 40px 20px;
+            background-color: #E1E9EF;
+
         }
 
         .header {
@@ -141,63 +137,63 @@
         }
 
         /* Colores para cada categoría usando la paleta proporcionada */
-        .category-item:nth-child(1) { 
-            --accent-color: #01203A; 
-            --bg-color: #EEF8FF; 
-            --icon-color: #01203A; 
+        .category-item:nth-child(1) {
+            --accent-color: #01203A;
+            --bg-color: #EEF8FF;
+            --icon-color: #01203A;
         }
-        
-        .category-item:nth-child(2) { 
-            --accent-color: #14334C; 
-            --bg-color: #F1F5F9; 
-            --icon-color: #14334C; 
+
+        .category-item:nth-child(2) {
+            --accent-color: #14334C;
+            --bg-color: #F1F5F9;
+            --icon-color: #14334C;
         }
-        
-        .category-item:nth-child(3) { 
-            --accent-color: #024678; 
-            --bg-color: #DBEAFE; 
-            --icon-color: #024678; 
+
+        .category-item:nth-child(3) {
+            --accent-color: #024678;
+            --bg-color: #DBEAFE;
+            --icon-color: #024678;
         }
-        
-        .category-item:nth-child(4) { 
-            --accent-color: #02678E; 
-            --bg-color: #E0F2FE; 
-            --icon-color: #02678E; 
+
+        .category-item:nth-child(4) {
+            --accent-color: #02678E;
+            --bg-color: #E0F2FE;
+            --icon-color: #02678E;
         }
-        
-        .category-item:nth-child(5) { 
-            --accent-color: #0F172A; 
-            --bg-color: #F1F5F9; 
-            --icon-color: #0F172A; 
+
+        .category-item:nth-child(5) {
+            --accent-color: #0F172A;
+            --bg-color: #F1F5F9;
+            --icon-color: #0F172A;
         }
-        
-        .category-item:nth-child(6) { 
-            --accent-color: #475569; 
-            --bg-color: #F8FAFC; 
-            --icon-color: #475569; 
+
+        .category-item:nth-child(6) {
+            --accent-color: #475569;
+            --bg-color: #F8FAFC;
+            --icon-color: #475569;
         }
-        
-        .category-item:nth-child(7) { 
-            --accent-color: #1E40AF; 
-            --bg-color: #DBEAFE; 
-            --icon-color: #1E40AF; 
+
+        .category-item:nth-child(7) {
+            --accent-color: #1E40AF;
+            --bg-color: #DBEAFE;
+            --icon-color: #1E40AF;
         }
-        
-        .category-item:nth-child(8) { 
-            --accent-color: #1E3A8A; 
-            --bg-color: #EFF6FF; 
-            --icon-color: #1E3A8A; 
+
+        .category-item:nth-child(8) {
+            --accent-color: #1E3A8A;
+            --bg-color: #EFF6FF;
+            --icon-color: #1E3A8A;
         }
 
         @media (max-width: 1024px) {
             .categories-grid {
                 grid-template-columns: repeat(3, 1fr);
             }
-            
+
             .category-item:nth-child(3n) {
                 border-right: none;
             }
-            
+
             .category-item:nth-child(4n) {
                 border-right: 1px solid #E2E8F0;
             }
@@ -207,27 +203,27 @@
             .container {
                 padding: 20px 16px;
             }
-            
+
             .categories-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
-            
+
             .category-item {
                 padding: 24px 16px;
             }
-            
+
             .category-item:nth-child(3n) {
                 border-right: 1px solid #E2E8F0;
             }
-            
+
             .category-item:nth-child(2n) {
                 border-right: none;
             }
-            
+
             .category-item:nth-child(4n) {
                 border-right: none;
             }
-            
+
             .header h1 {
                 font-size: 1.75rem;
             }
@@ -237,7 +233,7 @@
             .categories-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .category-item {
                 border-right: none !important;
             }
@@ -255,6 +251,7 @@
         }
     </style>
 </head>
+
 <body>
     <div class="container">
         <div class="categories-container">
@@ -278,8 +275,7 @@
         };
 
         // Datos de categorías
-        const categories = [
-            {
+        const categories = [{
                 id: 1,
                 title: "Computer & Laptop",
                 description: "Computadoras, laptops y accesorios",
@@ -338,7 +334,7 @@
                 const categoryElement = document.createElement('div');
                 categoryElement.className = 'category-item loading';
                 categoryElement.style.animationDelay = `${index * 0.05}s`;
-                
+
                 categoryElement.innerHTML = `
                     <div class="category-icon">
                         ${category.icon}
@@ -358,15 +354,15 @@
         // Función para manejar clicks
         function handleCategoryClick(category) {
             console.log(`Categoría seleccionada: ${category.title}`);
-            
+
             // Efecto visual de click
             const element = event.currentTarget;
             element.style.transform = 'translateY(0px) scale(0.98)';
-            
+
             setTimeout(() => {
                 element.style.transform = '';
             }, 150);
-            
+
             // Simular navegación
             alert(`Navegando a: ${category.title}`);
         }
@@ -374,7 +370,7 @@
         // API simulada para gestión dinámica
         const CategoryAPI = {
             getAll: () => Promise.resolve(categories),
-            
+
             add: (newCategory) => {
                 categories.push({
                     id: categories.length + 1,
@@ -383,17 +379,20 @@
                 renderCategories();
                 return Promise.resolve(newCategory);
             },
-            
+
             update: (id, updates) => {
                 const index = categories.findIndex(cat => cat.id === id);
                 if (index > -1) {
-                    categories[index] = { ...categories[index], ...updates };
+                    categories[index] = {
+                        ...categories[index],
+                        ...updates
+                    };
                     renderCategories();
                     return Promise.resolve(categories[index]);
                 }
                 return Promise.reject('Categoría no encontrada');
             },
-            
+
             remove: (id) => {
                 const index = categories.findIndex(cat => cat.id === id);
                 if (index > -1) {
@@ -414,4 +413,5 @@
         window.CategoryAPI = CategoryAPI;
     </script>
 </body>
+
 </html>

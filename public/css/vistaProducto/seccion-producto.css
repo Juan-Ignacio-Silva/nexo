@@ -26,6 +26,7 @@ body {
   border-radius: 12px;
   padding: 40px;
   margin-bottom: 40px;
+  width: 100%;
 }
 
 /* Galería de imágenes */
@@ -372,6 +373,16 @@ body {
   .product-section {
     grid-template-columns: 1fr;
     padding: 20px;
+  }
+
+  .nav-btn {
+    width: 30px;
+    height: 30px;
+  }
+
+  .thumbnail {
+    width: 45px;
+    height: 45px;
   }
 
   .product-info {
