@@ -150,7 +150,7 @@
                 stopOnFocus: true,
                 style: {
                     borderRadius: "4px",
-                    
+
                 }
             }).showToast();
         }
@@ -185,7 +185,13 @@
         });
     </script>
     <script>
-        document.getElementById("btnCalificarSave").addEventListener("click", async () => {
+        const btn = document.getElementById("btnCalificarSave");
+
+        btn.addEventListener("click", async () => {
+            if (btn.disabled) return;
+            btn.disabled = true;
+            btn.textContent = "Enviando...";
+
             const estrellas = document.getElementById('estrellas-calif').value;
             const comentario = document.getElementById('comentario-calif').value;
             const idProducto = '<?= $producto['id_producto'] ?>';
@@ -210,12 +216,16 @@
                     mostrarToast("Reseña publicada con exito.", "exito");
                     setTimeout(() => window.location.reload(), 1000);
                 } else {
-                    mostrarToast(dataR.msg, "error");
+                    mostrarToast(dataR.message, "error");
+                    btn.disabled = false;
+                    btn.textContent = "Guardar";
                 }
 
             } catch (error) {
                 console.error("Error en la solicitud:", error);
                 alert("Hubo un problema al enviar la reseña!.");
+                btn.disabled = false;
+                btn.textContent = "Guardar";
             }
         });
     </script>

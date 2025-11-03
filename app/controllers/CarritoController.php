@@ -3,7 +3,7 @@ require ROOT . '/vendor/autoload.php';
 
 use Dotenv\Dotenv;
 use MercadoPago\MercadoPagoConfig;
-use MercadoPago\Client\Preference\PreferenceClient;
+use MercadoPago\Client\Payment\PaymentClient;
 
 class CarritoController
 {
@@ -196,7 +196,7 @@ class CarritoController
             echo json_encode([
                 "success" => true,
                 "preferenceId" => $result['id'],
-                "init_point" => $result['init_point'], // 👈 URL checkout
+                "init_point" => $result['init_point'], // URL checkout
                 "msg" => "Preferencia creada exitosamente"
             ]);
         } catch (Exception $e) {
@@ -207,21 +207,16 @@ class CarritoController
 
     public function success()
     {
-        $externalRef = $_GET['external_reference'] ?? null;
+        $conexion = require ROOT . 'core/database.php';
 
-        if ($externalRef) {
-            $data = json_decode($externalRef, true);
-            $idUsuario = $data['id_usuario'] ?? null;
-            $productos = $data['productos'] ?? [];
+        $data = $_GET;
+        $external_ref = json_decode($data['external_reference'], true);
 
-            // Ejemplo: guardar compra en la base de datos
-            if ($idUsuario && !empty($productos)) {
-                require_once ROOT . 'app/models/Compra.php';
-                Compra::registrarCompra($idUsuario, $productos);
-            }
-        }
+        $idUsuario = $external_ref['id_usuario'];
+        $productos = $external_ref['productos'];
 
-        echo "✅ Pago aprobado. Gracias por tu compra.";
+        echo $idUsuario;
+        echo $productos;
     }
 
     public function failure()

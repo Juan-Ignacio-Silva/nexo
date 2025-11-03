@@ -111,7 +111,7 @@ $data = CarritoController::infoProductoCarrito();
             const data = await resp.json();
 
             if (data.success) {
-                mostrarToast("Producto eliminado del carrito con exito", "exito");
+                mostrarToast("Producto eliminado.", "exito");
                 let total_productos = parseInt(localStorage.getItem("totalCarrito")) || 0;
                 total_productos = Math.max(0, total_productos - 1);
                 localStorage.setItem("totalCarrito", total_productos);
@@ -142,8 +142,7 @@ $data = CarritoController::infoProductoCarrito();
             const data = await res.json();
 
             if (!data.success || !data.init_point) {
-                alert("Error al crear la preferencia de pago.");
-                console.error(data);
+                mostrarToast(data.msg, "error");
                 return;
             }
 
@@ -152,7 +151,7 @@ $data = CarritoController::infoProductoCarrito();
 
         } catch (err) {
             console.error("Error general:", err);
-            alert("Hubo un error al procesar el pago.");
+            mostrarToast("Error al procesar el pago.", "error");
         }
     });
 </script>

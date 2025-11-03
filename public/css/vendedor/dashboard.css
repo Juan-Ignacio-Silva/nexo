@@ -296,10 +296,6 @@ tbody tr:hover {
 }
 
 @media (max-width: 768px) {
-  body {
-    padding: 1rem;
-  }
-
   .header {
     flex-direction: column;
     gap: 1rem;
@@ -308,6 +304,14 @@ tbody tr:hover {
 
   .header h1 {
     font-size: 1.5rem;
+  }
+
+  .top-cards {
+    flex-direction: column;
+  }
+
+  table {
+    overflow-x: auto;
   }
 
   .stats-grid {

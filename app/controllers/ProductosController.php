@@ -143,28 +143,22 @@ class ProductosController
 
         $idUsuario = Session::get('usuario_id');
 
-        if ($idUsuario === null) {
-            echo json_encode([
-                'success' => false,
-                'message' => 'Debes tener una sesion iniciada.'
-            ]);
+        if (!$idUsuario) {
+            echo json_encode(['success' => false, 'message' => 'Debes iniciar sesión.']);
             return;
         }
 
-        if (empty($estrellas) || empty($comentario)) {
-            echo json_encode([
-                'success' => false,
-                'message' => 'Campos obligatorios faltantes.'
-            ]);
+        if (empty($estrellas) || empty($comentario) || empty($idProducto)) {
+            echo json_encode(['success' => false, 'message' => 'Campos obligatorios faltantes.']);
             return;
         }
 
         $publicada = Producto::registrarResena($conexion, $estrellas, $comentario, $idProducto, $idUsuario);
 
         if ($publicada === true) {
-            echo json_encode(['success' => true, 'message' => 'Reseña publicada con exito.']);
+            echo json_encode(['success' => true, 'message' => 'Publicada con exito.']);
         } else {
-            echo json_encode(['success' => false, 'message' => 'Error al publicar el producto.']);
+            echo json_encode(['success' => false, 'message' => 'Error al publicar.']);
         }
     }
 }

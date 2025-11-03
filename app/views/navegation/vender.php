@@ -180,7 +180,6 @@
                 box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
                 display: flex;
                 flex-direction: column;
-
             }
 
             .contenido-modal-form::-webkit-scrollbar {
