@@ -150,9 +150,9 @@ class CarritoController
                 "items" => $items,
                 "auto_return" => "approved",
                 "back_urls" => [
-                    "success" => "http://localhost:8080/carrito/success",
-                    "failure" => "http://localhost:8080/carrito/failure",
-                    "pending" => "http://localhost:8080/carrito/pending"
+                    "success" => ROOT. "carrito/success",
+                    "failure" => ROOT. "/carrito/failure",
+                    "pending" => ROOT. "carrito/pending"
                 ],
                 "binary_mode" => true,
                 "statement_descriptor" => "Nexo Store",
