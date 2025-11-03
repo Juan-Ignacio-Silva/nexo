@@ -52,7 +52,7 @@
                 </div>
 
                 <div class="purchase-section">
-                    <input type="number" value="1" min="1" class="quantity-input">
+                    <input type="number" value="1" min="1" class="quantity-input" id="cantidad">
                     <button class="add-to-cart-btn" data-id="<?= $producto['id_producto'] ?>">AGREGAR AL CARRITO</button>
                 </div>
 
@@ -160,6 +160,7 @@
         document.querySelectorAll(".add-to-cart-btn").forEach(boton => {
             boton.addEventListener("click", async () => {
                 const idProducto = boton.dataset.id;
+                const cantidad = document.getElementById('cantidad').value;
 
                 const resp = await fetch("<?= BASE_URL ?>carrito/agregar", {
                     method: "POST",
@@ -167,7 +168,8 @@
                         "Content-Type": "application/json"
                     },
                     body: JSON.stringify({
-                        id: idProducto
+                        idProducto,
+                        cantidad
                     })
                 });
 

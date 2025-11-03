@@ -65,7 +65,7 @@ class VendedorController
         require_once ROOT . 'core/Session.php';
 
         $data = json_decode(file_get_contents("php://input"), true);
-        $nombreProducto = trim($data['nombreProducto'] ?? '');
+        $nombreProducto = trim($data['nombreProducto'] ?? '');  
         $precio = trim($data['precio'] ?? '');
         $stock = trim($data['stock'] ?? '');
         $categoria = trim($data['categoria'] ?? '');

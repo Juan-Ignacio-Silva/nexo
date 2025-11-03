@@ -15,7 +15,6 @@
                 font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
                 background-color: #E1E9EF;
                 color: #334155;
-                line-height: 1.6;
             }
 
             .seccion-venta {

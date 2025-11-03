@@ -198,4 +198,10 @@ class Producto
 
         return false;
     }
+
+    public static function guardarImagen($conexion, $urlImagen) {
+        $query = $conexion->prepare("INSERT INTO productos (imagen_url) VALUES (:url)");
+        $query->bindParam(':url', $urlImagen);
+        $query->execute();
+    }
 }

@@ -7,14 +7,14 @@ use MercadoPago\Client\Payment\PaymentClient;
 
 class CarritoController
 {
-    private static $baseUrl = BASE_URL;
     public function agregar()
     {
         $input = json_decode(file_get_contents("php://input"), true);
-        $id = $input['id'] ?? null;
+        $id = $input['idProducto'] ?? null;
+        $cantidad = $input['cantidad'] ?? 1;
 
-        if (!$id) {
-            echo json_encode(["success" => false, "msg" => "Producto no válido"]);
+        if (!$id || $cantidad <= 0) {
+            echo json_encode(["success" => false, "msg" => "Datos inválidos"]);
             return;
         }
 
@@ -22,14 +22,19 @@ class CarritoController
             $_SESSION['carrito'] = [];
         }
 
-        $msg = "Producto agregado";
-
         if (isset($_SESSION['carrito'][$id])) {
-            $_SESSION['carrito'][$id]['cantidad']++;
-            $msg = "Producto ya agregado, cantidad incrementada";
-        } else {
-            $_SESSION['carrito'][$id] = ["id" => $id, "cantidad" => 1];
+            echo json_encode([
+                "success" => false,
+                "msg" => "Producto ya está agregado al carrito"
+            ]);
+            return;
         }
+
+        $_SESSION['carrito'][$id] = [
+            "id" => $id,
+            "cantidad" => (int)$cantidad
+        ];
+
         $total_productos = count($_SESSION['carrito']);
         $total_items = array_sum(array_column($_SESSION['carrito'], 'cantidad'));
 
@@ -37,9 +42,47 @@ class CarritoController
             "success" => true,
             "total_items" => $total_items,
             "total_productos" => $total_productos,
-            "msg" => $msg
+            "msg" => "Producto agregado."
         ]);
     }
+
+    public function actualizarCantidad()
+    {
+        $input = json_decode(file_get_contents("php://input"), true);
+        $id = $input['idProducto'] ?? null;
+        $cantidad = (int)($input['cantidad'] ?? 0);
+
+        if (!$id || $cantidad < 0) {
+            echo json_encode(["success" => false, "msg" => "Datos inválidos"]);
+            return;
+        }
+
+        if (!isset($_SESSION['carrito'][$id])) {
+            echo json_encode(["success" => false, "msg" => "El producto no está en el carrito"]);
+            return;
+        }
+
+        if ($cantidad === 0) {
+            // Si la cantidad es 0, eliminar el producto
+            unset($_SESSION['carrito'][$id]);
+            $msg = "Producto eliminado del carrito";
+        } else {
+            // Actualizar la cantidad
+            $_SESSION['carrito'][$id]['cantidad'] = $cantidad;
+            $msg = "Cantidad actualizada";
+        }
+
+        $total_productos = count($_SESSION['carrito']);
+        $total_items = array_sum(array_column($_SESSION['carrito'], 'cantidad'));
+
+        echo json_encode([
+            "success" => true,
+            "msg" => $msg,
+            "total_items" => $total_items,
+            "total_productos" => $total_productos
+        ]);
+    }
+
 
     public static function infoProductoCarrito()
     {
@@ -113,9 +156,39 @@ class CarritoController
     // Crear preferencia Mercado Pago
     public static function crearPreferencia()
     {
+        require_once ROOT . 'core/Session.php';
+
+        $dataEnvio = json_decode(file_get_contents("php://input"), true);
+
+        $direccion = trim($dataEnvio['direccion'] ?? '');
+        $departamento = trim($dataEnvio['departamento'] ?? '');
+        $localidad = trim($dataEnvio['localidad'] ?? '');
+        $apartamento = trim($dataEnvio['apartamento'] ?? '');
+        $indicaciones = trim($dataEnvio['indicaciones'] ?? '');
+        $nombre = trim($dataEnvio['nombre'] ?? '');
+        $telefono = trim($dataEnvio['telefono'] ?? '');
+
+        header('Content-Type: application/json');
+
+        if (empty($direccion) || empty($departamento) || empty($localidad) || empty($nombre) || empty($telefono)) {
+            echo json_encode([
+                'success' => false,
+                'msg' => 'Campos obligatorios faltantes.'
+            ]);
+            return;
+        }
+
+        $idUsuario = Session::get('usuario_id');
+
+        if (empty($idUsuario)) {
+            echo json_encode([
+                'success' => false,
+                'msg' => 'No tienes sesion iniciada.'
+            ]);
+            return;
+        }
+
         try {
-            require_once ROOT . 'core/Session.php';
-            $idUsuario = Session::get('usuario_id');
 
             $dotenv = Dotenv::createMutable(__DIR__ . '/../../');
             $dotenv->safeLoad();
@@ -150,15 +223,22 @@ class CarritoController
                 "items" => $items,
                 "auto_return" => "approved",
                 "back_urls" => [
-                    "success" => ROOT. "carrito/success",
-                    "failure" => ROOT. "/carrito/failure",
-                    "pending" => ROOT. "carrito/pending"
+                    "success" => ROOT . "carrito/success",
+                    "failure" => ROOT . "carrito/failure",
+                    "pending" => ROOT . "carrito/pending"
                 ],
                 "binary_mode" => true,
                 "statement_descriptor" => "Nexo Store",
                 "external_reference" => json_encode([
                     "id_usuario" => $idUsuario, // ID del usuario logueado
-                    "productos" => array_column($data['productos'], 'id_producto')
+                    "productos" => array_column($data['productos'], 'id_producto'),
+                    "direccion" => $direccion,
+                    "departamento" => $departamento,
+                    "localidad" => $localidad,
+                    "apartamento" => $apartamento,
+                    "indicaciones" => $indicaciones,
+                    "nombre" => $nombre,
+                    "telefono" => $telefono
                 ])
             ];
 

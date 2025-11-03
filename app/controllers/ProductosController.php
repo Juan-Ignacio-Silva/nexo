@@ -161,4 +161,31 @@ class ProductosController
             echo json_encode(['success' => false, 'message' => 'Error al publicar.']);
         }
     }
+
+    public function subir()
+    {
+        require ROOT . 'models/Producto.php';
+        require_once ROOT . 'core/Supabase.php';
+        
+        if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
+            $nombreArchivo = $_FILES['imagen']['name'];
+            $tmpPath = $_FILES['imagen']['tmp_name'];
+
+            // Instanciar el servicio que maneja la subida a Supabase
+            $storage = new SupabaseStorage();
+            $pathEnBucket = 'productos/' . uniqid() . '-' . $nombreArchivo;
+
+            $urlPublica = $storage->subirArchivo($pathEnBucket, $tmpPath);
+
+            if ($urlPublica) {
+                // Guardás la URL en la BD
+                Producto::guardarImagen($conexion, $urlPublica);
+                echo "✅ Imagen subida correctamente: " . $urlPublica;
+            } else {
+                echo "❌ Error al subir la imagen a Supabase.";
+            }
+        } else {
+            echo "⚠️ No se seleccionó ningún archivo o hubo un error.";
+        }
+    }
 }

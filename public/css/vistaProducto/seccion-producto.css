@@ -368,6 +368,13 @@ body {
   border: 1px solid #e2e8f0;
 }
 
+input:focus,
+textarea:focus {
+  outline: none;
+  border-color: #2563eb;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
 /* Responsive Design */
 @media (max-width: 768px) {
   .product-section {

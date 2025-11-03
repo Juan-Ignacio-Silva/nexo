@@ -13,7 +13,7 @@ $data = CarritoController::infoProductoCarrito();
 
 <div class="container">
     <div class="cart-container">
-        <div class="cart-items">
+        <div class="cart-items" id="cart-items">
             <div id="cart-content">
                 <?php
                 foreach ($data['productos'] as $producto): ?>
@@ -26,7 +26,7 @@ $data = CarritoController::infoProductoCarrito();
                             <div class="item-description"><?= $producto['descripcion'] ?></div>
                             <div class="item-category">Categoría: <?= $producto['categoria'] ?></div>
                             <div class="quantity-controls">
-                                <input type="number" class="quantity-input" value="<?= $producto['cantidad_carrito'] ?>" min="1">
+                                <input type="number" class="quantity-input" data-id="<?= $producto['id_producto'] ?>" value="<?= $producto['cantidad_carrito'] ?>" min="1">
                             </div>
                         </div>
                         <div class="item-actions">
@@ -36,6 +36,58 @@ $data = CarritoController::infoProductoCarrito();
                     </div>
                 <?php endforeach; ?>
             </div>
+        </div>
+        <div class="cart-info-envio" id="cart-info-envio">
+            <div class="header-cart-envio">
+                <h2>Información de Envío</h2>
+                <p id="btn-volver" class="btn-volver">Volver al carrito</p>
+            </div>
+            <form class="form-envio">
+                <!-- Ingresar dirección o lugar -->
+                <div class="form-group">
+                    <label for="address">Ingresar dirección o lugar</label>
+                    <input type="text" id="address" name="address" placeholder="Calle Principal 123" required>
+                </div>
+
+                <!-- Departamento y Localidad -->
+                <div class="form-group">
+                    <label for="department">Departamento</label>
+                    <input type="text" id="department" name="department" placeholder="Tu departamento" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="locality">Localidad o barrio</label>
+                    <input type="text" id="locality" name="locality" placeholder="Tu barrio o localidad" required>
+                </div>
+
+                <!-- Apartamento (opcional) -->
+                <div class="form-group">
+                    <label for="apartment">Apartamento <span class="optional">(opcional)</span></label>
+                    <input type="text" id="apartment" name="apartment" placeholder="Apto. 5B">
+                </div>
+
+                <!-- Indicaciones para la entrega (opcional) -->
+                <div class="form-group">
+                    <label for="delivery-instructions">Indicaciones para la entrega <span class="optional">(opcional)</span></label>
+                    <textarea id="delivery-instructions" name="delivery-instructions" placeholder="Ej: Toca timbre rojo, puerta lateral"></textarea>
+                </div>
+
+                <!-- Datos de contacto -->
+                <h3 class="section-title">Datos de contacto</h3>
+                <p class="contact-info-text">Te llamaremos si hay un problema con la entrega.</p>
+
+                <!-- Nombre y Apellido -->
+                <div class="form-group">
+                    <label for="fullname">Nombre y Apellido</label>
+                    <input type="text" id="fullname" name="fullname" placeholder="Juan Pérez" required>
+                </div>
+
+                <!-- Teléfono -->
+                <div class="form-group">
+                    <label for="phone">Teléfono</label>
+                    <input type="tel" id="phone" name="phone" placeholder="000 000 000" required>
+                </div>
+            </form>
         </div>
         <div class="cart-summary">
             <h2 class="summary-title">Resumen del Pedido</h2>
@@ -54,11 +106,11 @@ $data = CarritoController::infoProductoCarrito();
                 <span>Total:</span>
                 <span id="total">$<?= number_format($data['total'], 2) ?> </span>
             </div>
-            <button class="checkout-btn" id="btn-pagar">
-                Proceder al Pago
+            <button class="checkout-btn" id="btn-continuar">
+                Continuar compra
             </button>
-            <button class="continue-shopping" onclick="continueShopping()">
-                Continuar Comprando
+            <button class="checkout-btn" id="btn-pagar" style="display: none;">
+                Proceder con el pago
             </button>
         </div>
     </div>
@@ -84,11 +136,6 @@ $data = CarritoController::infoProductoCarrito();
             close: true,
             stopOnFocus: true
         }).showToast();
-    }
-
-    /* BOTÓN DE CONTINUAR COMPRANDO */
-    function continueShopping() {
-        window.location.href = "<?= BASE_URL ?>";
     }
 </script>
 
@@ -123,20 +170,116 @@ $data = CarritoController::infoProductoCarrito();
             }
         });
     });
+
+    document.querySelectorAll(".quantity-input").forEach(input => {
+        input.addEventListener("change", async (e) => {
+            const idProducto = e.target.dataset.id;
+            const cantidad = parseInt(e.target.value);
+
+            if (isNaN(cantidad) || cantidad < 0) {
+                mostrarToast("Cantidad inválida.", "error");
+                return;
+            }
+
+            try {
+                const resp = await fetch("<?= BASE_URL ?>carrito/actualizarCantidad", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json"
+                    },
+                    body: JSON.stringify({
+                        idProducto,
+                        cantidad
+                    })
+                });
+
+                const data = await resp.json();
+
+                if (data.success) {
+                    mostrarToast(data.msg, "exito");
+                    document.getElementById("contador-carrito").textContent = data.total_productos;
+                } else {
+                    mostrarToast(data.msg, "error");
+                }
+
+            } catch (err) {
+                console.error(err);
+                mostrarToast("Error al actualizar el carrito.", "error");
+            }
+        });
+    });
 </script>
 
 <script>
-    function continueShopping(){ 
-        window.location.href="<?= BASE_URL ?>"; 
+    const btnContinuar = document.getElementById('btn-continuar');
+    const cartItems = document.getElementById('cart-items');
+    const cartDatos = document.getElementById('cart-info-envio');
+    const btnPagar = document.getElementById('btn-pagar');
+    const btnVolver = document.getElementById('btn-volver');
+
+    document.addEventListener("DOMContentLoaded", () => {
+        const envioVisible = localStorage.getItem("envioVisible");
+        if (envioVisible === "true") {
+            mostrarFormularioEnvio();
+        }
+    });
+
+    function mostrarFormularioEnvio() {
+        cartItems.style.display = 'none';
+        cartDatos.style.display = 'flex';
+        btnContinuar.style.display = 'none';
+        btnPagar.style.display = 'block';
+        btnVolver.style.display = 'inline-block';
     }
 
-    document.getElementById("btn-pagar").addEventListener("click", async () => {
+    function mostrarCarrito() {
+        cartItems.style.display = 'block';
+        cartDatos.style.display = 'none';
+        btnContinuar.style.display = 'block';
+        btnPagar.style.display = 'none';
+        btnVolver.style.display = 'none';
+        localStorage.removeItem("envioVisible");
+    }
+
+    btnContinuar.addEventListener("click", () => {
+        mostrarFormularioEnvio();
+        localStorage.setItem("envioVisible", "true");
+    });
+
+    btnVolver.addEventListener("click", () => {
+        mostrarCarrito();
+    });
+
+    btnPagar.addEventListener("click", async () => {
+
+        const direccion = document.getElementById('address').value.trim();
+        const departamento = document.getElementById('department').value.trim();
+        const localidad = document.getElementById('locality').value.trim();
+        const apartamento = document.getElementById('apartment').value.trim();
+        const indicaciones = document.getElementById('delivery-instructions').value.trim();
+        const nombre = document.getElementById('fullname').value.trim();
+        const telefono = document.getElementById('phone').value.trim();
+
+        if (!direccion || !departamento || !localidad || !nombre || !telefono) {
+            mostrarToast('Campos obligatorios faltantes.', 'error');
+            return;
+        }
+
         try {
             const res = await fetch("<?= BASE_URL ?>carrito/crearPreferencia", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
-                }
+                },
+                body: JSON.stringify({
+                    direccion,
+                    departamento,
+                    localidad,
+                    apartamento,
+                    indicaciones,
+                    nombre,
+                    telefono
+                })
             });
 
             const data = await res.json();
@@ -145,6 +288,8 @@ $data = CarritoController::infoProductoCarrito();
                 mostrarToast(data.msg, "error");
                 return;
             }
+
+            localStorage.removeItem("envioVisible");
 
             // Redirigir a Mercado Pago
             window.location.href = data.init_point;
