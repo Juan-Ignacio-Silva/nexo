@@ -114,7 +114,7 @@ class CarritoController
     public static function crearPreferencia()
     {
         try {
-            require ROOT . 'core/Session.php';
+            require_once ROOT . 'core/Session.php';
             $idUsuario = Session::get('usuario_id');
 
             $dotenv = Dotenv::createMutable(__DIR__ . '/../../');
