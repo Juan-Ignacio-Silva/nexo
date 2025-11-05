@@ -221,13 +221,13 @@
             };
 
             if (dataFav.status === 'added') {
-                mostrarToast(dataFav.message);
+                mostrarToast(dataFav.message, 'exito');
                 heartOn.style.display = 'none';
                 heartOff.style.display = 'block';
             };
 
             if (dataFav.status === 'removed') {
-                mostrarToast(dataFav.message);
+                mostrarToast(dataFav.message, 'exito');
                 heartOn.style.display = 'block';
                 heartOff.style.display = 'none';
             };
