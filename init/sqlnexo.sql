@@ -35,7 +35,7 @@ CREATE TABLE usuarios (
 -- =====================================================
 CREATE TABLE vendedor (
     id_vendedor VARCHAR(36) NOT NULL PRIMARY KEY,
-    id_usuarios VARCHAR(36) NOT NULL REFERENCES usuarios(id_usuarios),
+    id_usuarios VARCHAR(36) NOT NULL REFERENCES usuarios(id_usuarios) ON DELETE CASCADE,
     nombre_empresa VARCHAR(100) NOT NULL,
     rut_empresa VARCHAR(20),
     descripcion TEXT,
@@ -50,7 +50,7 @@ CREATE TABLE vendedor (
 -- =====================================================
 CREATE TABLE producto (
     id_producto VARCHAR(36) NOT NULL PRIMARY KEY,
-    id_vendedor VARCHAR(36) NOT NULL REFERENCES vendedor(id_vendedor),
+    id_vendedor VARCHAR(36) NOT NULL REFERENCES vendedor(id_vendedor) ON DELETE CASCADE,
     nombre VARCHAR(100) NOT NULL,
     precio DECIMAL(10,2) NOT NULL,
     categoria VARCHAR(50) NOT NULL,
@@ -65,7 +65,7 @@ CREATE TABLE producto (
 -- =====================================================
 CREATE TABLE producto_imagen (
     id_imagen VARCHAR(36) NOT NULL PRIMARY KEY,
-    id_producto VARCHAR(36) NOT NULL REFERENCES producto(id_producto),
+    id_producto VARCHAR(36) NOT NULL REFERENCES producto(id_producto) ON DELETE CASCADE,
     url VARCHAR(255) NOT NULL,
     orden INT DEFAULT 0
 );
@@ -75,7 +75,7 @@ CREATE TABLE producto_imagen (
 -- =====================================================
 CREATE TABLE carrito (
     id_carrito VARCHAR(36) NOT NULL PRIMARY KEY,
-    id_usuarios VARCHAR(36) NOT NULL REFERENCES usuarios(id_usuarios),
+    id_usuarios VARCHAR(36) NOT NULL REFERENCES usuarios(id_usuarios) ON DELETE CASCADE,
     fecha_creacion TIMESTAMP NOT NULL
 );
 
@@ -84,8 +84,8 @@ CREATE TABLE carrito (
 -- =====================================================
 CREATE TABLE carrito_items (
     id_carrito_item VARCHAR(36) NOT NULL PRIMARY KEY,
-    id_producto VARCHAR(36) NOT NULL REFERENCES producto(id_producto),
-    id_carrito VARCHAR(36) NOT NULL REFERENCES carrito(id_carrito),
+    id_producto VARCHAR(36) NOT NULL REFERENCES producto(id_producto) ON DELETE CASCADE,
+    id_carrito VARCHAR(36) NOT NULL REFERENCES carrito(id_carrito) ON DELETE CASCADE,
     cantidad INT NOT NULL,
     precio_total DECIMAL(10,2) NOT NULL
 );
@@ -95,8 +95,8 @@ CREATE TABLE carrito_items (
 -- =====================================================
 CREATE TABLE favoritos (
     id_favorito SERIAL NOT NULL PRIMARY KEY,
-    id_usuarios VARCHAR(36) NOT NULL REFERENCES usuarios(id_usuarios),
-    id_producto VARCHAR(36) NOT NULL REFERENCES producto(id_producto)
+    id_usuarios VARCHAR(36) NOT NULL REFERENCES usuarios(id_usuarios) ON DELETE CASCADE,
+    id_producto VARCHAR(36) NOT NULL REFERENCES producto(id_producto) ON DELETE CASCADE
 );
 
 -- =====================================================
@@ -104,7 +104,7 @@ CREATE TABLE favoritos (
 -- =====================================================
 CREATE TABLE direccion (
     id_direccion VARCHAR(36) NOT NULL PRIMARY KEY,
-    id_usuarios VARCHAR(36) NOT NULL REFERENCES usuarios(id_usuarios),
+    id_usuarios VARCHAR(36) NOT NULL REFERENCES usuarios(id_usuarios) ON DELETE CASCADE,
     calle VARCHAR(100),
     numero INT,
     ciudad VARCHAR(50),
@@ -138,7 +138,7 @@ CREATE TABLE pedido_items (
 -- =====================================================
 CREATE TABLE pago (
     id_pago VARCHAR(36) NOT NULL PRIMARY KEY,
-    id_pedido VARCHAR(36) NOT NULL REFERENCES pedido(id_pedido),
+    id_pedido VARCHAR(36) NOT NULL REFERENCES pedido(id_pedido) ON DELETE CASCADE,
     metodo_pago VARCHAR(50),
     monto DECIMAL(10,2) NOT NULL,
     fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -162,4 +162,12 @@ CREATE TABLE resena (
 CREATE TABLE secuencias (
     tipo VARCHAR(50) PRIMARY KEY,
     ultimo_numero INT NOT NULL
+);
+
+-- Tabla de códigos de verificación
+CREATE TABLE codigos_verificacion (
+    id_usuarios VARCHAR(36) REFERENCES usuarios(id_usuarios) ON DELETE CASCADE,
+    codigo VARCHAR(6) NOT NULL,
+    creado_en TIMESTAMP NOT NULL DEFAULT NOW(),
+    PRIMARY KEY (id_usuarios)
 );

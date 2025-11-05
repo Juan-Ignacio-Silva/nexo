@@ -12,6 +12,7 @@ class UsuarioController
     {
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             require_once ROOT . 'core/database.php';
+            require_once ROOT . 'core/Mailer.php';
             require_once ROOT . 'app/models/Usuario.php';
             require_once ROOT . 'core/Session.php';
 
@@ -22,9 +23,25 @@ class UsuarioController
                 $identificado = Usuario::login($conexion, $email, $password);
 
                 if ($identificado) {
-                    Session::set('usuario_id', $identificado['id_usuarios']);
-                    Session::set('usuario_nombre', $identificado['nombre']);
-                    header("Location: ../home");
+
+                    // Generar código aleatorio
+                    $codigo = rand(100000, 999999);
+
+                    // Guardar código en BD
+                    Usuario::guardarCodigo($conexion, $identificado['id_usuarios'], $codigo);
+
+                    // Enviar correo
+                    Mailer::enviarCorreo(
+                        $email,
+                        'Código de verificación',
+                        "Tu código de verificación es: <b>$codigo</b>"
+                    );
+
+                    // Guardar ID temporal de usuario
+                    Session::set('verificacion_usuario', $identificado['id_usuarios']);
+
+                    // Redirigir a verificación
+                    header("Location:" . BASE_URL . "usuario/verificarCodigo");
                     exit;
                 } else {
                     $error = "Email o contraseña incorrecto. Intente de nuevo.";
@@ -42,6 +59,7 @@ class UsuarioController
         // Si se envió el formulario (POST)
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             require_once ROOT . 'core/database.php';
+            require_once ROOT . 'core/Mailer.php';
             require_once ROOT . 'app/models/Usuario.php';
             require_once ROOT . 'core/Session.php';
 
@@ -55,15 +73,25 @@ class UsuarioController
                 $idUser = Usuario::registrar($conexion, $nombre, $apellido, $email, $password);
 
                 if ($idUser) {
-                    $verificado = Usuario::loginPosRegistro($conexion, $idUser);
-                    if ($verificado) {
-                        Session::set('usuario_id', $verificado['id_usuarios']);
-                        Session::set('usuario_nombre', $verificado['nombre']);
-                        header("Location: ../home");
-                        exit;
-                    } else {
-                        $error = "<script>alert('Error al iniciar sesion automaticamente')</script>";
-                    }
+                    // Generar código de verificación
+                    $codigo = rand(100000, 999999);
+                    Usuario::guardarCodigo($conexion, $idUser, $codigo);
+
+                    // Enviar correo
+                    $mensaje = "
+                        <h2>Verificación de cuenta</h2>
+                        <p>Hola $nombre, tu código de verificación es:</p>
+                        <h3>$codigo</h3>
+                        <p>Ingresa este código en la página para activar tu cuenta.</p>
+                    ";
+
+                    Mailer::enviarCorreo($email, "Código de verificación", $mensaje);
+
+                    Session::set('verificacion_usuario', $idUser);
+
+                    // Redirigir a la vista de verificación
+                    header("Location:" . BASE_URL . "usuario/verificarCodigoR");
+                    exit;
                 } else {
                     $error = "Email ya registrado, intente de nuevo.";
                 }
@@ -182,8 +210,8 @@ class UsuarioController
         $client->addScope('email');
         $client->addScope('profile');
 
-                                                                                                                                                        // Generar URL de autenticación
-                                                                                                                                                        $authUrl = $client->createAuthUrl();
+        // Generar URL de autenticación
+        $authUrl = $client->createAuthUrl();
 
         // Redirigir al usuario a Google
         header('Location: ' . $authUrl);
@@ -238,5 +266,71 @@ class UsuarioController
         }
 
         header("Location: ../login");
+    }
+
+    public function verificarCodigo()
+    {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            require_once ROOT . 'core/database.php';
+            require_once ROOT . 'app/models/Usuario.php';
+            require_once ROOT . 'core/Session.php';
+
+            $codigo = trim($_POST['codigo'] ?? '');
+            $usuarioId = Session::get('verificacion_usuario');
+
+            if (!empty($codigo) && $usuarioId) {
+                $valido = Usuario::verificarCodigo($conexion, $usuarioId, $codigo);
+
+                if ($valido) {
+                    $usuario = Usuario::obtenerPorId($conexion, $usuarioId);
+
+                    Session::set('usuario_id', $usuario['id_usuarios']);
+                    Session::set('usuario_nombre', $usuario['nombre']);
+                    Session::remove('verificacion_usuario');
+
+                    header("Location: ../home");
+                    exit;
+                } else {
+                    $error = "Código incorrecto o expirado.";
+                }
+            } else {
+                $error = "Debe ingresar un código válido.";
+            }
+        }
+
+        include ROOT . 'app/views/usuario/verificarCodigo.php';
+    }
+
+    public function verificarCodigoR()
+    {
+        require_once ROOT . 'core/Session.php';
+        require_once ROOT . 'core/database.php';
+        require_once ROOT . 'app/models/Usuario.php';
+
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+            $codigo = trim($_POST['codigo'] ?? '');
+            $usuarioId = Session::get('verificacion_usuario');
+
+            if (!empty($codigo) && $usuarioId) {
+                $valido = Usuario::verificarCodigo($conexion, $usuarioId, $codigo);
+
+                if ($valido) {
+                    $usuario = Usuario::obtenerPorId($conexion, $usuarioId);
+
+                    Session::set('usuario_id', $usuario['id_usuarios']);
+                    Session::set('usuario_nombre', $usuario['nombre']);
+                    Session::remove('verificacion_usuario');
+
+                    header("Location: ../home");
+                    exit;
+                } else {
+                    $error = "Código incorrecto o expirado.";
+                }
+            } else {
+                $error = "Debe ingresar un código válido.";
+            }
+        }
+
+        include ROOT . 'app/views/usuario/verificarCodigo.php';
     }
 }

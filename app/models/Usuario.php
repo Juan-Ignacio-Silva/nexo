@@ -174,4 +174,33 @@ class Usuario
 
         return false;
     }
+
+    public static function guardarCodigo($conexion, $usuarioId, $codigo)
+    {
+        $stmt = $conexion->prepare("
+            INSERT INTO codigos_verificacion (id_usuarios, codigo, creado_en)
+            VALUES (?, ?, NOW())
+            ON CONFLICT (id_usuarios)
+            DO UPDATE SET codigo = EXCLUDED.codigo, creado_en = NOW()
+        ");
+        $stmt->execute([$usuarioId, $codigo]);
+    }
+
+    public static function verificarCodigo($conexion, $usuarioId, $codigo)
+    {
+        $stmt = $conexion->prepare("
+            SELECT * FROM codigos_verificacion
+            WHERE id_usuarios = ? AND codigo = ? 
+            AND creado_en > NOW() - INTERVAL '10 MINUTES'
+        ");
+        $stmt->execute([$usuarioId, $codigo]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
+
+    public static function obtenerPorId($conexion, $usuarioId)
+    {
+        $stmt = $conexion->prepare("SELECT * FROM usuarios WHERE id_usuarios = ?");
+        $stmt->execute([$usuarioId]);
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }
