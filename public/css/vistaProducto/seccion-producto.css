@@ -185,7 +185,7 @@ body {
   transform: translateY(-1px);
 }
 
-.wishlist-btn {
+.btn-fav {
   display: flex;
   align-items: center;
   gap: 8px;
@@ -198,7 +198,7 @@ body {
   transition: color 0.3s ease;
 }
 
-.wishlist-btn:hover {
+.btn-fav:hover {
   color: #de411e;
 }
 
