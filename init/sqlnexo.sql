@@ -1,4 +1,6 @@
--- Eliminar tablas si existen
+-- =====================================================
+-- LIMPIEZA DE TABLAS EXISTENTES
+-- =====================================================
 DROP TABLE IF EXISTS resena CASCADE;
 DROP TABLE IF EXISTS favoritos CASCADE;
 DROP TABLE IF EXISTS carrito_items CASCADE;
@@ -11,8 +13,11 @@ DROP TABLE IF EXISTS producto CASCADE;
 DROP TABLE IF EXISTS direccion CASCADE;
 DROP TABLE IF EXISTS usuarios CASCADE;
 DROP TABLE IF EXISTS pago CASCADE;
+DROP TABLE IF EXISTS secuencias CASCADE;
 
--- Tabla de usuarios
+-- =====================================================
+-- TABLA: usuarios
+-- =====================================================
 CREATE TABLE usuarios (
     id_usuarios VARCHAR(36) NOT NULL PRIMARY KEY,
     nombre VARCHAR(50) NOT NULL,
@@ -25,7 +30,9 @@ CREATE TABLE usuarios (
     fecha_registro TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
--- Tabla de vendedores
+-- =====================================================
+-- TABLA: vendedor
+-- =====================================================
 CREATE TABLE vendedor (
     id_vendedor VARCHAR(36) NOT NULL PRIMARY KEY,
     id_usuarios VARCHAR(36) NOT NULL REFERENCES usuarios(id_usuarios) ON DELETE CASCADE,
@@ -33,10 +40,14 @@ CREATE TABLE vendedor (
     rut_empresa VARCHAR(20),
     descripcion TEXT,
     fecha_registro TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    estado_aprobacion VARCHAR(20) DEFAULT 'pendiente' CHECK (estado_aprobacion IN ('pendiente','aprobado','rechazado'))
+    estado_aprobacion VARCHAR(20) DEFAULT 'pendiente' CHECK (estado_aprobacion IN ('pendiente','aprobado','rechazado')),
+    mp_access_token TEXT,
+    mp_user_id TEXT
 );
 
--- Tabla de productos
+-- =====================================================
+-- TABLA: producto
+-- =====================================================
 CREATE TABLE producto (
     id_producto VARCHAR(36) NOT NULL PRIMARY KEY,
     id_vendedor VARCHAR(36) NOT NULL REFERENCES vendedor(id_vendedor) ON DELETE CASCADE,
@@ -49,7 +60,9 @@ CREATE TABLE producto (
     cantidad INT NOT NULL
 );
 
--- Tabla de imágenes adicionales de productos
+-- =====================================================
+-- TABLA: producto_imagen
+-- =====================================================
 CREATE TABLE producto_imagen (
     id_imagen VARCHAR(36) NOT NULL PRIMARY KEY,
     id_producto VARCHAR(36) NOT NULL REFERENCES producto(id_producto) ON DELETE CASCADE,
@@ -57,31 +70,18 @@ CREATE TABLE producto_imagen (
     orden INT DEFAULT 0
 );
 
--- Tabla de pedidos
-CREATE TABLE pedido (
-    id_pedido VARCHAR(36) NOT NULL PRIMARY KEY,
-    id_usuarios VARCHAR(36) NOT NULL REFERENCES usuarios(id_usuarios) ON DELETE CASCADE,
-    ubicacion VARCHAR(100) NOT NULL,
-    fecha_pedido TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    estado_pedido VARCHAR(20) DEFAULT 'pendiente' CHECK (estado_pedido IN ('pendiente','procesando','enviado','entregado','cancelado'))
-);
-
--- Tabla de ítems del pedido
-CREATE TABLE pedido_items (
-    id_pedido_item VARCHAR(36) NOT NULL PRIMARY KEY,
-    id_pedido VARCHAR(36) NOT NULL REFERENCES pedido(id_pedido) ON DELETE CASCADE,
-    id_producto VARCHAR(36) NOT NULL REFERENCES producto(id_producto) ON DELETE CASCADE,
-    cantidad INT NOT NULL
-);
-
--- Tabla de carritos
+-- =====================================================
+-- TABLA: carrito
+-- =====================================================
 CREATE TABLE carrito (
     id_carrito VARCHAR(36) NOT NULL PRIMARY KEY,
     id_usuarios VARCHAR(36) NOT NULL REFERENCES usuarios(id_usuarios) ON DELETE CASCADE,
     fecha_creacion TIMESTAMP NOT NULL
 );
 
--- Tabla de ítems del carrito
+-- =====================================================
+-- TABLA: carrito_items
+-- =====================================================
 CREATE TABLE carrito_items (
     id_carrito_item VARCHAR(36) NOT NULL PRIMARY KEY,
     id_producto VARCHAR(36) NOT NULL REFERENCES producto(id_producto) ON DELETE CASCADE,
@@ -90,23 +90,18 @@ CREATE TABLE carrito_items (
     precio_total DECIMAL(10,2) NOT NULL
 );
 
--- Tabla de favoritos
+-- =====================================================
+-- TABLA: favoritos
+-- =====================================================
 CREATE TABLE favoritos (
     id_favorito SERIAL NOT NULL PRIMARY KEY,
     id_usuarios VARCHAR(36) NOT NULL REFERENCES usuarios(id_usuarios) ON DELETE CASCADE,
     id_producto VARCHAR(36) NOT NULL REFERENCES producto(id_producto) ON DELETE CASCADE
 );
 
--- Tabla de reseñas
-CREATE TABLE resena (
-    id_resena VARCHAR(36) NOT NULL PRIMARY KEY,
-    id_usuarios VARCHAR(36) NOT NULL REFERENCES usuarios(id_usuarios) ON DELETE CASCADE,
-    id_producto VARCHAR(36) NOT NULL REFERENCES producto(id_producto) ON DELETE CASCADE,
-    comentario TEXT NOT NULL,
-    calificacion INT CHECK (calificacion BETWEEN 1 AND 5)
-);
-
--- Tabla de direcciones de usuarios
+-- =====================================================
+-- TABLA: direccion
+-- =====================================================
 CREATE TABLE direccion (
     id_direccion VARCHAR(36) NOT NULL PRIMARY KEY,
     id_usuarios VARCHAR(36) NOT NULL REFERENCES usuarios(id_usuarios) ON DELETE CASCADE,
@@ -117,7 +112,30 @@ CREATE TABLE direccion (
     pais VARCHAR(50)
 );
 
--- Tabla de pagos
+-- =====================================================
+-- TABLA: pedido
+-- =====================================================
+CREATE TABLE pedido (
+    id_pedido VARCHAR(36) NOT NULL PRIMARY KEY,
+    id_usuarios VARCHAR(36) NOT NULL REFERENCES usuarios(id_usuarios),
+    ubicacion VARCHAR(100) NOT NULL,
+    fecha_pedido TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    estado_pedido VARCHAR(20) DEFAULT 'pendiente' CHECK (estado_pedido IN ('pendiente','procesando','enviado','entregado','cancelado'))
+);
+
+-- =====================================================
+-- TABLA: pedido_items
+-- =====================================================
+CREATE TABLE pedido_items (
+    id_pedido_item VARCHAR(36) NOT NULL PRIMARY KEY,
+    id_pedido VARCHAR(36) NOT NULL REFERENCES pedido(id_pedido),
+    id_producto VARCHAR(36) NOT NULL REFERENCES producto(id_producto),
+    cantidad INT NOT NULL
+);
+
+-- =====================================================
+-- TABLA: pago
+-- =====================================================
 CREATE TABLE pago (
     id_pago VARCHAR(36) NOT NULL PRIMARY KEY,
     id_pedido VARCHAR(36) NOT NULL REFERENCES pedido(id_pedido) ON DELETE CASCADE,
@@ -127,10 +145,23 @@ CREATE TABLE pago (
     estado_pago VARCHAR(20) DEFAULT 'pendiente' CHECK (estado_pago IN ('pendiente','pagado','fallido'))
 );
 
--- Tabla de secuencia para idGenerator
+-- =====================================================
+-- TABLA: resena
+-- =====================================================
+CREATE TABLE resena (
+    id_resena VARCHAR(36) NOT NULL PRIMARY KEY,
+    id_usuarios VARCHAR(36) NOT NULL REFERENCES usuarios(id_usuarios),
+    id_producto VARCHAR(36) NOT NULL REFERENCES producto(id_producto),
+    comentario TEXT NOT NULL,
+    calificacion INT CHECK (calificacion BETWEEN 1 AND 5)
+);
+
+-- =====================================================
+-- TABLA: secuencias
+-- =====================================================
 CREATE TABLE secuencias (
-  tipo VARCHAR(50) PRIMARY KEY,
-  ultimo_numero INT NOT NULL
+    tipo VARCHAR(50) PRIMARY KEY,
+    ultimo_numero INT NOT NULL
 );
 
 -- Tabla de códigos de verificación
