@@ -56,8 +56,20 @@
                     <button class="add-to-cart-btn" data-id="<?= $producto['id_producto'] ?>">AGREGAR AL CARRITO</button>
                 </div>
 
-                <button class="wishlist-btn">
-                    ♡ Examinar Lista de Deseos
+                <button class="btn-fav" id="btn-fav" data-id="<?= $producto['id_producto'] ?>">
+                    <div class="svg-heart-on" id="heart-on">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart-icon lucide-heart">
+                            <path d="M2 9.5a5.5 5.5 0 0 1 9.591-3.676.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 2.29-1.5 4-3 5.5l-5.492 5.313a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5" />
+                        </svg>
+                    </div>
+                    <div class="svg-heart-off" id="heart-off" style="display: none;">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-heart-off-icon lucide-heart-off">
+                            <path d="M10.5 4.893a5.5 5.5 0 0 1 1.091.931.56.56 0 0 0 .818 0A5.49 5.49 0 0 1 22 9.5c0 1.872-1.002 3.356-2.187 4.655" />
+                            <path d="m16.967 16.967-3.459 3.346a2 2 0 0 1-3 .019L5 15c-1.5-1.5-3-3.2-3-5.5a5.5 5.5 0 0 1 2.747-4.761" />
+                            <path d="m2 2 20 20" />
+                        </svg>
+                    </div>
+                    Agregar a favoritos.
                 </button>
 
                 <div class="product-meta">
@@ -185,6 +197,67 @@
                 }
             });
         });
+
+        const btnFav = document.getElementById('btn-fav')
+        btnFav.addEventListener('click', async () => {
+
+            const idProducto = '<?= $producto['id_producto'] ?>';
+            const heartOn = document.getElementById('heart-on');
+            const heartOff = document.getElementById('heart-off');
+
+            const resFav = await fetch('<?= BASE_URL ?>favoritos/toggleFavorito', {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    idProducto
+                })
+            });
+
+            const dataFav = await resFav.json();
+            if (dataFav.success === false) {
+                mostrarToast(dataFav.message, 'error');
+            };
+
+            if (dataFav.status === 'added') {
+                mostrarToast(dataFav.message);
+                heartOn.style.display = 'none';
+                heartOff.style.display = 'block';
+            };
+
+            if (dataFav.status === 'removed') {
+                mostrarToast(dataFav.message);
+                heartOn.style.display = 'block';
+                heartOff.style.display = 'none';
+            };
+        });
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            const idProducto = '<?= $producto['id_producto'] ?>';
+            const heartOn = document.getElementById('heart-on');
+            const heartOff = document.getElementById('heart-off');
+
+            const resFav = await fetch('<?= BASE_URL ?>favoritos/esFavorito', {
+                method: 'POST',
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    idProducto
+                })
+            });
+
+            const dataEsFav = await resFav.json();
+
+            if (dataEsFav.success) {
+                heartOn.style.display = 'none';
+                heartOff.style.display = 'block';
+            } else {
+                heartOn.style.display = 'block';
+                heartOff.style.display = 'none';
+            }
+        })
     </script>
     <script>
         const btn = document.getElementById("btnCalificarSave");

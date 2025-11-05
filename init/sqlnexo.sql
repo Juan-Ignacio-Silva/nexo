@@ -94,7 +94,7 @@ CREATE TABLE carrito_items (
 -- TABLA: favoritos
 -- =====================================================
 CREATE TABLE favoritos (
-    id_favorito VARCHAR(36) NOT NULL PRIMARY KEY,
+    id_favorito SERIAL NOT NULL PRIMARY KEY,
     id_usuarios VARCHAR(36) NOT NULL REFERENCES usuarios(id_usuarios),
     id_producto VARCHAR(36) NOT NULL REFERENCES producto(id_producto)
 );

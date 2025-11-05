@@ -223,9 +223,9 @@ class CarritoController
                 "items" => $items,
                 "auto_return" => "approved",
                 "back_urls" => [
-                    "success" => ROOT . "carrito/success",
-                    "failure" => ROOT . "carrito/failure",
-                    "pending" => ROOT . "carrito/pending"
+                    "success" => BASE_URL . "carrito/success",
+                    "failure" => BASE_URL . "carrito/failure",
+                    "pending" => BASE_URL . "carrito/pending"
                 ],
                 "binary_mode" => true,
                 "statement_descriptor" => "Nexo Store",

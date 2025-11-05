@@ -180,12 +180,12 @@ class ProductosController
             if ($urlPublica) {
                 // Guardás la URL en la BD
                 Producto::guardarImagen($conexion, $urlPublica);
-                echo "✅ Imagen subida correctamente: " . $urlPublica;
+                echo "Imagen subida correctamente: " . $urlPublica;
             } else {
-                echo "❌ Error al subir la imagen a Supabase.";
+                echo "Error al subir la imagen a Supabase.";
             }
         } else {
-            echo "⚠️ No se seleccionó ningún archivo o hubo un error.";
+            echo "No se seleccionó ningún archivo o hubo un error.";
         }
     }
 }
