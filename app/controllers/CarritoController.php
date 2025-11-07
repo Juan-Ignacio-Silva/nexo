@@ -232,6 +232,7 @@ class CarritoController
                 "external_reference" => json_encode([
                     "id_usuario" => $idUsuario, // ID del usuario logueado
                     "productos" => array_column($data['productos'], 'id_producto'),
+                    "total" => $data['total'],
                     "direccion" => $direccion,
                     "departamento" => $departamento,
                     "localidad" => $localidad,
@@ -289,14 +290,52 @@ class CarritoController
     {
         $conexion = require ROOT . 'core/database.php';
 
-        $data = $_GET;
-        $external_ref = json_decode($data['external_reference'], true);
+        if (!isset($_GET['external_reference'])) {
+            echo "No se recibieron datos de la compra.";
+            return;
+        }
 
-        $idUsuario = $external_ref['id_usuario'];
-        $productos = $external_ref['productos'];
+        $external_ref = json_decode($_GET['external_reference'], true);
 
-        echo $idUsuario;
-        echo $productos;
+        if (!$external_ref) {
+            echo "Error al decodificar la información recibida.";
+            return;
+        }
+
+        $idUsuario = $external_ref['id_usuario'] ?? 'Desconocido';
+        $productos = $external_ref['productos'] ?? [];
+        $direccion = $external_ref['direccion'] ?? '';
+        $departamento = $external_ref['departamento'] ?? '';
+        $localidad = $external_ref['localidad'] ?? '';
+        $apartamento = $external_ref['apartamento'] ?? '';
+        $indicaciones = $external_ref['indicaciones'] ?? '';
+        $nombre = $external_ref['nombre'] ?? '';
+        $telefono = $external_ref['telefono'] ?? '';
+
+        echo "<h2>✅ Pago exitoso</h2>";
+        echo "<p><strong>Usuario ID:</strong> $idUsuario</p>";
+        echo "<p><strong>Nombre:</strong> $nombre</p>";
+        echo "<p><strong>Teléfono:</strong> $telefono</p>";
+        echo "<p><strong>Dirección:</strong> $direccion, $apartamento</p>";
+        echo "<p><strong>Localidad:</strong> $localidad ($departamento)</p>";
+        echo "<p><strong>Indicaciones:</strong> $indicaciones</p>";
+
+        echo "<hr><h3>Productos comprados:</h3>";
+
+        if (!empty($productos)) {
+            echo "<ul>";
+            foreach ($productos as $idProducto) {
+                echo "<li>Producto ID: $idProducto</li>";
+            }
+            echo "</ul>";
+        } else {
+            echo "<p>No se recibieron productos.</p>";
+        }
+
+        // si querés mostrar el total:
+        if (isset($external_ref['total'])) {
+            echo "<p><strong>Total:</strong> $" . number_format($external_ref['total'], 2) . "</p>";
+        }
     }
 
     public function failure()
