@@ -257,6 +257,10 @@
                     return;
                 }
 
+                if (result.success) {
+                    localStorage.removeItem('totalCarrito');
+                }
+
                 const d = result.data;
 
                 // Cliente

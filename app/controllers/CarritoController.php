@@ -229,6 +229,9 @@ class CarritoController
                 ],
                 "binary_mode" => true,
                 "statement_descriptor" => "Nexo Store",
+                "payer" => [
+                    "email" => "test_user_7525121157191801824@testuser.com"
+                ],
                 "external_reference" => json_encode([
                     "id_usuario" => $idUsuario, // ID del usuario logueado
                     "productos" => array_column($data['productos'], 'id_producto'),
@@ -293,6 +296,7 @@ class CarritoController
     public function success()
     {
         $conexion = require ROOT . 'core/database.php';
+        require ROOT . 'core/Session.php';
 
         if (!isset($_GET['external_reference'])) {
             echo json_encode(["success" => false, "msg" => "No se recibieron datos de la compra."]);
@@ -305,6 +309,8 @@ class CarritoController
             echo json_encode(["success" => false, "msg" => "Error al decodificar la información recibida."]);
             return;
         }
+
+        Session::remove('carrito');
 
         // Extraer los datos
         $idUsuario = $external_ref['id_usuario'] ?? 'Desconocido';
