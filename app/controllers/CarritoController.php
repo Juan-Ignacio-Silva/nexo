@@ -230,7 +230,7 @@ class CarritoController
                 "binary_mode" => true,
                 "statement_descriptor" => "Nexo Store",
                 "payer" => [
-                    "email" => "test_user_7525121157191801824@testuser.com"
+                    "email" => "test_user_5667324276344884575@testuser.com"
                 ],
                 "external_reference" => json_encode([
                     "id_usuario" => $idUsuario, // ID del usuario logueado
