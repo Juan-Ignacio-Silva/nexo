@@ -232,6 +232,10 @@ class CarritoController
                 "external_reference" => json_encode([
                     "id_usuario" => $idUsuario, // ID del usuario logueado
                     "productos" => array_column($data['productos'], 'id_producto'),
+                    "productoName" => array_column($data['productos'], 'nombre'),
+                    "precioProducto" => array_column($data['productos'], 'precio'),
+                    "subtotal" => array_column($data['productos'], 'subtotal'),
+                    "cantidad" => array_column($data['productos'], 'cantidad_carrito'),
                     "total" => $data['total'],
                     "direccion" => $direccion,
                     "departamento" => $departamento,
@@ -291,19 +295,26 @@ class CarritoController
         $conexion = require ROOT . 'core/database.php';
 
         if (!isset($_GET['external_reference'])) {
-            echo "No se recibieron datos de la compra.";
+            echo json_encode(["success" => false, "msg" => "No se recibieron datos de la compra."]);
             return;
         }
 
         $external_ref = json_decode($_GET['external_reference'], true);
 
         if (!$external_ref) {
-            echo "Error al decodificar la información recibida.";
+            echo json_encode(["success" => false, "msg" => "Error al decodificar la información recibida."]);
             return;
         }
 
+        // Extraer los datos
         $idUsuario = $external_ref['id_usuario'] ?? 'Desconocido';
         $productos = $external_ref['productos'] ?? [];
+        $productoName = $external_ref['productoName'] ?? [];
+        $precios = $external_ref['precioProducto'] ?? [];
+        $cantidades = $external_ref['cantidad'] ?? [];
+        $subtotales = $external_ref['subtotal'] ?? [];
+        $total = $external_ref['total'] ?? 0;
+
         $direccion = $external_ref['direccion'] ?? '';
         $departamento = $external_ref['departamento'] ?? '';
         $localidad = $external_ref['localidad'] ?? '';
@@ -312,31 +323,38 @@ class CarritoController
         $nombre = $external_ref['nombre'] ?? '';
         $telefono = $external_ref['telefono'] ?? '';
 
-        echo "<h2>✅ Pago exitoso</h2>";
-        echo "<p><strong>Usuario ID:</strong> $idUsuario</p>";
-        echo "<p><strong>Nombre:</strong> $nombre</p>";
-        echo "<p><strong>Teléfono:</strong> $telefono</p>";
-        echo "<p><strong>Dirección:</strong> $direccion, $apartamento</p>";
-        echo "<p><strong>Localidad:</strong> $localidad ($departamento)</p>";
-        echo "<p><strong>Indicaciones:</strong> $indicaciones</p>";
 
-        echo "<hr><h3>Productos comprados:</h3>";
+        // Detectar si el request viene de un fetch (AJAX)
+        $isFetch = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
 
-        if (!empty($productos)) {
-            echo "<ul>";
-            foreach ($productos as $idProducto) {
-                echo "<li>Producto ID: $idProducto</li>";
-            }
-            echo "</ul>";
-        } else {
-            echo "<p>No se recibieron productos.</p>";
+        if ($isFetch) {
+            header('Content-Type: application/json');
+            echo json_encode([
+                "success" => true,
+                "data" => [
+                    "id_usuario"    => $idUsuario,
+                    "productos"     => $productos,
+                    "productoName"  => $productoName,
+                    "precios"       => $precios,
+                    "cantidades"    => $cantidades,
+                    "subtotales"    => $subtotales,
+                    "total"         => $total,
+                    "direccion"     => $direccion,
+                    "departamento"  => $departamento,
+                    "localidad"     => $localidad,
+                    "apartamento"   => $apartamento,
+                    "indicaciones"  => $indicaciones,
+                    "nombre"        => $nombre,
+                    "telefono"      => $telefono
+                ]
+            ]);
+            return;
         }
 
-        // si querés mostrar el total:
-        if (isset($external_ref['total'])) {
-            echo "<p><strong>Total:</strong> $" . number_format($external_ref['total'], 2) . "</p>";
-        }
+        // Si es una visita normal (no fetch), carga la vista
+        include ROOT . 'app/views/compra/successPago.php';
     }
+
 
     public function failure()
     {
