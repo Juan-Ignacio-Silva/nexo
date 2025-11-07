@@ -228,26 +228,7 @@ class CarritoController
                     "pending" => BASE_URL . "carrito/pending"
                 ],
                 "binary_mode" => true,
-                "statement_descriptor" => "Nexo Store",
-                "payer" => [
-                    "email" => "test_user_5667324276344884575@testuser.com"
-                ],
-                "external_reference" => json_encode([
-                    "id_usuario" => $idUsuario, // ID del usuario logueado
-                    "productos" => array_column($data['productos'], 'id_producto'),
-                    "productoName" => array_column($data['productos'], 'nombre'),
-                    "precioProducto" => array_column($data['productos'], 'precio'),
-                    "subtotal" => array_column($data['productos'], 'subtotal'),
-                    "cantidad" => array_column($data['productos'], 'cantidad_carrito'),
-                    "total" => $data['total'],
-                    "direccion" => $direccion,
-                    "departamento" => $departamento,
-                    "localidad" => $localidad,
-                    "apartamento" => $apartamento,
-                    "indicaciones" => $indicaciones,
-                    "nombre" => $nombre,
-                    "telefono" => $telefono
-                ])
+                "statement_descriptor" => "Nexo Store"
             ];
 
 
