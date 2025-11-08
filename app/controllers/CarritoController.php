@@ -294,24 +294,57 @@ class CarritoController
     {
         $conexion = require ROOT . 'core/database.php';
         require_once ROOT . 'app/models/OrdenPago.php';
+        require_once ROOT . 'app/models/Pago.php';
         require_once ROOT . 'core/Session.php';
 
-        if (!isset($_GET['external_reference'])) {
-            echo json_encode(["success" => false, "msg" => "No se recibieron datos de la compra."]);
+        if (!isset($_GET['payment_id']) || !isset($_GET['external_reference'])) {
+            echo json_encode(["success" => false, "msg" => "Faltan datos del pago."]);
             return;
         }
 
+        $paymentId = $_GET['payment_id'] ?? null;
         $idOrden = $_GET['external_reference'];
         // Obtenemos la info de la orden temporal
         $infoOrden = OrdenPago::obtenerPorId($conexion, $idOrden);
+        if (!$infoOrden) {
+            echo json_encode(["success" => false, "msg" => "No se encontró la orden temporal."]);
+            return;
+        }
 
-        var_dump($infoOrden);
+        $productosJson = $orden['productos'];
+        $pedidoInfoJson = json_encode([
+            "direccion" => $orden['direccion'],
+            "departamento" => $orden['departamento'],
+            "localidad" => $orden['localidad'],
+            "apartamento" => $orden['apartamento'],
+            "indicaciones" => $orden['indicaciones'],
+            "nombre" => $orden['nombre'],
+            "telefono" => $orden['telefono']
+        ]);
 
-        // Eliminamos el carrito
-        Session::remove('carrito');
+        $resultado = Pago::guardarPago($conexion, $orden['id_usuario'], $paymentId, $orden['total'], $productosJson, $pedidoInfoJson);
+        if ($resultado) {
+            $pagoInfo = [
+                "payment_id" => $paymentId,
+                "total" => $infoOrden['total'],
+                "productos" => json_decode($infoOrden['productos'], true),
+                "direccion" => $infoOrden['direccion'],
+                "departamento" => $infoOrden['departamento'],
+                "localidad" => $infoOrden['localidad'],
+                "apartamento" => $infoOrden['apartamento'],
+                "indicaciones" => $infoOrden['indicaciones'],
+                "nombre" => $infoOrden['nombre'],
+                "telefono" => $infoOrden['telefono'],
+            ];
 
-        // Si es una visita normal (no fetch), carga la vista
-        include ROOT . 'app/views/compra/successPago.php';
+            // Limpieza
+            Session::remove('carrito');
+            OrdenPago::eliminar($conexion, $idOrden);
+
+            // Muestra la vista con la info
+            include ROOT . 'app/views/compra/successPago.php';
+            return;
+        }
     }
 
 
