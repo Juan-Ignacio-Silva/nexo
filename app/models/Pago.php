@@ -6,7 +6,7 @@ class Pago
         $idPago = uniqid('pago_');
 
         if (is_array($productos)) {
-            $productosJson = json_encode($productos, JSON_UNESCAPED_UNICODE);
+            $productos = json_encode($productos, JSON_UNESCAPED_UNICODE);
         }
 
         $stmt = $conexion->prepare("
@@ -20,7 +20,7 @@ class Pago
             $idUsuario,
             $idTransaccion,
             $montoTotal,
-            $productosJson,
+            $productos,
             $pedidoInfoJson
         ]);
     }
