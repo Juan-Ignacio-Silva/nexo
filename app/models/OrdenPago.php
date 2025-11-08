@@ -5,7 +5,7 @@ class OrdenPago
     {
         $stmt = $conexion->prepare("
             INSERT INTO ordenes_temporales 
-            (id, id_usuario, productos, total, direccion, departamento, localidad, apartamento, indicaciones, nombre, telefono)
+            (id_orden, id_usuario, productos, total, direccion, departamento, localidad, apartamento, indicaciones, nombre, telefono)
             VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ");
 
@@ -27,7 +27,7 @@ class OrdenPago
     // Obtener una orden por ID
     public static function obtenerPorId($conexion, $idOrden)
     {
-        $stmt = $conexion->prepare("SELECT * FROM ordenes_temporales WHERE id = ?");
+        $stmt = $conexion->prepare("SELECT * FROM ordenes_temporales WHERE id_orden = ?");
         $stmt->execute([$idOrden]);
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -35,7 +35,7 @@ class OrdenPago
     // Eliminar una orden por id, después del pago exitoso)
     public static function eliminar($conexion, $idOrden)
     {
-        $stmt = $conexion->prepare("DELETE FROM ordenes_temporales WHERE id = ?");
+        $stmt = $conexion->prepare("DELETE FROM ordenes_temporales WHERE id_orden = ?");
         return $stmt->execute([$idOrden]);
     }
 }
