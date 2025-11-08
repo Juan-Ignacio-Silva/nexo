@@ -171,7 +171,6 @@
 </head>
 
 <body>
-    <?= htmlspecialchars($pagoInfo['payment_id']) ?>
     <div class="container" id="recibo">
         <!-- Header -->
         <div class="header">
@@ -193,7 +192,7 @@
         <div class="info-section">
             <div class="section-title">Dirección de Envío</div>
             <div class="info-grid" id="info-envio">
-                <p>Cargando datos de envío...</p>
+                <?= htmlspecialchars($pedido['nombre']) ?>
             </div>
         </div>
 
@@ -212,9 +211,14 @@
                     </tr>
                 </thead>
                 <tbody id="tbody-productos">
-                    <tr>
-                        <td colspan="4">Cargando productos...</td>
-                    </tr>
+                    <?php foreach ($productos as $prod): ?>
+                        <tr>
+                            <td class="product-name"><strong><?= htmlspecialchars($prod['nombre']) ?></strong></td>
+                            <td class="product-quantity"><?= htmlspecialchars($prod['cantidad']) ?></td>
+                            <td class="product-price">$<?= htmlspecialchars($prod['precio']) ?></td>
+                            <td class="product-price">$<?= htmlspecialchars($prod['subtotal']) ?></td>
+                        </tr>
+                    <?php endforeach; ?>
                 </tbody>
             </table>
         </div>
@@ -225,7 +229,7 @@
         <div class="summary" id="resumen">
             <div class="summary-item">
                 <span class="summary-label">Total</span>
-                <span class="summary-value total">$0.00</span>
+                <span class="summary-value total">$<?= htmlspecialchars($pago['monto_total']) ?></span>
             </div>
         </div>
 
