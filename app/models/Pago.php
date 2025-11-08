@@ -37,21 +37,28 @@ class Pago
     {
         require_once ROOT . 'app/models/Producto.php';
 
-        $productosIds = json_decode($productosJson, true);
-        if (empty($productosIds)) {
+        $productosData = json_decode($productosJson, true);
+        if (empty($productosData) || !is_array($productosData)) {
             return [];
         }
 
-        // Preparamos la consulta para obtener productos
+        // Extraer los IDs de los productos
+        $productosIds = array_column($productosData, 'id');
+
+        // Generar placeholders dinámicos
         $placeholders = implode(',', array_fill(0, count($productosIds), '?'));
         $stmt = $conexion->prepare("SELECT id_producto, nombre, precio FROM producto WHERE id_producto IN ($placeholders)");
         $stmt->execute($productosIds);
         $productos = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        // Agregar cantidad y subtotal
+        // Asignar cantidad y subtotal desde el JSON original
         foreach ($productos as &$p) {
-            $p['cantidad'] = $p['cantidad'] ?? 1;
-            $p['subtotal'] = $p['precio'] * $p['cantidad'];
+            $info = array_filter($productosData, fn($item) => $item['id'] === $p['id_producto']);
+            $info = reset($info); // obtiene el primer elemento coincidente
+            $cantidad = isset($info['cantidad']) ? (int)$info['cantidad'] : 1;
+
+            $p['cantidad'] = $cantidad;
+            $p['subtotal'] = $p['precio'] * $cantidad;
         }
 
         return $productos;
