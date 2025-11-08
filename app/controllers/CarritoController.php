@@ -222,9 +222,17 @@ class CarritoController
             require_once ROOT . 'app/models/OrdenPago.php';
             // Generar id unica para la orden
             $idOrden = uniqid('orden_');
-            $productosIds = array_column($data['productos'], 'id_producto');
+
+            $productosData = [];
+            foreach ($data['productos'] as $p) {
+                $productosData[] = [
+                    "id" => $p['id_producto'],
+                    "cantidad" => (int)$p['cantidad_carrito']
+                ];
+            }
+
             // Registro una orden temporal
-            $guardarDatos = OrdenPago::crear($conexion, $idOrden, $idUsuario, $productosIds, $data['total'], $direccion, $departamento, $localidad, $apartamento, $indicaciones, $nombre, $telefono);
+            $guardarDatos = OrdenPago::crear($conexion, $idOrden, $idUsuario, $productosData, $data['total'], $direccion, $departamento, $localidad, $apartamento, $indicaciones, $nombre, $telefono);
 
             if (!$guardarDatos) {
                 echo json_encode([
@@ -345,7 +353,7 @@ class CarritoController
         }
 
         $productos = Pago::obtenerProductosDePago($conexion, $pago['productos']);
-        
+
         $pedido = json_decode($pago['pedido_info'], true);
 
         // Cargar la vista de éxito
