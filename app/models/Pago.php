@@ -1,9 +1,13 @@
 <?php
 class Pago
 {
-    public static function guardarPago($conexion, $idUsuario, $idTransaccion, $montoTotal, $productosArray, $pedidoInfoJson)
+    public static function guardarPago($conexion, $idUsuario, $idTransaccion, $montoTotal, $productos, $pedidoInfoJson)
     {
         $idPago = uniqid('pago_');
+
+        if (is_array($productos)) {
+            $productosJson = json_encode($productos, JSON_UNESCAPED_UNICODE);
+        }
 
         $stmt = $conexion->prepare("
             INSERT INTO pago (
@@ -16,7 +20,7 @@ class Pago
             $idUsuario,
             $idTransaccion,
             $montoTotal,
-            $productosArray,
+            $productosJson,
             $pedidoInfoJson
         ]);
     }
