@@ -3,16 +3,8 @@ class OrdenPago
 {
     public static function crear($conexion, $idOrden, $idUsuario, $productos, $total, $direccion, $departamento, $localidad, $apartamento, $indicaciones, $nombre, $telefono)
     {
-        // Estructuramos los productos con id + cantidad
-        $productosFormateados = array_map(function ($p) {
-            return [
-                'id' => $p['id_producto'],
-                'cantidad' => (int)$p['cantidad_carrito'] ?? 1
-            ];
-        }, $productos);
-
-        $productosJson = json_encode($productosFormateados, JSON_UNESCAPED_UNICODE);
-
+        $productosJson = json_encode($productos, JSON_UNESCAPED_UNICODE);
+        
         $stmt = $conexion->prepare("
         INSERT INTO ordenes_temporales 
         (id_orden, id_usuario, productos, total, direccion, departamento, localidad, apartamento, indicaciones, nombre, telefono)
