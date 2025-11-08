@@ -157,6 +157,24 @@ textarea:focus {
   .form-info-user input {
     width: 100%;
   }
+
+  .header-perfil {
+    flex-direction: column;
+    height: auto;
+    align-items: center;
+  }
+
+  .foto-perfil {
+    width: 120px;
+    height: 120px;
+  }
+
+  .informacion-perfil {
+    padding: 10px 0px 0px 0px;
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+  }
 }
 
 /* VISTA PRDUCTOS FAVORITOS */
