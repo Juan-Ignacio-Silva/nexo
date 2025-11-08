@@ -314,10 +314,6 @@ class CarritoController
         $idOrden = $_GET['external_reference'];
         // Obtenemos la info de la orden temporal
         $infoOrden = OrdenPago::obtenerPorId($conexion, $idOrden);
-        if (!$infoOrden) {
-            echo json_encode(["success" => false, "msg" => "No se encontró la orden temporal."]);
-            return;
-        }
 
         $productosJson = $infoOrden['productos'];
         if (!is_string($productosJson)) {
@@ -353,7 +349,7 @@ class CarritoController
         }
 
         $productos = Pago::obtenerProductosDePago($conexion, $pago['productos']);
-
+        var_dump($productos);
         $pedido = json_decode($pago['pedido_info'], true);
 
         // Cargar la vista de éxito
