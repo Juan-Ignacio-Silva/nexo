@@ -312,6 +312,10 @@ class CarritoController
         }
 
         $productosJson = $infoOrden['productos'];
+        if (!is_string($productosJson)) {
+            $productosJson = json_encode($productosJson);
+        }
+
         $pedidoInfoJson = json_encode([
             "direccion" => $infoOrden['direccion'],
             "departamento" => $infoOrden['departamento'],
@@ -323,28 +327,29 @@ class CarritoController
         ]);
 
         $resultado = Pago::guardarPago($conexion, $infoOrden['id_usuario'], $paymentId, $infoOrden['total'], $productosJson, $pedidoInfoJson);
-        if ($resultado) {
-            $pagoInfo = [
-                "payment_id" => $paymentId,
-                "total" => $infoOrden['total'],
-                "productos" => json_decode($infoOrden['productos'], true),
-                "direccion" => $infoOrden['direccion'],
-                "departamento" => $infoOrden['departamento'],
-                "localidad" => $infoOrden['localidad'],
-                "apartamento" => $infoOrden['apartamento'],
-                "indicaciones" => $infoOrden['indicaciones'],
-                "nombre" => $infoOrden['nombre'],
-                "telefono" => $infoOrden['telefono'],
-            ];
 
-            // Limpieza
-            Session::remove('carrito');
-            OrdenPago::eliminar($conexion, $idOrden);
-
-            // Muestra la vista con la info
-            include ROOT . 'app/views/compra/successPago.php';
+        if (!$resultado) {
+            echo json_encode(["success" => false, "msg" => "Error al guardar el pago."]);
             return;
         }
+
+        // Borrar carrito y orden temporal
+        Session::remove('carrito');
+        OrdenPago::eliminar($conexion, $idOrden);
+
+        // Recuperar la información del pago para mostrar
+        $pago = Pago::obtenerPorTransaccion($conexion, $paymentId);
+        if (!$pago) {
+            echo json_encode(["success" => false, "msg" => "No se pudo obtener la información del pago."]);
+            return;
+        }
+
+        $productos = Pago::obtenerProductosDePago($conexion, $pago['productos']);
+        
+        $pedido = json_decode($pago['pedido_info'], true);
+
+        // Cargar la vista de éxito
+        include ROOT . 'app/views/compra/successPago.php';
     }
 
 
