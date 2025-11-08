@@ -311,15 +311,15 @@ class CarritoController
             return;
         }
 
-        $productosJson = $orden['productos'];
+        $productosJson = $infoOrden['productos'];
         $pedidoInfoJson = json_encode([
-            "direccion" => $orden['direccion'],
-            "departamento" => $orden['departamento'],
-            "localidad" => $orden['localidad'],
-            "apartamento" => $orden['apartamento'],
-            "indicaciones" => $orden['indicaciones'],
-            "nombre" => $orden['nombre'],
-            "telefono" => $orden['telefono']
+            "direccion" => $infoOrden['direccion'],
+            "departamento" => $infoOrden['departamento'],
+            "localidad" => $infoOrden['localidad'],
+            "apartamento" => $infoOrden['apartamento'],
+            "indicaciones" => $infoOrden['indicaciones'],
+            "nombre" => $infoOrden['nombre'],
+            "telefono" => $infoOrden['telefono']
         ]);
 
         $resultado = Pago::guardarPago($conexion, $orden['id_usuario'], $paymentId, $orden['total'], $productosJson, $pedidoInfoJson);
