@@ -227,7 +227,9 @@ class CarritoController
             foreach ($data['productos'] as $p) {
                 $productosData[] = [
                     "id" => $p['id_producto'],
-                    "cantidad" => (int)$p['cantidad_carrito']
+                    "cantidad" => (int)$p['cantidad_carrito'],
+                    "subtotal" => (int)$p['subtotal'],
+                    "precio" => (float)$p['precio']
                 ];
             }
 
@@ -299,69 +301,61 @@ class CarritoController
     }
 
     public function success()
-{
-    $conexion = require ROOT . 'core/database.php';
-    require_once ROOT . 'app/models/OrdenPago.php';
-    require_once ROOT . 'app/models/Pago.php';
-    require_once ROOT . 'core/Session.php';
+    {
+        $conexion = require ROOT . 'core/database.php';
+        require_once ROOT . 'app/models/OrdenPago.php';
+        require_once ROOT . 'app/models/Pago.php';
+        require_once ROOT . 'core/Session.php';
 
-    header('Content-Type: application/json');
+        header('Content-Type: application/json');
 
-    if (!isset($_GET['payment_id']) || !isset($_GET['external_reference'])) {
-        echo json_encode(["success" => false, "msg" => "Faltan datos del pago."]);
-        return;
+        if (!isset($_GET['payment_id']) || !isset($_GET['external_reference'])) {
+            echo json_encode(["success" => false, "msg" => "Faltan datos del pago."]);
+            return;
+        }
+
+        $paymentId = $_GET['payment_id'];
+        $idOrden = $_GET['external_reference'];
+
+        // Buscar la orden temporal
+        $infoOrden = OrdenPago::obtenerPorId($conexion, $idOrden);
+        if (!$infoOrden) {
+            return;
+        }
+
+        // Armamos los datos del pedido (dirección, contacto, etc.)
+        $pedidoInfoUserJson = json_encode([
+            "direccion" => $infoOrden['direccion'],
+            "departamento" => $infoOrden['departamento'],
+            "localidad" => $infoOrden['localidad'],
+            "apartamento" => $infoOrden['apartamento'],
+            "indicaciones" => $infoOrden['indicaciones'],
+            "nombre" => $infoOrden['nombre'],
+            "telefono" => $infoOrden['telefono']
+        ], JSON_UNESCAPED_UNICODE);
+
+        // Guardamos el pago en la tabla `pago`
+        $resultado = Pago::guardarPago(
+            $conexion,
+            $infoOrden['id_usuario'],
+            $paymentId,
+            $infoOrden['total'],
+            json_decode($infoOrden['productos'], true),
+            $pedidoInfoUserJson
+        );
+
+        if ($resultado) {
+            // Limpiar carrito y eliminar orden temporal
+            Session::remove('carrito');
+            OrdenPago::eliminar($conexion, $idOrden);
+
+            // Pasamos la info a la vista de éxito
+            include ROOT . 'app/views/compra/successPago.php';
+            return;
+        } else {
+            echo json_encode(["success" => false, "msg" => "Error al guardar el pago."]);
+        }
     }
-
-    $paymentId = $_GET['payment_id'];
-    $idOrden = $_GET['external_reference'];
-
-    // Buscar la orden temporal
-    $infoOrden = OrdenPago::obtenerPorId($conexion, $idOrden);
-    if (!$infoOrden) {
-        echo json_encode(["success" => false, "msg" => "No se encontró la orden temporal."]);
-        return;
-    }
-
-    // Armamos los datos del pedido (dirección, contacto, etc.)
-    $pedidoInfoJson = json_encode([
-        "direccion" => $infoOrden['direccion'],
-        "departamento" => $infoOrden['departamento'],
-        "localidad" => $infoOrden['localidad'],
-        "apartamento" => $infoOrden['apartamento'],
-        "indicaciones" => $infoOrden['indicaciones'],
-        "nombre" => $infoOrden['nombre'],
-        "telefono" => $infoOrden['telefono']
-    ], JSON_UNESCAPED_UNICODE);
-
-    // Guardamos el pago en la tabla `pago`
-    $resultado = Pago::guardarPago(
-        $conexion,
-        $infoOrden['id_usuario'],
-        $paymentId,
-        $infoOrden['total'],
-        json_decode($infoOrden['productos'], true),
-        $pedidoInfoJson
-    );
-
-    if ($resultado) {
-        // Limpiar carrito y eliminar orden temporal
-        Session::remove('carrito');
-        OrdenPago::eliminar($conexion, $idOrden);
-
-        // Recuperar la información del pago recién guardado
-        $pago = Pago::obtenerPorTransaccion($conexion, $paymentId);
-
-        // Obtener los productos asociados con sus cantidades y subtotales
-        $productos = Pago::obtenerProductosDePago($conexion, $pago['productos']);
-        $pedido = json_decode($pago['pedido_info'], true);
-
-        // Pasamos la info a la vista de éxito
-        include ROOT . 'app/views/compra/successPago.php';
-        return;
-    } else {
-        echo json_encode(["success" => false, "msg" => "Error al guardar el pago."]);
-    }
-}
 
 
 
