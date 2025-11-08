@@ -171,6 +171,7 @@
 </head>
 
 <body>
+    <?= htmlspecialchars($pagoInfo['payment_id']) ?>
     <div class="container" id="recibo">
         <!-- Header -->
         <div class="header">
@@ -233,79 +234,6 @@
             <p>Gracias por su compra</p>
         </div>
     </div>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", async () => {
-            const params = new URLSearchParams(window.location.search);
-            const external_reference = params.get('external_reference');
-
-            if (!external_reference) {
-                document.getElementById("recibo").innerHTML = "<h2>Error: No se recibieron datos.</h2>";
-                return;
-            }
-
-            try {
-                const response = await fetch(window.location.pathname + "?external_reference=" + encodeURIComponent(external_reference), {
-                    headers: {
-                        "X-Requested-With": "XMLHttpRequest"
-                    }
-                });
-                const result = await response.json();
-
-                if (!result.success) {
-                    document.getElementById("recibo").innerHTML = `<h2>${result.msg}</h2>`;
-                    return;
-                }
-
-                if (result.success) {
-                    localStorage.removeItem('totalCarrito');
-                }
-
-                const d = result.data;
-
-                // Cliente
-                document.getElementById("info-cliente").innerHTML = `
-                <div class="info-item"><span class="info-label">Nombre</span><span class="info-value">${d.nombre}</span></div>
-                <div class="info-item"><span class="info-label">ID Usuario</span><span class="info-value">#${d.id_usuario}</span></div>
-                <div class="info-item"><span class="info-label">Teléfono</span><span class="info-value">${d.telefono}</span></div>
-                <div class="info-item full-width"><span class="info-label">Total</span><span class="info-value">$${d.total.toFixed(2)}</span></div>
-            `;
-
-                // Envío
-                document.getElementById("info-envio").innerHTML = `
-                <div class="info-item full-width"><span class="info-label">Dirección</span><span class="info-value">${d.direccion}</span></div>
-                <div class="info-item"><span class="info-label">Departamento</span><span class="info-value">${d.departamento}</span></div>
-                <div class="info-item"><span class="info-label">Apartamento</span><span class="info-value">${d.apartamento}</span></div>
-                <div class="info-item"><span class="info-label">Localidad</span><span class="info-value">${d.localidad}</span></div>
-                <div class="info-item full-width"><span class="info-label">Indicaciones</span><span class="info-value">${d.indicaciones}</span></div>
-            `;
-
-                // Productos
-                const tbody = document.getElementById("tbody-productos");
-                tbody.innerHTML = "";
-                if (d.productos.length > 0) {
-                    d.productos.forEach((p, i) => {
-                        tbody.innerHTML += `
-                        <tr>
-                            <td class="product-name">${d.productoName[i]}</td>
-                            <td class="product-quantity">${d.cantidades[i]}</td>
-                            <td class="product-price">$${parseFloat(d.precios[i]).toFixed(2)}</td>
-                            <td class="product-price">$${parseFloat(d.subtotales[i]).toFixed(2)}</td>
-                        </tr>`;
-                    });
-                } else {
-                    tbody.innerHTML = `<tr><td colspan="4">No se recibieron productos.</td></tr>`;
-                }
-
-                // Total resumen
-                document.querySelector("#resumen .summary-value.total").textContent = `$${d.total.toFixed(2)}`;
-
-            } catch (err) {
-                console.error(err);
-                document.getElementById("recibo").innerHTML = "<h2>Error al cargar la información.</h2>";
-            }
-        });
-    </script>
 </body>
 
 </html>

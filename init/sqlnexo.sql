@@ -138,13 +138,16 @@ CREATE TABLE pedido_items (
 -- TABLA: pago
 -- =====================================================
 CREATE TABLE pago (
-    id_pago VARCHAR(36) NOT NULL PRIMARY KEY,
-    id_pedido VARCHAR(36) NOT NULL REFERENCES pedido(id_pedido) ON DELETE CASCADE,
-    metodo_pago VARCHAR(50),
-    monto DECIMAL(10,2) NOT NULL,
-    fecha TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    estado_pago VARCHAR(20) DEFAULT 'pendiente' CHECK (estado_pago IN ('pendiente','pagado','fallido'))
+    id_pago VARCHAR(36) PRIMARY KEY,
+    id_usuario VARCHAR(36) NOT NULL REFERENCES usuarios(id_usuarios) ON DELETE CASCADE,
+    id_transaccion_mp VARCHAR(100),
+    monto_total DECIMAL(10,2) NOT NULL,
+    estado_pago VARCHAR(20) DEFAULT 'pendiente' CHECK (estado_pago IN ('pendiente','pagado','fallido','rechazado','cancelado')),
+    productos JSONB NOT NULL,
+    pedido_info JSONB NOT NULL,
+    fecha_pago TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
 
 -- =====================================================
 -- TABLA: resena
