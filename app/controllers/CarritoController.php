@@ -348,13 +348,12 @@ class CarritoController
             // Limpiar carrito y eliminar orden temporal
             Session::remove('carrito');
             OrdenPago::eliminar($conexion, $idOrden);
-
-            // Pasamos la info a la vista de éxito
-            include ROOT . 'app/views/compra/successPago.php';
-            return;
+            
         } else {
             echo json_encode(["success" => false, "msg" => "Error al guardar el pago."]);
         }
+
+        include ROOT . 'app/views/compra/successPago.php';
     }
 
 
