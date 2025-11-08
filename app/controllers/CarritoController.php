@@ -340,7 +340,7 @@ class CarritoController
             $infoOrden['id_usuario'],
             $paymentId,
             $infoOrden['total'],
-            json_decode($infoOrden['productos'], true),
+            $infoOrden['productos'],
             $pedidoInfoUserJson
         );
 
