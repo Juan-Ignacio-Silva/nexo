@@ -299,62 +299,70 @@ class CarritoController
     }
 
     public function success()
-    {
-        $conexion = require ROOT . 'core/database.php';
-        require_once ROOT . 'app/models/OrdenPago.php';
-        require_once ROOT . 'app/models/Pago.php';
-        require_once ROOT . 'core/Session.php';
+{
+    $conexion = require ROOT . 'core/database.php';
+    require_once ROOT . 'app/models/OrdenPago.php';
+    require_once ROOT . 'app/models/Pago.php';
+    require_once ROOT . 'core/Session.php';
 
-        if (!isset($_GET['payment_id']) || !isset($_GET['external_reference'])) {
-            echo json_encode(["success" => false, "msg" => "Faltan datos del pago."]);
-            return;
-        }
+    header('Content-Type: application/json');
 
-        $paymentId = $_GET['payment_id'] ?? null;
-        $idOrden = $_GET['external_reference'];
-        // Obtenemos la info de la orden temporal
-        $infoOrden = OrdenPago::obtenerPorId($conexion, $idOrden);
+    if (!isset($_GET['payment_id']) || !isset($_GET['external_reference'])) {
+        echo json_encode(["success" => false, "msg" => "Faltan datos del pago."]);
+        return;
+    }
 
-        $productosJson = $infoOrden['productos'];
-        if (!is_string($productosJson)) {
-            $productosJson = json_encode($productosJson);
-        }
+    $paymentId = $_GET['payment_id'];
+    $idOrden = $_GET['external_reference'];
 
-        $pedidoInfoJson = json_encode([
-            "direccion" => $infoOrden['direccion'],
-            "departamento" => $infoOrden['departamento'],
-            "localidad" => $infoOrden['localidad'],
-            "apartamento" => $infoOrden['apartamento'],
-            "indicaciones" => $infoOrden['indicaciones'],
-            "nombre" => $infoOrden['nombre'],
-            "telefono" => $infoOrden['telefono']
-        ]);
+    // Buscar la orden temporal
+    $infoOrden = OrdenPago::obtenerPorId($conexion, $idOrden);
+    if (!$infoOrden) {
+        echo json_encode(["success" => false, "msg" => "No se encontró la orden temporal."]);
+        return;
+    }
 
-        $resultado = Pago::guardarPago($conexion, $infoOrden['id_usuario'], $paymentId, $infoOrden['total'], $productosJson, $pedidoInfoJson);
+    // Armamos los datos del pedido (dirección, contacto, etc.)
+    $pedidoInfoJson = json_encode([
+        "direccion" => $infoOrden['direccion'],
+        "departamento" => $infoOrden['departamento'],
+        "localidad" => $infoOrden['localidad'],
+        "apartamento" => $infoOrden['apartamento'],
+        "indicaciones" => $infoOrden['indicaciones'],
+        "nombre" => $infoOrden['nombre'],
+        "telefono" => $infoOrden['telefono']
+    ], JSON_UNESCAPED_UNICODE);
 
-        if (!$resultado) {
-            echo json_encode(["success" => false, "msg" => "Error al guardar el pago."]);
-            return;
-        }
+    // Guardamos el pago en la tabla `pago`
+    $resultado = Pago::guardarPago(
+        $conexion,
+        $infoOrden['id_usuario'],
+        $paymentId,
+        $infoOrden['total'],
+        json_decode($infoOrden['productos'], true),
+        $pedidoInfoJson
+    );
 
-        // Borrar carrito y orden temporal
+    if ($resultado) {
+        // Limpiar carrito y eliminar orden temporal
         Session::remove('carrito');
         OrdenPago::eliminar($conexion, $idOrden);
 
-        // Recuperar la información del pago para mostrar
+        // Recuperar la información del pago recién guardado
         $pago = Pago::obtenerPorTransaccion($conexion, $paymentId);
-        if (!$pago) {
-            echo json_encode(["success" => false, "msg" => "No se pudo obtener la información del pago."]);
-            return;
-        }
 
+        // Obtener los productos asociados con sus cantidades y subtotales
         $productos = Pago::obtenerProductosDePago($conexion, $pago['productos']);
-        var_dump($productos);
         $pedido = json_decode($pago['pedido_info'], true);
 
-        // Cargar la vista de éxito
+        // Pasamos la info a la vista de éxito
         include ROOT . 'app/views/compra/successPago.php';
+        return;
+    } else {
+        echo json_encode(["success" => false, "msg" => "Error al guardar el pago."]);
     }
+}
+
 
 
     public function failure()
