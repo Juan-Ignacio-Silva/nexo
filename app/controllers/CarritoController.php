@@ -157,6 +157,7 @@ class CarritoController
     public static function crearPreferencia()
     {
         require_once ROOT . 'core/Session.php';
+        $conexion = require ROOT . 'core/database.php';
 
         $dataEnvio = json_decode(file_get_contents("php://input"), true);
 
@@ -218,6 +219,21 @@ class CarritoController
                 ];
             }
 
+            require_once ROOT . 'app/models/OrdenPago.php';
+            // Generar id unica para la orden
+            $idOrden = uniqid('orden_');
+            $productosIds = array_column($data['productos'], 'id_producto');
+            // Registro una orden temporal
+            $guardarDatos = OrdenPago::crear($conexion, $idOrden, $idUsuario, $productosIds, $data['total'], $direccion, $departamento, $localidad, $apartamento, $indicaciones, $nombre, $telefono);
+
+            if (!$guardarDatos) {
+                echo json_encode([
+                    'success' => false,
+                    'msg' => 'Error al proceder con el pago. Intente de nuevo'
+                ]);
+                return;
+            }
+
             // Datos de preferencia
             $preference = [
                 "items" => $items,
@@ -228,9 +244,9 @@ class CarritoController
                     "pending" => BASE_URL . "carrito/pending"
                 ],
                 "binary_mode" => true,
-                "statement_descriptor" => "Nexo Store"
+                "statement_descriptor" => "Nexo Store",
+                "external_reference" => $idOrden
             ];
-
 
             // Request a Mercado Pago
             $ch = curl_init();
@@ -277,66 +293,22 @@ class CarritoController
     public function success()
     {
         $conexion = require ROOT . 'core/database.php';
-        require ROOT . 'core/Session.php';
+        require_once ROOT . 'app/models/OrdenPago.php';
+        require_once ROOT . 'core/Session.php';
 
         if (!isset($_GET['external_reference'])) {
             echo json_encode(["success" => false, "msg" => "No se recibieron datos de la compra."]);
             return;
         }
 
-        $external_ref = json_decode($_GET['external_reference'], true);
+        $idOrden = $_GET['external_reference'];
+        // Obtenemos la info de la orden temporal
+        $infoOrden = OrdenPago::obtenerPorId($conexion, $idOrden);
 
-        if (!$external_ref) {
-            echo json_encode(["success" => false, "msg" => "Error al decodificar la información recibida."]);
-            return;
-        }
+        var_dump($infoOrden);
 
+        // Eliminamos el carrito
         Session::remove('carrito');
-
-        // Extraer los datos
-        $idUsuario = $external_ref['id_usuario'] ?? 'Desconocido';
-        $productos = $external_ref['productos'] ?? [];
-        $productoName = $external_ref['productoName'] ?? [];
-        $precios = $external_ref['precioProducto'] ?? [];
-        $cantidades = $external_ref['cantidad'] ?? [];
-        $subtotales = $external_ref['subtotal'] ?? [];
-        $total = $external_ref['total'] ?? 0;
-
-        $direccion = $external_ref['direccion'] ?? '';
-        $departamento = $external_ref['departamento'] ?? '';
-        $localidad = $external_ref['localidad'] ?? '';
-        $apartamento = $external_ref['apartamento'] ?? '';
-        $indicaciones = $external_ref['indicaciones'] ?? '';
-        $nombre = $external_ref['nombre'] ?? '';
-        $telefono = $external_ref['telefono'] ?? '';
-
-
-        // Detectar si el request viene de un fetch (AJAX)
-        $isFetch = isset($_SERVER['HTTP_X_REQUESTED_WITH']) && $_SERVER['HTTP_X_REQUESTED_WITH'] === 'XMLHttpRequest';
-
-        if ($isFetch) {
-            header('Content-Type: application/json');
-            echo json_encode([
-                "success" => true,
-                "data" => [
-                    "id_usuario"    => $idUsuario,
-                    "productos"     => $productos,
-                    "productoName"  => $productoName,
-                    "precios"       => $precios,
-                    "cantidades"    => $cantidades,
-                    "subtotales"    => $subtotales,
-                    "total"         => $total,
-                    "direccion"     => $direccion,
-                    "departamento"  => $departamento,
-                    "localidad"     => $localidad,
-                    "apartamento"   => $apartamento,
-                    "indicaciones"  => $indicaciones,
-                    "nombre"        => $nombre,
-                    "telefono"      => $telefono
-                ]
-            ]);
-            return;
-        }
 
         // Si es una visita normal (no fetch), carga la vista
         include ROOT . 'app/views/compra/successPago.php';

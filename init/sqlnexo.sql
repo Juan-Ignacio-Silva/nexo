@@ -14,6 +14,7 @@ DROP TABLE IF EXISTS direccion CASCADE;
 DROP TABLE IF EXISTS usuarios CASCADE;
 DROP TABLE IF EXISTS pago CASCADE;
 DROP TABLE IF EXISTS secuencias CASCADE;
+DROP TABLE IF EXISTS ordenes_temporales CASCADE;
 
 -- =====================================================
 -- TABLA: usuarios
@@ -170,4 +171,22 @@ CREATE TABLE codigos_verificacion (
     codigo VARCHAR(6) NOT NULL,
     creado_en TIMESTAMP NOT NULL DEFAULT NOW(),
     PRIMARY KEY (id_usuarios)
+);
+
+-- =====================================================
+-- TABLA: ordenes_temporales
+-- =====================================================
+CREATE TABLE ordenes_temporales (
+    id_orden VARCHAR(100) PRIMARY KEY,
+    id_usuario VARCHAR(36) NOT NULL REFERENCES usuarios(id_usuarios) ON DELETE CASCADE,
+    productos JSON NOT NULL,
+    total DECIMAL(10,2) NOT NULL,
+    direccion VARCHAR(255),
+    departamento VARCHAR(100),
+    localidad VARCHAR(100),
+    apartamento VARCHAR(100),
+    indicaciones TEXT,
+    nombre VARCHAR(150),
+    telefono VARCHAR(50),
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
