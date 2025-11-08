@@ -307,8 +307,6 @@ class CarritoController
         require_once ROOT . 'app/models/Pago.php';
         require_once ROOT . 'core/Session.php';
 
-        header('Content-Type: application/json');
-
         if (!isset($_GET['payment_id']) || !isset($_GET['external_reference'])) {
             echo json_encode(["success" => false, "msg" => "Faltan datos del pago."]);
             return;
@@ -348,7 +346,7 @@ class CarritoController
             // Limpiar carrito y eliminar orden temporal
             Session::remove('carrito');
             OrdenPago::eliminar($conexion, $idOrden);
-            
+
         } else {
             echo json_encode(["success" => false, "msg" => "Error al guardar el pago."]);
         }
