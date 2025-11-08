@@ -322,7 +322,7 @@ class CarritoController
             "telefono" => $infoOrden['telefono']
         ]);
 
-        $resultado = Pago::guardarPago($conexion, $orden['id_usuario'], $paymentId, $orden['total'], $productosJson, $pedidoInfoJson);
+        $resultado = Pago::guardarPago($conexion, $infoOrden['id_usuario'], $paymentId, $infoOrden['total'], $productosJson, $pedidoInfoJson);
         if ($resultado) {
             $pagoInfo = [
                 "payment_id" => $paymentId,
@@ -351,7 +351,7 @@ class CarritoController
     public function failure()
     {
         echo "❌ Pago fallido.";
-        header('Location:' . BASE_URL);
+        header('Location: ' . BASE_URL);
     }
 
     public function pending()
