@@ -1,3 +1,6 @@
+<?php
+    include ROOT . 'app/views/compra/header.php';
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -9,16 +12,6 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #E1E9EF;
-            min-height: 100vh;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
         }
 
         @keyframes fadeIn {
@@ -33,17 +26,25 @@
         }
 
         .container {
-            animation: fadeIn 0.8s ease-out;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            width: 100%;
+            height: calc(100vh - 50px);
+            background-color: #E1E9EF;
         }
 
         .card {
+            animation: fadeIn 0.8s ease-out;
             background: white;
             border-radius: 20px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             padding: 60px 40px;
             text-align: center;
             max-width: 500px;
             width: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
 
         @keyframes checkmark {
@@ -148,13 +149,13 @@
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+            background: #1976d2;
             color: white;
         }
 
         .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 20px rgba(16, 185, 129, 0.3);
+            transform: translateY(-1px);
+            box-shadow: 0 10px 20px rgba(63, 36, 219, 0.3);
         }
 
         .btn-secondary {
@@ -164,7 +165,7 @@
 
         .btn-secondary:hover {
             background: #d1d5db;
-            transform: translateY(-2px);
+            transform: translateY(-1px);
         }
     </style>
 </head>
@@ -186,3 +187,11 @@
     </div>
 </body>
 </html>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        total_productos = 0;
+        localStorage.setItem("totalCarrito", total_productos);
+        document.getElementById("contador-carrito").textContent = total_productos;
+    })
+</script>
