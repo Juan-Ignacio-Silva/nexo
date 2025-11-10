@@ -359,8 +359,7 @@ class CarritoController
 
     public function failure()
     {
-        echo "❌ Pago fallido.";
-        header('Location: ' . BASE_URL);
+        include ROOT . 'app/views/compra/failurePago.php';
     }
 
     public function pending()

@@ -56,7 +56,6 @@ class UsuarioController
 
     public function registro()
     {
-        // Si se envió el formulario (POST)
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             require_once ROOT . 'core/database.php';
             require_once ROOT . 'core/Mailer.php';
@@ -68,32 +67,44 @@ class UsuarioController
             $apellido = trim($_POST['apellido'] ?? '');
             $email = trim($_POST['email'] ?? '');
             $password = trim($_POST['password'] ?? '');
+            $confirmar = trim($_POST['confirmar_password'] ?? '');
 
-            if (!empty($nombre) && !empty($apellido) && !empty($email) && !empty($password)) {
-                $idUser = Usuario::registrar($conexion, $nombre, $apellido, $email, $password);
+            if (!empty($nombre) && !empty($apellido) && !empty($email) && !empty($password) && !empty($confirmar)) {
 
-                if ($idUser) {
-                    // Generar código de verificación
-                    $codigo = rand(100000, 999999);
-                    Usuario::guardarCodigo($conexion, $idUser, $codigo);
+                // Validar que las contraseñas coincidan
+                if ($password !== $confirmar) {
+                    $error = "Las contraseñas no coinciden.";
+                }
+                // Validar largo mínimo
+                elseif (strlen($password) < 8) {
+                    $error = "La contraseña debe tener al menos 8 caracteres.";
+                } else {
+                    // Intentar registrar al usuario
+                    $idUser = Usuario::registrar($conexion, $nombre, $apellido, $email, $password);
 
-                    // Enviar correo
-                    $mensaje = "
+                    if ($idUser) {
+                        // Generar código de verificación
+                        $codigo = rand(100000, 999999);
+                        Usuario::guardarCodigo($conexion, $idUser, $codigo);
+
+                        // Enviar correo de verificación
+                        $mensaje = "
                         <h2>Verificación de cuenta</h2>
                         <p>Hola $nombre, tu código de verificación es:</p>
                         <h3>$codigo</h3>
                         <p>Ingresa este código en la página para activar tu cuenta.</p>
                     ";
 
-                    Mailer::enviarCorreo($email, "Código de verificación", $mensaje);
+                        Mailer::enviarCorreo($email, "Código de verificación", $mensaje);
 
-                    Session::set('verificacion_usuario', $idUser);
+                        Session::set('verificacion_usuario', $idUser);
 
-                    // Redirigir a la vista de verificación
-                    header("Location:" . BASE_URL . "usuario/verificarCodigoR");
-                    exit;
-                } else {
-                    $error = "Email ya registrado, intente de nuevo.";
+                        header("Location:" . BASE_URL . "usuario/verificarCodigoR");
+                        exit;
+                    } else {
+                        // Si el método registrar devuelve false o null
+                        $error = "El email ya está registrado, intente con otro.";
+                    }
                 }
             } else {
                 $error = "Todos los campos son obligatorios.";
@@ -102,6 +113,7 @@ class UsuarioController
 
         include ROOT . 'app/views/usuario/registro.php';
     }
+
 
     public function logout()
     {
