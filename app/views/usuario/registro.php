@@ -39,7 +39,7 @@
                 </div>
                 
                 <div class="form-group">
-                    <input type="password" name="passwordConfirm" placeholder="Repita la contraseña" required>
+                    <input type="password" name="confirmar_password" placeholder="Repita la contraseña" required>
                 </div>
                 <?php if (isset($error)): ?>
                     <p style="color:red;"><?= htmlspecialchars($error) ?></p>
