@@ -1,4 +1,5 @@
 <link rel="stylesheet" href="css/seccion-categorias.css">
+
 <div class="container">
     <div class="max-width">
         <!-- Header -->
@@ -9,36 +10,40 @@
 
         <!-- Categories -->
         <div class="categories">
-            <div class="categories-desktop">
-                <div class="category">
-                    <div class="category-icon">
-                        <img src="https://via.placeholder.com/80x80/94a3b8/ffffff?text=📱" alt="Electrodomésticos">
-                    </div>
-                    <h3>Electrodomésticos</h3>
-                    <p>40 Productos</p>
-                </div>
-                <div class="category">
-                    <div class="category-icon">
-                        <img src="https://via.placeholder.com/80x80/94a3b8/ffffff?text=🏠" alt="Electrodomésticos">
-                    </div>
-                    <h3>Electrodomésticos</h3>
-                    <p>40 Productos</p>
-                </div>
-                <div class="category">
-                    <div class="category-icon">
-                        <img src="https://via.placeholder.com/80x80/94a3b8/ffffff?text=⚡" alt="Electrodomésticos">
-                    </div>
-                    <h3>Electrodomésticos</h3>
-                    <p>40 Productos</p>
-                </div>
-                <div class="category">
-                    <div class="category-icon">
-                        <img src="https://via.placeholder.com/80x80/94a3b8/ffffff?text=🔌" alt="Electrodomésticos">
-                    </div>
-                    <h3>Electrodomésticos</h3>
-                    <p>40 Productos</p>
-                </div>
+            <div class="categories-desktop" id="categorias-container">
+                <!-- Las categorías se cargarán aquí -->
             </div>
         </div>
     </div>
 </div>
+
+<script>
+    fetch('<?= BASE_URL ?>/categoria/obtenerTopCategorias')
+        .then(res => res.json())
+        .then(data => {
+            const contenedor = document.getElementById('categorias-container');
+            contenedor.innerHTML = ''; // limpia el contenido inicial
+
+            if (data.status === 'success' && data.categorias.length > 0) {
+                data.categorias.forEach(cat => {
+                    const div = document.createElement('div');
+                    div.classList.add('category');
+                    div.innerHTML = `
+                        <div class="category-icon">
+                            <img src="${cat.icono}" alt="${cat.id_categoria}">
+                        </div>
+                        <h3>${cat.categoria}</h3>
+                        <p>Promedio: ${cat.promedio}</p>
+                    `;
+                    contenedor.appendChild(div);
+                });
+            } else {
+                contenedor.innerHTML = '<p>No hay categorías destacadas.</p>';
+            }
+        })
+        .catch(err => {
+            console.error(err);
+            document.getElementById('categorias-container').innerHTML =
+                '<p>Error al cargar las categorías.</p>';
+        });
+</script>

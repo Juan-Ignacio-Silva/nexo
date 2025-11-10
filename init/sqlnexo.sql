@@ -15,6 +15,8 @@ DROP TABLE IF EXISTS usuarios CASCADE;
 DROP TABLE IF EXISTS pago CASCADE;
 DROP TABLE IF EXISTS secuencias CASCADE;
 DROP TABLE IF EXISTS ordenes_temporales CASCADE;
+DROP TABLE IF EXISTS categorias CASCADE;
+DROP TABLE IF EXISTS codigos_verificacion CASCADE;
 
 -- =====================================================
 -- TABLA: usuarios
@@ -47,6 +49,16 @@ CREATE TABLE vendedor (
 );
 
 -- =====================================================
+-- TABLA: categorias
+-- =====================================================
+CREATE TABLE categorias (
+    id SERIAL PRIMARY KEY,
+    nombre VARCHAR(100) NOT NULL,
+    icono_url TEXT,
+    creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- =====================================================
 -- TABLA: producto
 -- =====================================================
 CREATE TABLE producto (
@@ -54,7 +66,7 @@ CREATE TABLE producto (
     id_vendedor VARCHAR(36) NOT NULL REFERENCES vendedor(id_vendedor) ON DELETE CASCADE,
     nombre VARCHAR(100) NOT NULL,
     precio DECIMAL(10,2) NOT NULL,
-    categoria VARCHAR(50) NOT NULL,
+    id_categoria INT REFERENCES categorias(id) ON DELETE SET NULL,
     etiqueta VARCHAR(50) NOT NULL,
     descripcion TEXT NOT NULL,
     imagen VARCHAR(255) NOT NULL,
@@ -148,7 +160,6 @@ CREATE TABLE pago (
     fecha_pago TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
-
 -- =====================================================
 -- TABLA: resena
 -- =====================================================
@@ -168,7 +179,9 @@ CREATE TABLE secuencias (
     ultimo_numero INT NOT NULL
 );
 
--- Tabla de códigos de verificación
+-- =====================================================
+-- TABLA: codigos_verificacion
+-- =====================================================
 CREATE TABLE codigos_verificacion (
     id_usuarios VARCHAR(36) REFERENCES usuarios(id_usuarios) ON DELETE CASCADE,
     codigo VARCHAR(6) NOT NULL,
@@ -193,3 +206,15 @@ CREATE TABLE ordenes_temporales (
     telefono VARCHAR(50),
     creado_en TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
+
+-- =====================================================
+-- DATOS INICIALES: CATEGORÍAS
+-- =====================================================
+INSERT INTO categorias (nombre, icono_url) VALUES
+('Tecnología', 'https://img.icons8.com/fluency/96/laptop.png'),
+('Gaming', 'https://img.icons8.com/fluency/96/controller.png'),
+('Hogar', 'https://img.icons8.com/fluency/96/sofa.png'),
+('Electrodomésticos', 'https://img.icons8.com/fluency/96/microwave.png'),
+('Moda', 'https://img.icons8.com/fluency/96/t-shirt.png'),
+('Deportes', 'https://img.icons8.com/fluency/96/basketball.png'),
+('Belleza', 'https://img.icons8.com/fluency/96/lipstick.png');
