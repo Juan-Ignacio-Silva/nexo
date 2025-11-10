@@ -318,6 +318,7 @@ class CarritoController
         // Buscar la orden temporal
         $infoOrden = OrdenPago::obtenerPorId($conexion, $idOrden);
         if (!$infoOrden) {
+            header("Location: " . BASE_URL);
             return;
         }
 

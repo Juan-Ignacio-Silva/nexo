@@ -59,7 +59,7 @@ $totalProductos = count($productosArray);
                                         <td><strong><?= htmlspecialchars($producto['nombre']) ?></strong></td>
                                         <td>US$ <?= number_format($producto['precio'] ?? 0, 2) ?></td>
                                         <td><?= htmlspecialchars($producto['cantidad']) ?></td>
-                                        <td><?= htmlspecialchars($producto['categoria'] ?? 'Sin categoría') ?></td>
+                                        <td><?= htmlspecialchars($producto['id_categoria'] ?? 'Sin categoría') ?></td>
                                         <td>${p.vendidos}</td>
                                         <td>${getStockBadge(p.stock)}</td>
                                         <td>
@@ -104,12 +104,7 @@ $totalProductos = count($productosArray);
                 <label for="categoria">Categoría</label>
                 <select id="categoria" name="categoria" required>
                     <option value="">Seleccionar...</option>
-                    <option value="Electrónica">Electrónica</option>
-                    <option value="Ropa">Ropa</option>
-                    <option value="Alimentos">Alimentos</option>
-                    <option value="Hogar">Hogar</option>
-                    <option value="Deportes">Deportes</option>
-                    <option value="Otros">Otros</option>
+                    <!-- Las categorias se generan dinamicamente -->
                 </select>
             </div>
             <div class="form-group">
@@ -163,6 +158,9 @@ $totalProductos = count($productosArray);
         document.getElementById('modalTitle').textContent = 'Agregar Producto';
         document.getElementById('productForm').reset();
         document.getElementById('productModal').classList.add('active');
+
+        // Ejecuta la funcion para mostrar las categorias
+        obtenerCategorias();
     }
 
     function editProduct(id) {
@@ -192,6 +190,25 @@ $totalProductos = count($productosArray);
             closeModal();
         }
     });
+
+    function obtenerCategorias() {
+        fetch('<?= BASE_URL ?>/categoria/obtenerCategorias')
+            .then(res => res.json())
+            .then(data => {
+                const contenedorCat = document.getElementById('categoria');
+                // contenedorCat.innerHTML = '';
+
+                if (data.status === 'success') {
+                    data.categorias.forEach(cat => {
+                        contenedorCat.innerHTML += `
+                            <option value="${cat.id}">${cat.nombre}</option>
+                        `; 
+                        // Si quiero el icono
+                        // ${cat.icono_url || 'https://via.placeholder.com/80'}" alt="${cat.nombre}
+                    });
+                }
+            });
+    }
 </script>
 
 <script>
@@ -226,7 +243,7 @@ $totalProductos = count($productosArray);
 
             if (data.success) {
                 mostrarToast("Producto publicado con exito.", "exito");
-                    setTimeout(() => window.location.reload(), 1000);
+                setTimeout(() => window.location.reload(), 1000);
             } else {
                 mostrarToast("Error al publicar el producto.", "error");
             }

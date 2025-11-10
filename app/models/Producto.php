@@ -4,29 +4,32 @@ class Producto
     public static function productosInfo($conexion)
     {
         $sql = "
-            SELECT 
-                p.id_producto,
-                p.nombre,
-                p.precio,
-                p.categoria,
-                p.etiqueta,
-                p.descripcion,
-                p.imagen,
-                ROUND(AVG(r.calificacion)::numeric, 2) AS calificacion_promedio,
-                COUNT(r.id_resena) AS total_resenas
-            FROM producto p
-            LEFT JOIN resena r ON r.id_producto = p.id_producto
-            GROUP BY 
-                p.id_producto, 
-                p.nombre, 
-                p.precio, 
-                p.categoria, 
-                p.etiqueta, 
-                p.descripcion, 
-                p.imagen
-            ORDER BY calificacion_promedio DESC NULLS LAST, total_resenas DESC
-            LIMIT 3
-        ";
+        SELECT 
+            p.id_producto,
+            p.nombre,
+            p.precio,
+            c.nombre AS categoria,
+            c.icono_url AS categoria_icono,
+            p.etiqueta,
+            p.descripcion,
+            p.imagen,
+            ROUND(AVG(r.calificacion)::numeric, 2) AS calificacion_promedio,
+            COUNT(r.id_resena) AS total_resenas
+        FROM producto p
+        LEFT JOIN categorias c ON c.id = p.id_categoria
+        LEFT JOIN resena r ON r.id_producto = p.id_producto
+        GROUP BY 
+            p.id_producto, 
+            p.nombre, 
+            p.precio, 
+            c.nombre,
+            c.icono_url,
+            p.etiqueta, 
+            p.descripcion, 
+            p.imagen
+        ORDER BY calificacion_promedio DESC NULLS LAST, total_resenas DESC
+        LIMIT 3
+    ";
 
         $stmt = $conexion->prepare($sql);
         $stmt->execute();
@@ -35,25 +38,29 @@ class Producto
         return $productos;
     }
 
+
     public static function obtenerPorId($conexion, $id)
     {
         $sql = "
-            SELECT 
-                p.id_producto, 
-                p.nombre, 
-                p.precio, 
-                p.categoria, 
-                p.etiqueta, 
-                p.descripcion, 
-                p.imagen, 
+        SELECT 
+            p.id_producto, 
+            p.nombre, 
+            p.precio, 
+            c.nombre AS categoria, 
+            c.icono_url AS categoria_icono,
+            p.etiqueta, 
+            p.descripcion, 
+            p.imagen, 
             COALESCE(ROUND(AVG(r.calificacion), 2), 0) AS promedio
-            FROM producto p
-            LEFT JOIN resena r ON p.id_producto = r.id_producto
-            WHERE p.id_producto = :id
-            GROUP BY p.id_producto;
-        ";
+        FROM producto p
+        LEFT JOIN categorias c ON c.id = p.id_categoria
+        LEFT JOIN resena r ON p.id_producto = r.id_producto
+        WHERE p.id_producto = :id
+        GROUP BY 
+            p.id_producto, c.nombre, c.icono_url;
+    ";
         $stmt = $conexion->prepare($sql);
-        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->bindParam(':id', $id);
         $stmt->execute();
         return $stmt->fetch(PDO::FETCH_ASSOC);
     }
@@ -86,10 +93,21 @@ class Producto
 
     public static function buscarProductos($conexion, $busqueda)
     {
-        $sql = "SELECT * FROM producto 
-                WHERE LOWER(nombre) LIKE LOWER(:busqueda) 
-                OR LOWER(categoria) LIKE LOWER(:busqueda)
-                ";
+        $sql = "
+        SELECT 
+            p.id_producto,
+            p.nombre,
+            p.precio,
+            c.nombre AS categoria,
+            c.icono_url AS categoria_icono,
+            p.etiqueta,
+            p.descripcion,
+            p.imagen
+        FROM producto p
+        LEFT JOIN categorias c ON c.id = p.id_categoria
+        WHERE LOWER(p.nombre) LIKE LOWER(:busqueda)
+        OR LOWER(c.nombre) LIKE LOWER(:busqueda)
+    ";
 
         $stmt = $conexion->prepare($sql);
         $stmt->execute([':busqueda' => "%" . $busqueda . "%"]);
@@ -109,7 +127,8 @@ class Producto
             p.id_vendedor,
             p.nombre,
             p.precio,
-            p.categoria,
+            c.nombre AS categoria,
+            c.icono_url AS categoria_icono,
             p.etiqueta,
             p.descripcion,
             p.imagen,
@@ -117,6 +136,7 @@ class Producto
             ROUND(AVG(r.calificacion)::numeric, 2) AS calificacion_promedio,
             COUNT(r.id_resena) AS total_resenas
         FROM producto p
+        LEFT JOIN categorias c ON c.id = p.id_categoria
         LEFT JOIN resena r ON r.id_producto = p.id_producto
         WHERE p.id_producto IN ($placeholders)
         GROUP BY 
@@ -124,7 +144,8 @@ class Producto
             p.id_vendedor,
             p.nombre,
             p.precio,
-            p.categoria,
+            c.nombre,
+            c.icono_url,
             p.etiqueta,
             p.descripcion,
             p.imagen,
@@ -153,15 +174,15 @@ class Producto
         // Generar id único para el producto
         $id = IdGenerator::generarID('producto', $conexion);
 
-        $stmt = $conexion->prepare("INSERT INTO producto(id_producto, id_vendedor, nombre, precio, categoria, etiqueta, descripcion, imagen, cantidad) 
-                VALUES (:idProducto, :idVendedor, :nombreProducto, :precio, :categoria, :etiquetas, :descripcion, :imagen, :stock)");
+        $stmt = $conexion->prepare("INSERT INTO producto(id_producto, id_vendedor, nombre, precio, id_categoria, etiqueta, descripcion, imagen, cantidad) 
+                VALUES (:idProducto, :idVendedor, :nombreProducto, :precio, :id_categoria, :etiquetas, :descripcion, :imagen, :stock)");
 
         $resultado = $stmt->execute([
             'idProducto' => $id,
             'idVendedor' => $idVendedor,
             'nombreProducto' => $nombreProducto,
             'precio' => $precio,
-            'categoria' => $categoria,
+            'id_categoria' => $categoria,
             'etiquetas' => $etiquetas,
             'descripcion' => $descripcion,
             'imagen' => $imagen,
@@ -175,7 +196,8 @@ class Producto
         return false;
     }
 
-    public static function registrarResena($conexion, $calificacion, $comentario, $idProducto, $idUsuario) {
+    public static function registrarResena($conexion, $calificacion, $comentario, $idProducto, $idUsuario)
+    {
         require_once ROOT . 'core/IdGenerator.php';
 
         // Generar id único para el producto
@@ -199,7 +221,8 @@ class Producto
         return false;
     }
 
-    public static function guardarImagen($conexion, $urlImagen) {
+    public static function guardarImagen($conexion, $urlImagen)
+    {
         $query = $conexion->prepare("INSERT INTO productos (imagen_url) VALUES (:url)");
         $query->bindParam(':url', $urlImagen);
         $query->execute();
