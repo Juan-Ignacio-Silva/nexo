@@ -20,7 +20,6 @@
             margin: 0 auto;
             padding: 40px 20px;
             background-color: #E1E9EF;
-
         }
 
         .header {
@@ -53,6 +52,9 @@
             display: grid;
             grid-template-columns: repeat(4, 1fr);
             border-collapse: collapse;
+        }
+        .categories-grid a {
+            text-decoration: none;
         }
 
         .category-item {
@@ -267,15 +269,18 @@
                 .then(res => res.json())
                 .then(data => {
                     const contenedorCat = document.getElementById('categoriesGrid');
+                    const urlWeb = "<? BASE_URL ?>";
                     // contenedorCat.innerHTML = '';
 
                     if (data.status === 'success') {
                         data.categorias.forEach(cat => {
                             contenedorCat.innerHTML += `
-                            <div class="category-item" data-id="${cat.id}">
-                                <img src="${cat.icono_url}" class="category-icon">
-                                <h3 class="category-title">${cat.nombre}</h3>
-                            </div>
+                            <a href="${urlWeb}/productos/categoria/${cat.id}">
+                                <div class="category-item" data-id="${cat.id}">
+                                    <img src="${cat.icono_url}" class="category-icon">
+                                    <h3 class="category-title">${cat.nombre}</h3>
+                                </div>
+                            </a>
                         `;
                             // Si quiero el icono
                             // ${cat.icono_url || 'https://via.placeholder.com/80'}" alt="${cat.nombre}

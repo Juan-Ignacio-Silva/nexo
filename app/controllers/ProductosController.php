@@ -47,6 +47,38 @@ class ProductosController
         ]);
     }
 
+    public function categoria($idCategoria)
+    {
+        $conexion = require ROOT . 'core/database.php';
+        require_once ROOT . 'app/models/Producto.php';
+        require_once ROOT . 'app/models/CategoriaModel.php';
+        require_once ROOT . 'core/Auth.php';
+
+        // Validar ID
+        if (!is_numeric($idCategoria)) {
+            die("Categoría inválida");
+        }
+
+        // Obtener los datos
+        $productos = Producto::obtenerPorCategoria($conexion, $idCategoria);
+        $categoria = CategoriaModel::obtenerPorId($conexion, $idCategoria);
+
+        $nombreCat = $categoria['nombre'];
+
+        // Si no hay productos
+        if (empty($productos)) {
+            $mensaje = "No hay productos disponibles en esta categoría.";
+        }
+
+        // Cargar la vista
+        View::render(view: "producto/categoria", data: [
+            "title" => "Nexo - $nombreCat",
+            "usuario" => Auth::usuario(),
+            "productos" => $productos
+        ]);
+    }
+
+
     public static function getProductosInfo()
     {
 
@@ -166,7 +198,7 @@ class ProductosController
     {
         require ROOT . 'models/Producto.php';
         require_once ROOT . 'core/Supabase.php';
-        
+
         if (isset($_FILES['imagen']) && $_FILES['imagen']['error'] === UPLOAD_ERR_OK) {
             $nombreArchivo = $_FILES['imagen']['name'];
             $tmpPath = $_FILES['imagen']['tmp_name'];

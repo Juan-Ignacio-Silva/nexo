@@ -50,4 +50,13 @@ class CategoriaModel
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public static function obtenerPorId($conexion, $id)
+    {
+        $sql = "SELECT * FROM categorias WHERE id = :id";
+        $stmt = $conexion->prepare($sql);
+        $stmt->bindParam(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 }
