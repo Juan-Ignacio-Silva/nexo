@@ -221,6 +221,47 @@ class Producto
         return false;
     }
 
+    public static function obtenerPorCategoria($conexion, $idCategoria)
+    {
+        $sql = "
+        SELECT
+            p.id_producto,
+            p.id_vendedor,
+            p.nombre,
+            p.precio,
+            c.nombre AS categoria,
+            c.icono_url AS categoria_icono,
+            p.etiqueta,
+            p.descripcion,
+            p.imagen,
+            p.cantidad,
+            ROUND(AVG(r.calificacion)::numeric, 2) AS calificacion_promedio,
+            COUNT(r.id_resena) AS total_resenas
+        FROM producto p
+        LEFT JOIN categorias c ON c.id = p.id_categoria
+        LEFT JOIN resena r ON r.id_producto = p.id_producto
+        WHERE p.id_categoria = :idCategoria
+        GROUP BY 
+            p.id_producto,
+            p.id_vendedor,
+            p.nombre,
+            p.precio,
+            c.nombre,
+            c.icono_url,
+            p.etiqueta,
+            p.descripcion,
+            p.imagen,
+            p.cantidad
+        ORDER BY p.nombre ASC
+    ";
+
+        $stmt = $conexion->prepare($sql);
+        $stmt->bindParam(':idCategoria', $idCategoria, PDO::PARAM_INT);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
+
     public static function guardarImagen($conexion, $urlImagen)
     {
         $query = $conexion->prepare("INSERT INTO productos (imagen_url) VALUES (:url)");

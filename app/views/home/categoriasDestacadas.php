@@ -29,11 +29,13 @@
                     const div = document.createElement('div');
                     div.classList.add('category');
                     div.innerHTML = `
-                        <div class="category-icon">
-                            <img src="${cat.icono}" alt="${cat.id_categoria}">
-                        </div>
-                        <h3>${cat.categoria}</h3>
-                        <p>Promedio: ${cat.promedio}</p>
+                        <a href="<? BASE_URL ?>productos/categoria/${cat.id_categoria}">
+                            <div class="category-icon">
+                                <img src="${cat.icono}" alt="${cat.id_categoria}">
+                            </div>
+                            <h3>${cat.categoria}</h3>
+                            <p>Promedio: ${cat.promedio}</p>
+                        </a>
                     `;
                     contenedor.appendChild(div);
                 });
