@@ -43,11 +43,20 @@
   padding-bottom: 1rem;
 }
 
+.categories-desktop {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+  gap: 50px;
+}
+
 .category {
   display: flex;
   flex-direction: column;
   align-items: center;
   min-width: 100px;
+  width: 50px;
 }
 
 .category a {
@@ -58,14 +67,14 @@
 }
 
 .category-icon {
-  width: 4.5rem;
-  height: 4.5rem;
+  width: 6rem;
+  height: 6rem;
   background-color: #94a3b8;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
@@ -75,27 +84,23 @@
 }
 
 .category-icon img {
-  width: 2.5rem;
-  height: 2.5rem;
+  width: 3.125rem;
+  height: 3.125rem;
   object-fit: contain;
 }
 
 .category h3 {
   color: #374151;
   font-weight: 500;
-  font-size: 0.75rem;
   text-align: center;
-  margin-bottom: 0.75rem;
+  font-size: 0.875rem;
+    margin-bottom: 1rem;
 }
 
 .category p {
   color: #6b7280;
   font-size: 0.75rem;
   margin-bottom: 1rem;
-}
-
-.categories-desktop {
-  display: none;
 }
 
 /* Cards Grid */
@@ -200,103 +205,4 @@
   width: 150px;
   height: 150px;
   object-fit: contain;
-}
-
-/* Desktop Styles */
-@media (min-width: 768px) {
-  .container {
-    padding: 4rem 1rem;
-  }
-
-  .max-width {
-    padding: 0 2rem;
-  }
-
-  .header {
-    margin-bottom: 3rem;
-  }
-
-  .header h2 {
-    font-size: 2.25rem;
-  }
-
-  .categories {
-    gap: 2rem;
-    margin-bottom: 4rem;
-  }
-
-  .category {
-    min-width: 120px;
-  }
-
-  .category-icon {
-    width: 6rem;
-    height: 6rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .category-icon img {
-    width: 3.125rem;
-    height: 3.125rem;
-  }
-
-  .category h3 {
-    font-size: 0.875rem;
-    margin-bottom: 1rem;
-  }
-
-  .category p {
-    font-size: 0.875rem;
-    margin-bottom: 2rem;
-  }
-
-  .categories-desktop {
-    display: flex;
-    gap: 2rem;
-  }
-
-  .cards-grid {
-    grid-template-columns: 1fr 1fr;
-    gap: 2rem;
-    padding: 0;
-  }
-
-  .card-content {
-    padding: 2rem;
-  }
-
-  .discount-badge {
-    padding: 0.5rem 1rem;
-    font-size: 0.875rem;
-    margin-bottom: 1.5rem;
-  }
-
-  .card h3 {
-    font-size: 1.875rem;
-    margin-bottom: 1rem;
-  }
-
-  .card p {
-    font-size: 0.875rem;
-    margin-bottom: 2rem;
-  }
-
-  .btn {
-    padding: 0.75rem 1.5rem;
-    font-size: 1rem;
-  }
-
-  .card-image {
-    right: 1rem;
-  }
-
-  .card-image img {
-    width: 250px;
-    height: 150px;
-  }
-
-  .card-red .card-image img {
-    width: 150px;
-    height: 150px;
-  }
 }

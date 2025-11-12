@@ -33,7 +33,7 @@ class UsuarioController
                     // Enviar correo
                     Mailer::enviarCorreo(
                         $email,
-                        'Código de verificación',
+                        'Codigo de verificacion',
                         "Tu código de verificación es: <b>$codigo</b>"
                     );
 
@@ -95,7 +95,7 @@ class UsuarioController
                         <p>Ingresa este código en la página para activar tu cuenta.</p>
                     ";
 
-                        Mailer::enviarCorreo($email, "Código de verificación", $mensaje);
+                        Mailer::enviarCorreo($email, "Codigo de verificacion", $mensaje);
 
                         Session::set('verificacion_usuario', $idUser);
 

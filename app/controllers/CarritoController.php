@@ -18,6 +18,35 @@ class CarritoController
             return;
         }
 
+        $conexion = require ROOT . 'core/database.php';
+        require_once ROOT . 'app/models/Producto.php';
+        // Consultar producto en la base de datos
+        $producto = Producto::obtenerPorId($conexion, $id);
+
+        if (!$producto) {
+            echo json_encode(["success" => false, "msg" => "Producto no encontrado"]);
+            return;
+        }
+
+        // Verificar stock
+        $stockDisponible = (int)$producto['cantidad'];
+
+        if ($stockDisponible <= 0) {
+            echo json_encode([
+                "success" => false,
+                "msg" => "Este producto no tiene stock disponible"
+            ]);
+            return;
+        }
+
+        if ($cantidad > $stockDisponible) {
+            echo json_encode([
+                "success" => false,
+                "msg" => "Solo hay {$stockDisponible} unidades disponibles"
+            ]);
+            return;
+        }
+
         if (!isset($_SESSION['carrito'])) {
             $_SESSION['carrito'] = [];
         }
@@ -61,6 +90,35 @@ class CarritoController
             echo json_encode(["success" => false, "msg" => "El producto no está en el carrito"]);
             return;
         }
+
+        $conexion = require ROOT . 'core/database.php';
+        require_once ROOT . 'app/models/Producto.php';
+        // Consultar stock actual del producto
+        $producto = Producto::obtenerPorId($conexion, $id);
+
+        if (!$producto) {
+            echo json_encode(["success" => false, "msg" => "Producto no encontrado"]);
+            return;
+        }
+
+        $stockDisponible = (int)$producto['cantidad'];
+
+        if ($stockDisponible <= 0) {
+            echo json_encode([
+                "success" => false,
+                "msg" => "El producto no tiene stock disponible"
+            ]);
+            return;
+        }
+
+        if ($cantidad > $stockDisponible) {
+            echo json_encode([
+                "success" => false,
+                "msg" => "Solo hay {$stockDisponible} unidades disponibles"
+            ]);
+            return;
+        }
+
 
         if ($cantidad === 0) {
             // Si la cantidad es 0, eliminar el producto
@@ -347,7 +405,6 @@ class CarritoController
             // Limpiar carrito y eliminar orden temporal
             Session::remove('carrito');
             OrdenPago::eliminar($conexion, $idOrden);
-
         } else {
             echo json_encode(["success" => false, "msg" => "Error al guardar el pago."]);
         }
