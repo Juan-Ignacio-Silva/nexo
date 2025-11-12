@@ -135,5 +135,73 @@
         </main>
     </div>
 </body>
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const productsGrid = document.getElementById("productsGrid");
+        const categoryFilters = document.querySelectorAll(".category-filter");
+        const minPriceInput = document.getElementById("minPrice");
+        const maxPriceInput = document.getElementById("maxPrice");
+        const ratingFilter = document.getElementById("ratingFilter");
+        const stockFilter = document.getElementById("stockFilter");
+        const resultsCount = document.getElementById("resultsCount");
+
+        // Guardamos todos los productos originales (PHP los genera en HTML)
+        const allProducts = Array.from(productsGrid.querySelectorAll(".card-accion"));
+
+        function filterProducts() {
+            const selectedCategories = Array.from(categoryFilters)
+                .filter(cb => cb.checked)
+                .map(cb => cb.value);
+
+            const minPrice = parseFloat(minPriceInput.value) || 0;
+            const maxPrice = parseFloat(maxPriceInput.value) || Infinity;
+            const minRating = parseInt(ratingFilter.value) || 0;
+            const onlyInStock = stockFilter.checked;
+
+            let visibleCount = 0;
+
+            allProducts.forEach(card => {
+                const category = card.querySelector(".cuerpo-card p")?.textContent.toLowerCase() || "";
+                const priceText = card.querySelector(".precio")?.textContent.replace("US$", "").trim();
+                const price = parseFloat(priceText) || 0;
+                const stars = card.querySelectorAll(".star.filled").length;
+
+                // Si quisieras manejar stock, tendrías que agregar una clase o data-stock al HTML
+                const inStock = true; // por ahora todos los productos están en stock
+
+                const categoryMatch = selectedCategories.length === 0 || selectedCategories.includes(category);
+                const priceMatch = price >= minPrice && price <= maxPrice;
+                const ratingMatch = stars >= minRating;
+                const stockMatch = !onlyInStock || inStock;
+
+                const visible = categoryMatch && priceMatch && ratingMatch && stockMatch;
+                card.style.display = visible ? "block" : "none";
+
+                if (visible) visibleCount++;
+            });
+
+            resultsCount.textContent = `${visibleCount} productos`;
+        }
+
+        // Eventos para todos los filtros
+        [...categoryFilters, minPriceInput, maxPriceInput, ratingFilter, stockFilter].forEach(input => {
+            input.addEventListener("input", filterProducts);
+            input.addEventListener("change", filterProducts);
+        });
+
+        // Botón de limpiar filtros
+        window.clearAllFilters = function() {
+            categoryFilters.forEach(cb => cb.checked = false);
+            minPriceInput.value = "";
+            maxPriceInput.value = "";
+            ratingFilter.value = "";
+            stockFilter.checked = false;
+            filterProducts();
+        };
+
+        // Llamar una vez al cargar
+        filterProducts();
+    });
+</script>
 
 </html>

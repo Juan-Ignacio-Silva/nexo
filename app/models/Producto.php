@@ -49,8 +49,9 @@ class Producto
             c.nombre AS categoria, 
             c.icono_url AS categoria_icono,
             p.etiqueta, 
-            p.descripcion, 
-            p.imagen, 
+            p.descripcion,
+            p.imagen,
+            p.cantidad,
             COALESCE(ROUND(AVG(r.calificacion), 2), 0) AS promedio
         FROM producto p
         LEFT JOIN categorias c ON c.id = p.id_categoria
