@@ -1,8 +1,11 @@
 <?php
 require_once ROOT . 'app/controllers/ProductosController.php';
+require_once ROOT . 'app/controllers/VendedorController.php';
 $productos = ProductosController::getProductosIdVendedor();
 $productosArray = json_decode(json_encode($productos), true);
 $totalProductos = count($productosArray);
+$totalVendido = VendedorController::obtnerProductosVendidos();
+$totalRecaudado = VendedorController::obtenerTotalRecaudado();
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -24,11 +27,11 @@ $totalProductos = count($productosArray);
         <div class="top-cards">
             <div class="card">
                 <h4>Todal recaudado</h4>
-                <p class="value">$200.00</p>
+                <p class="value">$<?= $totalRecaudado ?></p>
             </div>
             <div class="card">
                 <h4>Productos vendidos</h4>
-                <p class="value">0</p>
+                <p class="value"><?= $totalVendido ?></p>
             </div>
             <div class="card">
                 <h4>Total de productos</h4>
