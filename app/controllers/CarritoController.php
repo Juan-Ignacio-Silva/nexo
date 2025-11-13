@@ -363,6 +363,7 @@ class CarritoController
         $conexion = require ROOT . 'core/database.php';
         require_once ROOT . 'app/models/OrdenPago.php';
         require_once ROOT . 'app/models/Pago.php';
+        require_once ROOT . 'app/models/Producto.php';
         require_once ROOT . 'core/Session.php';
 
         if (!isset($_GET['payment_id']) || !isset($_GET['external_reference'])) {
@@ -397,11 +398,13 @@ class CarritoController
             $infoOrden['id_usuario'],
             $paymentId,
             $infoOrden['total'],
-            $infoOrden['productos'],
+            $infoOrden['productos'], // Tine el id + la cantidad
             $pedidoInfoUserJson
         );
 
         if ($resultado) {
+
+            Producto::actualizarStockDespuesDeCompra($conexion, $infoOrden['productos']);
             // Limpiar carrito y eliminar orden temporal
             Session::remove('carrito');
             OrdenPago::eliminar($conexion, $idOrden);

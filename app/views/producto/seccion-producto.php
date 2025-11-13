@@ -4,6 +4,7 @@
 ?>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="stylesheet" href="/css/vistaProducto/seccion-producto.css">
+<title><?= $producto['nombre'] ?></title>
 <main class="producto">
     <div class="container">
         <!-- Sección del Producto general -->

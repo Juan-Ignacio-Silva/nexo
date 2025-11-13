@@ -263,6 +263,29 @@ class Producto
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    public static function actualizarStockDespuesDeCompra($conexion, $productosJson)
+    {
+        // $productosJson viene en formato JSON (id y cantidad)
+        $productos = json_decode($productosJson, true);
+
+        if (!is_array($productos)) {
+            return false;
+        }
+
+        $sql = "UPDATE producto SET cantidad = GREATEST(cantidad - :cantidad, 0)
+            WHERE id_producto = :id";
+
+        $stmt = $conexion->prepare($sql);
+
+        foreach ($productos as $item) {
+            $stmt->execute([
+                ':cantidad' => (int)$item['cantidad'],
+                ':id' => (int)$item['id']
+            ]);
+        }
+
+        return true;
+    }
     public static function guardarImagen($conexion, $urlImagen)
     {
         $query = $conexion->prepare("INSERT INTO productos (imagen_url) VALUES (:url)");
