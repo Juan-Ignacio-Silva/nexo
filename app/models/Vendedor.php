@@ -65,4 +65,79 @@ class Vendedor
             return 'No se pudo identificar al vendedor';
         }
     }
+
+    public static function obtenerCantidadVendidaPorVendedor($conexion, $idVendedor)
+    {
+        // Obtener todos los registros de pago
+        $sql = "SELECT productos FROM pago";
+        $stmt = $conexion->prepare($sql);
+        $stmt->execute();
+        $pagos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Inicializamos el contador total
+        $totalVendidos = 0;
+
+        foreach ($pagos as $pago) {
+            $productos = json_decode($pago['productos'], true);
+
+            if (!is_array($productos)) continue;
+
+            // Recorremos cada producto del JSON
+            foreach ($productos as $prod) {
+                $idProducto = $prod['id'] ?? null;
+                $cantidad = (int)($prod['cantidad'] ?? 0);
+
+                if (!$idProducto || $cantidad <= 0) continue;
+
+                // Buscamos el producto y verificamos si pertenece al vendedor
+                $sqlProd = "SELECT id_vendedor FROM producto WHERE id_producto = :id";
+                $stmtProd = $conexion->prepare($sqlProd);
+                $stmtProd->execute([':id' => $idProducto]);
+                $producto = $stmtProd->fetch(PDO::FETCH_ASSOC);
+
+                // Si el producto es del vendedor, sumamos su cantidad
+                if ($producto && $producto['id_vendedor'] === $idVendedor) {
+                    $totalVendidos += $cantidad;
+                }
+            }
+        }
+
+        return $totalVendidos;
+    }
+
+    public static function obtenerTotalRecaudadoPorVendedor($conexion, $idVendedor)
+    {
+        // Obtenemos todos los pagos registrados
+        $sql = "SELECT productos FROM pago";
+        $stmt = $conexion->prepare($sql);
+        $stmt->execute();
+        $pagos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        $totalRecaudado = 0;
+
+        foreach ($pagos as $pago) {
+            $productos = json_decode($pago['productos'], true);
+
+            if (!is_array($productos)) continue;
+
+            foreach ($productos as $prod) {
+                $idProducto = $prod['id'] ?? null;
+                $subtotal = (float)($prod['subtotal'] ?? 0);
+
+                if (!$idProducto || $subtotal <= 0) continue;
+
+                // Verificamos si el producto pertenece al vendedor
+                $sqlProd = "SELECT id_vendedor FROM producto WHERE id_producto = :id";
+                $stmtProd = $conexion->prepare($sqlProd);
+                $stmtProd->execute([':id' => $idProducto]);
+                $producto = $stmtProd->fetch(PDO::FETCH_ASSOC);
+
+                if ($producto && $producto['id_vendedor'] === $idVendedor) {
+                    $totalRecaudado += $subtotal;
+                }
+            }
+        }
+
+        return $totalRecaudado;
+    }
 }

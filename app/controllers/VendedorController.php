@@ -29,7 +29,7 @@ class VendedorController
     public static function registroVendedor()
     {
         $conexion = require ROOT . 'core/database.php';
-        require ROOT . "app/models/Vendedor.php";
+        require_once ROOT . "app/models/Vendedor.php";
         require_once ROOT . 'core/Session.php';
 
         $input = json_decode(file_get_contents("php://input"), true);
@@ -65,7 +65,7 @@ class VendedorController
         require_once ROOT . 'core/Session.php';
 
         $data = json_decode(file_get_contents("php://input"), true);
-        $nombreProducto = trim($data['nombreProducto'] ?? '');  
+        $nombreProducto = trim($data['nombreProducto'] ?? '');
         $precio = trim($data['precio'] ?? '');
         $stock = trim($data['stock'] ?? '');
         $categoria = trim($data['categoria'] ?? '');
@@ -79,7 +79,7 @@ class VendedorController
 
         $idVendedorArray = Vendedor::identificarVendedor($conexion, $idUsuario);
         $idVendedor = $idVendedorArray['id_vendedor'] ?? null;
-        
+
         if (empty($nombreProducto) || empty($precio) || empty($stock) || empty($categoria) || empty($etiquetas) || empty($descripcion) || empty($imagen)) {
             echo json_encode([
                 'success' => false,
@@ -95,5 +95,37 @@ class VendedorController
         } else {
             echo json_encode(['success' => false, 'message' => 'Error al publicar el producto.']);
         }
+    }
+
+    public static function obtnerProductosVendidos()
+    {
+        $conexion = require ROOT . 'core/database.php';
+        require_once ROOT . "app/models/Vendedor.php";
+        require_once ROOT . 'core/Session.php';
+        
+        $idUsuario = Session::get('usuario_id');
+
+        $idVendedorArray = Vendedor::identificarVendedor($conexion, $idUsuario);
+        $idVendedor = $idVendedorArray['id_vendedor'] ?? null;
+
+        $totalVendido = Vendedor::obtenerCantidadVendidaPorVendedor($conexion, $idVendedor);
+
+        return $totalVendido;
+    }
+
+    public static function obtenerTotalRecaudado()
+    {
+        $conexion = require ROOT . 'core/database.php';
+        require_once ROOT . "app/models/Vendedor.php";
+        require_once ROOT . 'core/Session.php';
+        
+        $idUsuario = Session::get('usuario_id');
+
+        $idVendedorArray = Vendedor::identificarVendedor($conexion, $idUsuario);
+        $idVendedor = $idVendedorArray['id_vendedor'] ?? null;
+
+        $totalRecaudado = Vendedor::obtenerTotalRecaudadoPorVendedor($conexion, $idVendedor);
+
+        return $totalRecaudado;
     }
 }
