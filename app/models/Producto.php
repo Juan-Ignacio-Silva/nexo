@@ -272,15 +272,19 @@ class Producto
             return false;
         }
 
-        $sql = "UPDATE producto SET cantidad = GREATEST(cantidad - :cantidad, 0)
-            WHERE id_producto = :id";
+        $sql = "
+            UPDATE producto
+            SET cantidad = cantidad - :cantidad
+            WHERE id_producto = :id
+            AND cantidad >= :cantidad;
+        ";
 
         $stmt = $conexion->prepare($sql);
 
         foreach ($productos as $item) {
             $stmt->execute([
                 ':cantidad' => (int)$item['cantidad'],
-                ':id' => (int)$item['id']
+                ':id' => $item['id']
             ]);
         }
 
