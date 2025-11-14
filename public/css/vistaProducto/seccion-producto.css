@@ -49,9 +49,13 @@ body {
 .img-main-producto {
   width: 100%;
   height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
 }
 
 .img-0-producto {
+  display: none;
   width: 100%;
   height: 100%;
 }
