@@ -19,7 +19,7 @@ $data = CarritoController::infoProductoCarrito();
                 foreach ($data['productos'] as $producto): ?>
                     <div class="cart-item">
                         <div class="item-image">
-                            <span>Imagen del producto</span>
+                            <img src="<?= $producto['imagen'] ?>" alt="" style="width: 100%; height: 100%;">
                         </div>
                         <div class="item-details">
                             <h3><?= $producto['nombre'] ?></h3>

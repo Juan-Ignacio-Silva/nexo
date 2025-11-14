@@ -14,8 +14,7 @@
             <h1 class="titulo-principal">Tu tienda en un solo lugar</h1>
             
             <p class="descripcion">
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit,
-                sed do eiusmod tempor incididunt ut labore et dolore.
+                Descubrí una experiencia de compra moderna, rápida y segura. Encontrá todo lo que necesitás en un solo lugar, con productos seleccionados y un servicio pensado para vos.
             </p>
             
             <a href="<?= BASE_URL?>home/categorias" class="boton-comprar" style="text-decoration: none;">

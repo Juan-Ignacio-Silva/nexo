@@ -19,7 +19,7 @@ $productosDestacados = ProductosController::getProductosInfo();
             <a href="productos/producto/<?= $producto['id_producto']?>" class="card-accion">
                 <div class="card-productos">
                     <div class="card-header">
-                        <img src="images/productos/portatil-samsung.png" alt="">
+                        <img src="<?= $producto['imagen'] ?>" alt="">
                     </div>
                     <div class="cuerpo-card">
                         <div class="header-cuerpo-card">

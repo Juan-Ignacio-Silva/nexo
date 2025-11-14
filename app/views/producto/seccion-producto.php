@@ -12,12 +12,14 @@
             <!-- Imágenes del Producto seleccionado-->
             <div class="product-images">
                 <div class="main-image" id="mainImage">
-                    <!-- Aquí es donde va la imagen principal -->
+                    <img class="img-main-producto" src="<?= $producto['imagen'] ?>" alt="">
                 </div>
                 <div class="thumbnail-container">
                     <button class="nav-btn" onclick="previousImage()">‹</button>
                     <div class="thumbnails">
-                        <div class="thumbnail active" onclick="changeImage(0)"></div>
+                        <div class="thumbnail active" onclick="changeImage(0)">
+                            <img class="img-0-producto" src="<?= $producto['imagen'] ?>" alt="">
+                        </div>
                         <div class="thumbnail" onclick="changeImage(1)"></div>
                         <div class="thumbnail" onclick="changeImage(2)"></div>
                         <div class="thumbnail" onclick="changeImage(3)"></div>

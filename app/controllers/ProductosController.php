@@ -29,6 +29,22 @@ class ProductosController
         include ROOT . 'app/views/templates/footer.php';
     }
 
+    public static function obtenerProducto($id)
+    {
+        $conexion = require ROOT . 'core/database.php';
+        require ROOT . "app/models/Producto.php";
+
+        header('Content-Type: application/json');
+
+        $producto = Producto::obtenerPorId($conexion, $id);
+
+        if ($producto) {
+            echo json_encode(['success' => true, 'producto' => $producto]);
+        } else {
+            echo json_encode(['success' => false]);
+        }
+    }
+
     public function carrito()
     {
         require_once ROOT . 'core/Auth.php';

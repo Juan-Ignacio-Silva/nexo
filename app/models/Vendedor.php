@@ -140,4 +140,93 @@ class Vendedor
 
         return $totalRecaudado;
     }
+
+    public static function editarProducto($conexion, $id_producto, $id_vendedor, $nombre, $precio, $cantidad, $id_categoria, $etiqueta, $descripcion, $ruta_imagen = null)
+    {
+        // --- Sanitización y validaciones seguras ---
+        $nombre = trim($nombre);
+        $descripcion = trim($descripcion ?? '');
+
+        // Precio siempre número decimal
+        $precio = is_numeric($precio) ? (float)$precio : 0;
+
+        // Cantidad siempre integer
+        $cantidad = is_numeric($cantidad) ? (int)$cantidad : 0;
+
+        // Categoría puede venir "", null, undefined
+        if ($id_categoria === '' || $id_categoria === null || $id_categoria === 'undefined') {
+            $id_categoria = null;
+        } else {
+            $id_categoria = (int)$id_categoria;
+        }
+
+        // Etiquetas puede venir vacía
+        if ($etiqueta === '' || $etiqueta === null || $etiqueta === 'undefined') {
+            $etiqueta = null;
+        }
+
+        // Si no hay imagen nueva, NO actualizar ese campo
+        if ($ruta_imagen) {
+            $sql = "
+            UPDATE producto
+            SET nombre = $1,
+                precio = $2,
+                cantidad = $3,
+                id_categoria = $4,
+                etiqueta = $5,
+                descripcion = $6,
+                imagen = $7
+            WHERE id_producto = $8
+            AND id_vendedor = $9
+        ";
+
+            $params = [
+                $nombre,
+                $precio,
+                $cantidad,
+                $id_categoria,
+                $etiqueta,
+                $descripcion,
+                $ruta_imagen,
+                $id_producto,
+                $id_vendedor
+            ];
+        } else {
+            // Sin imagen
+            $sql = "
+            UPDATE producto
+            SET nombre = $1,
+                precio = $2,
+                cantidad = $3,
+                id_categoria = $4,
+                etiqueta = $5,
+                descripcion = $6
+            WHERE id_producto = $7
+            AND id_vendedor = $8
+        ";
+
+            $params = [
+                $nombre,
+                $precio,
+                $cantidad,
+                $id_categoria,
+                $etiqueta,
+                $descripcion,
+                $id_producto,
+                $id_vendedor
+            ];
+        }
+
+        // --- Ejecutar la consulta ---
+        $stmt = $conexion->prepare($sql);
+        return $stmt->execute($params);
+    }
+
+
+    public static function eliminarProducto($conexion, $idProducto, $idVendedor)
+    {
+        $sql = "DELETE FROM producto WHERE id_producto = ? AND id_vendedor = ?";
+        $stmt = $conexion->prepare($sql);
+        return $stmt->execute([$idProducto, $idVendedor]);
+    }
 }

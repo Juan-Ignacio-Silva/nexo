@@ -408,12 +408,6 @@ class CarritoController
             // Limpiar carrito y eliminar orden temporal
             Session::remove('carrito');
             OrdenPago::eliminar($conexion, $idOrden);
-            
-            $productos = json_decode($infoOrden['productos'], true);
-
-            echo "<pre>";
-            print_r($productos);
-            echo "</pre>";
         } else {
             echo json_encode(["success" => false, "msg" => "Error al guardar el pago."]);
         }

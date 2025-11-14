@@ -26,33 +26,6 @@ $productos = ProductosController::obtenerProductosDeBusqueda();
                     <span id="resultsCount">12 productos</span>
                 </div>
 
-                <!-- Filtro de Categorías -->
-                <div class="filter-group">
-                    <h4>Categorías</h4>
-                    <div class="category-filters">
-                        <label class="checkbox-label">
-                            <input type="checkbox" value="electronica" class="category-filter">
-                            <span class="checkmark"></span>
-                            Electrónica
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" value="gaming" class="category-filter">
-                            <span class="checkmark"></span>
-                            Gaming
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" value="oficina" class="category-filter">
-                            <span class="checkmark"></span>
-                            Oficina
-                        </label>
-                        <label class="checkbox-label">
-                            <input type="checkbox" value="accesorios" class="category-filter">
-                            <span class="checkmark"></span>
-                            Accesorios
-                        </label>
-                    </div>
-                </div>
-
                 <!-- Filtro de Precio -->
                 <div class="filter-group">
                     <h4>Precio (US$)</h4>
@@ -101,7 +74,7 @@ $productos = ProductosController::obtenerProductosDeBusqueda();
                         <a href="<?= BASE_URL ?>productos/producto/<?= $producto['id_producto'] ?>" class="card-accion">
                             <div class="card-productos">
                                 <div class="card-header">
-                                    <img src="/images/productos/portatil-samsung.png" alt="">
+                                    <img src="<?= $producto['imagen'] ?>" alt="">
                                 </div>
                                 <div class="cuerpo-card">
                                     <div class="header-cuerpo-card">

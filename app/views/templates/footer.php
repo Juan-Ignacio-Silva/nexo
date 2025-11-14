@@ -5,8 +5,7 @@
             <div class="footer-left">
                 <img src="/images/nexo_logo.png" alt="Nexo" class="logo">
                 <p class="footer-text">
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore,
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore.
+                    Descubrí una experiencia de compra moderna, rápida y segura. Encontrá todo lo que necesitás en un solo lugar, con productos seleccionados y un servicio pensado para vos.
                 </p>
                 <div class="social-icons">
                     <div class="circle"></div>
