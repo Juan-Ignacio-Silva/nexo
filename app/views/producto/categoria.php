@@ -98,7 +98,7 @@
                         <a href="<?= BASE_URL ?>productos/producto/<?= $producto['id_producto'] ?>" class="card-accion">
                             <div class="card-productos">
                                 <div class="card-header">
-                                    <img src="/images/productos/portatil-samsung.png" alt="">
+                                    <img src="<?= $producto['imagen'] ?>" alt="">
                                 </div>
                                 <div class="cuerpo-card">
                                     <div class="header-cuerpo-card">
@@ -129,7 +129,7 @@
                         </a>
                     <?php endforeach; ?>
                 <?php else: ?>
-                    $mensaje
+                    <span>No hay productos con esta categoria</span>
                 <?php endif; ?>
             </div>
         </main>

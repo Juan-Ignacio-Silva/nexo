@@ -47,7 +47,6 @@ $totalRecaudado = VendedorController::obtenerTotalRecaudado();
                             <th>Producto</th>
                             <th>Precio</th>
                             <th>Stock</th>
-                            <th>Ganancia</th>
                             <th>Vendidos</th>
                             <th>Estado</th>
                             <th>Acciones</th>
@@ -62,12 +61,17 @@ $totalRecaudado = VendedorController::obtenerTotalRecaudado();
                                         <td><strong><?= htmlspecialchars($producto['nombre']) ?></strong></td>
                                         <td>US$ <?= number_format($producto['precio'] ?? 0, 2) ?></td>
                                         <td><?= htmlspecialchars($producto['cantidad']) ?></td>
-                                        <td><?= htmlspecialchars($producto['id_categoria'] ?? 'Sin categoría') ?></td>
-                                        <td>${p.vendidos}</td>
-                                        <td>${getStockBadge(p.stock)}</td>
+                                        <td>Vendidos</td>
                                         <td>
-                                            <button class="btn-edit-p">Editar</button>
-                                            <button class="btn-delete-p">Eliminar</button>
+                                            <?php if ((int)$producto['cantidad'] <= 0): ?>
+                                                <span class="sin-stock" style="color: red; font-weight: bold;">Vendidos</span>
+                                            <?php else: ?>
+                                                <span class="con-stock" style="color: green; font-weight: bold;">En venta</span>
+                                            <?php endif; ?>
+                                        </td>
+                                        <td>
+                                            <button class="btn-edit-p" onclick="openEditModal('<?= $producto['id_producto'] ?>')">Editar</button>
+                                            <button class="btn-delete-p" onclick="deleteProduct('<?= $producto['id_producto'] ?>')">Eliminar</button>
                                         </td>
                                     </tr>
                                 </a>
@@ -166,20 +170,62 @@ $totalRecaudado = VendedorController::obtenerTotalRecaudado();
         obtenerCategorias();
     }
 
-    function editProduct(id) {
-        const producto = productos.find(p => p.id === id);
-        if (!producto) return;
+    let editingId = null;
 
-        editingId = id;
-        document.getElementById('modalTitle').textContent = 'Editar Producto';
-        document.getElementById('nombre').value = producto.nombre;
-        document.getElementById('precio').value = producto.precio;
-        document.getElementById('stock').value = producto.stock;
-        document.getElementById('categoria').value = producto.categoria;
-        document.getElementById('vendidos').value = producto.vendidos;
-        document.getElementById('descripcion').value = producto.descripcion || '';
-        document.getElementById('productModal').classList.add('active');
+    // === ABRIR MODAL PARA EDITAR ===
+    function openEditModal(idProducto) {
+
+        // Obtener datos del producto desde el servidor
+        fetch("<?= BASE_URL ?>productos/obtenerProducto/" + idProducto)
+            .then(res => res.json())
+            .then(data => {
+                if (!data.success) {
+                    mostrarToast("No se pudo cargar el producto.", "error");
+                    return;
+                }
+
+                const p = data.producto;
+
+                editingId = idProducto;
+
+                document.getElementById("modalTitle").textContent = "Editar Producto";
+
+                document.getElementById("nombreProducto").value = p.nombre;
+                document.getElementById("precio").value = p.precio;
+                document.getElementById("stock").value = p.cantidad;
+                document.getElementById("etiquetas").value = p.etiquetas;
+                document.getElementById("descripcion").value = p.descripcion;
+
+                // imagen no se rellena porque es file input
+
+                document.getElementById("productModal").classList.add("active");
+            });
     }
+
+    function deleteProduct(idProducto) {
+        if (!confirm("¿Seguro que deseas eliminar este producto?")) return;
+
+        fetch("<?= BASE_URL ?>vendedor/eliminarProducto", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    idProducto
+                })
+            })
+            .then(res => res.json())
+            .then(data => {
+                if (data.success) {
+                    mostrarToast("Producto eliminado.", "exito");
+                    setTimeout(() => window.location.reload(), 800);
+                } else {
+                    mostrarToast("No se pudo eliminar.", "error");
+                }
+            });
+    }
+
+
 
     function closeModal() {
         document.getElementById('productModal').classList.remove('active');
@@ -204,8 +250,8 @@ $totalRecaudado = VendedorController::obtenerTotalRecaudado();
                 if (data.status === 'success') {
                     data.categorias.forEach(cat => {
                         contenedorCat.innerHTML += `
-                            <option value="${cat.id}">${cat.nombre}</option>
-                        `; 
+<option value="${cat.id}">${cat.nombre}</option>
+`;
                         // Si quiero el icono
                         // ${cat.icono_url || 'https://via.placeholder.com/80'}" alt="${cat.nombre}
                     });
@@ -216,44 +262,35 @@ $totalRecaudado = VendedorController::obtenerTotalRecaudado();
 
 <script>
     document.getElementById("btn-save-p").addEventListener("click", async () => {
-        const nombreProducto = document.getElementById('nombreProducto').value;
-        const precio = document.getElementById('precio').value;
-        const stock = document.getElementById('stock').value;
-        const categoria = document.getElementById('categoria').value;
-        const etiquetas = document.getElementById('etiquetas').value;
-        const descripcion = document.getElementById('descripcion').value;
-        const imagen = document.getElementById('imagen').value;
+        const form = document.getElementById("productForm");
+        const formData = new FormData(form);
+
+        let url = "<?= BASE_URL ?>vendedor/publicarProducto"; // por defecto AGREGAR
+
+        if (editingId !== null) {
+            formData.append("idProducto", editingId);
+            url = "<?= BASE_URL ?>vendedor/editarProducto"; // si existe editingId → EDITAR
+        }
 
         try {
-            // Enviar datos al backend
-            const resp = await fetch("<?= BASE_URL ?>vendedor/publicarProducto", {
+            const resp = await fetch(url, {
                 method: "POST",
-                headers: {
-                    "Content-Type": "application/json"
-                },
-                body: JSON.stringify({
-                    nombreProducto,
-                    precio,
-                    stock,
-                    categoria,
-                    etiquetas,
-                    descripcion,
-                    imagen
-                })
+                body: formData
             });
 
             const data = await resp.json();
 
             if (data.success) {
-                mostrarToast("Producto publicado con exito.", "exito");
+                mostrarToast("Cambios guardados.", "exito");
+
                 setTimeout(() => window.location.reload(), 1000);
             } else {
-                mostrarToast("Error al publicar el producto.", "error");
+                mostrarToast(data.message || "Error al guardar.", "error");
             }
 
         } catch (error) {
-            console.error("Error en la solicitud:", error);
-            alert("Hubo un problema al enviar los datos.");
+            console.error("Error:", error);
+            mostrarToast("Error en la conexión.", "error");
         }
     });
 </script>
