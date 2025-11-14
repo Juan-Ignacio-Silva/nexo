@@ -61,7 +61,7 @@ $totalRecaudado = VendedorController::obtenerTotalRecaudado();
                                         <td><strong><?= htmlspecialchars($producto['nombre']) ?></strong></td>
                                         <td>US$ <?= number_format($producto['precio'] ?? 0, 2) ?></td>
                                         <td><?= htmlspecialchars($producto['cantidad']) ?></td>
-                                        <td>Vendidos</td>
+                                        <td>0</td>
                                         <td>
                                             <?php if ((int)$producto['cantidad'] <= 0): ?>
                                                 <span class="sin-stock" style="color: red; font-weight: bold;">Vendidos</span>
@@ -123,8 +123,8 @@ $totalRecaudado = VendedorController::obtenerTotalRecaudado();
                 <textarea id="descripcion" name="descripcion"></textarea>
             </div>
             <div class="form-group">
-                <label for="etiqueta">Imagen del Producto</label>
-                <input type="file" id="imagen" name="imagen" required>
+                <label for="imagen">URL de la Imagen</label>
+                <input type="url" id="imagen" name="imagen" placeholder="https://ejemplo.com/imagen.png" required>
             </div>
             <div class="modal-actions">
                 <button type="button" class="btn-cancel" onclick="closeModal()">Cancelar</button>
@@ -175,7 +175,6 @@ $totalRecaudado = VendedorController::obtenerTotalRecaudado();
     // === ABRIR MODAL PARA EDITAR ===
     function openEditModal(idProducto) {
 
-        // Obtener datos del producto desde el servidor
         fetch("<?= BASE_URL ?>productos/obtenerProducto/" + idProducto)
             .then(res => res.json())
             .then(data => {
@@ -195,12 +194,12 @@ $totalRecaudado = VendedorController::obtenerTotalRecaudado();
                 document.getElementById("stock").value = p.cantidad;
                 document.getElementById("etiquetas").value = p.etiquetas;
                 document.getElementById("descripcion").value = p.descripcion;
-
-                // imagen no se rellena porque es file input
+                document.getElementById("imagen").value = p.imagen; // <-- AHORA SÍ
 
                 document.getElementById("productModal").classList.add("active");
             });
     }
+
 
     function deleteProduct(idProducto) {
         if (!confirm("¿Seguro que deseas eliminar este producto?")) return;
