@@ -1,139 +1,142 @@
 .section-productos-home {
-    width: 100%;
-    min-height: 100vh;
-    background-color: #E1E9EF;
+  width: 100%;
+  min-height: 100vh;
+  background-color: #e1e9ef;
 }
 
 .contenedor-productos-home {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 80px 20px;
-    height: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 80px 20px;
+  height: 100%;
 }
 
 .header-section-productos {
-    display: flex;
-    justify-content: space-between;
+  display: flex;
+  justify-content: space-between;
 }
 
 .titulo-section-producto p {
-    color: #64748b;
-    font-size: 1.125rem;
+  color: #64748b;
+  font-size: 1.125rem;
 }
 .titulo-section-producto h1 {
-    font-size: 34px;
+  font-size: 34px;
 }
 .titulo-section-producto span {
-    color: #ef4444;
+  color: #ef4444;
 }
 
 .header-section-productos {
-    position: relative;
+  position: relative;
 }
 
 .header-section-productos a {
-    background-color: #2563eb;
-    color: #EEF8FF;
-    border-radius: 0.5rem;
-    font-weight: 500;
-    border: none;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-    height: fit-content;
-    padding: 15px;
-    position: absolute;
-    bottom: 0px;
-    right: 0px;
-    text-decoration: none;
-    margin-bottom: 10px;
+  background-color: #2563eb;
+  color: #eef8ff;
+  border-radius: 0.5rem;
+  font-weight: 500;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  height: fit-content;
+  padding: 15px;
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  text-decoration: none;
+  margin-bottom: 10px;
 }
 
 .header-section-productos a:hover {
-    background-color: #1d4ed8;
+  background-color: #1d4ed8;
 }
 
 .contenedor-cards-productos {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 20px 0px 20px 0px;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 0px 20px 0px;
 }
 
 .card-accion {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 .card-productos {
-    width: 350px;
-    height: 100%;
-    border-radius: 5px;
-    cursor: pointer;
-    border: 1px solid #ddd;
+  width: 350px;
+  height: 100%;
+  border-radius: 5px;
+  cursor: pointer;
+  border: 1px solid #ddd;
 }
 
 .card-header {
-    width: 100%;
-    height: 325px;
-    background-color: #cfdee9;
-    border-radius: 5px 5px 0px 0px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  width: 100%;
+  height: 325px;
+  background-color: #cfdee9;
+  border-radius: 5px 5px 0px 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .card-header img {
-    width: 250px;
-    height: 200px;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  display: block;
 }
 
 .cuerpo-card {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-    background-color: rgba(255, 255, 255, 0.9);
-    border-radius: 0px 0px 8px 8px;
-    padding-left: 2px;
-    padding-right: 2px;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background-color: rgba(255, 255, 255, 0.9);
+  border-radius: 0px 0px 8px 8px;
+  padding-left: 2px;
+  padding-right: 2px;
 }
 
 .header-cuerpo-card {
-    display: flex;
-    width: 100%;
-    justify-content: space-between;
-    margin-top: 5px;
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  margin-top: 5px;
 }
 
 .star.filled {
-    color: #DE411E;
+  color: #de411e;
 }
 
 .header-cuerpo-card p {
-    color: #1e293b;
-    font-family: sans-serif, monospace;
-    font-size: 14px;
+  color: #1e293b;
+  font-family: sans-serif, monospace;
+  font-size: 14px;
 }
 
 .nombre-producto {
-    color: #1e293b;
-    font-family: sans-serif, monospace;
+  color: #1e293b;
+  font-family: sans-serif, monospace;
 }
 
 .footer-card {
-    display: flex;
-    margin-top: 10px;
+  display: flex;
+  margin-top: 10px;
 }
 
 .precio {
-    margin-right: 10px;
-    color: #1e293b;
-    font-family: sans-serif, monospace;
+  margin-right: 10px;
+  color: #1e293b;
+  font-family: sans-serif, monospace;
 }
 
 @media (max-width: 768px) {
-    .contenedor-cards-productos {
-        flex-direction: column;
-        gap: 20px;
-    }
+  .contenedor-cards-productos {
+    flex-direction: column;
+    gap: 20px;
+  }
 }
