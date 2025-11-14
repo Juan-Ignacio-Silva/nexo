@@ -141,92 +141,107 @@ class Vendedor
         return $totalRecaudado;
     }
 
-    public static function editarProducto($conexion, $id_producto, $id_vendedor, $nombre, $precio, $cantidad, $id_categoria, $etiqueta, $descripcion, $ruta_imagen = null)
-    {
-        // --- Sanitización y validaciones seguras ---
-        $nombre = trim($nombre);
-        $descripcion = trim($descripcion ?? '');
+    public static function editarProducto(
+        $conexion,
+        $id_producto,
+        $id_vendedor,
+        $nombre,
+        $precio,
+        $cantidad,
+        $id_categoria,
+        $etiqueta,
+        $descripcion,
+        $ruta_imagen = null
+    ) {
+        try {
 
-        // Precio siempre número decimal
-        $precio = is_numeric($precio) ? (float)$precio : 0;
+            // --- Sanitización ---
+            $nombre = trim($nombre);
+            $descripcion = trim($descripcion ?? '');
 
-        // Cantidad siempre integer
-        $cantidad = is_numeric($cantidad) ? (int)$cantidad : 0;
+            $precio = is_numeric($precio) ? (float)$precio : 0;
+            $cantidad = is_numeric($cantidad) ? (int)$cantidad : 0;
 
-        // Categoría puede venir "", null, undefined
-        if ($id_categoria === '' || $id_categoria === null || $id_categoria === 'undefined') {
-            $id_categoria = null;
-        } else {
-            $id_categoria = (int)$id_categoria;
-        }
+            // Categoría
+            if ($id_categoria === '' || $id_categoria === 'undefined' || $id_categoria === null) {
+                $id_categoria = null;
+            } else {
+                $id_categoria = (int)$id_categoria;
+            }
 
-        // Etiquetas puede venir vacía
-        if ($etiqueta === '' || $etiqueta === null || $etiqueta === 'undefined') {
-            $etiqueta = null;
-        }
+            // Etiqueta
+            if ($etiqueta === '' || $etiqueta === 'undefined') {
+                $etiqueta = null;
+            }
 
-        // Si no hay imagen nueva, NO actualizar ese campo
-        if ($ruta_imagen) {
-            $sql = "
-            UPDATE producto
-            SET nombre = $1,
-                precio = $2,
-                cantidad = $3,
-                id_categoria = $4,
-                etiqueta = $5,
-                descripcion = $6,
-                imagen = $7
-            WHERE id_producto = $8
-            AND id_vendedor = $9
-        ";
+            // Verificar que el producto pertenece al vendedor
+            $check = $conexion->prepare("
+            SELECT id_producto 
+            FROM producto 
+            WHERE id_producto = :id_prod AND id_vendedor = :id_vend
+        ");
+            $check->execute([
+                'id_prod' => $id_producto,
+                'id_vend' => $id_vendedor
+            ]);
+
+            if ($check->rowCount() === 0) {
+                return "Error: No tenés permiso para editar este producto.";
+            }
+
+            // Armado dinámico del UPDATE
+            $campos = [
+                "nombre = :nombre",
+                "precio = :precio",
+                "cantidad = :cantidad",
+                "id_categoria = :id_categoria",
+                "etiqueta = :etiqueta",
+                "descripcion = :descripcion"
+            ];
 
             $params = [
-                $nombre,
-                $precio,
-                $cantidad,
-                $id_categoria,
-                $etiqueta,
-                $descripcion,
-                $ruta_imagen,
-                $id_producto,
-                $id_vendedor
+                'nombre' => $nombre,
+                'precio' => $precio,
+                'cantidad' => $cantidad,
+                'id_categoria' => $id_categoria,
+                'etiqueta' => $etiqueta,
+                'descripcion' => $descripcion,
+                'id_producto' => $id_producto,
+                'id_vendedor' => $id_vendedor
             ];
-        } else {
-            // Sin imagen
+
+            // Si viene imagen nueva → agregar
+            if (!empty($ruta_imagen) && $ruta_imagen !== "undefined") {
+                $campos[] = "imagen = :imagen";
+                $params['imagen'] = $ruta_imagen;
+            }
+
             $sql = "
             UPDATE producto
-            SET nombre = $1,
-                precio = $2,
-                cantidad = $3,
-                id_categoria = $4,
-                etiqueta = $5,
-                descripcion = $6
-            WHERE id_producto = $7
-            AND id_vendedor = $8
+            SET " . implode(", ", $campos) . "
+            WHERE id_producto = :id_producto
+            AND id_vendedor = :id_vendedor
         ";
 
-            $params = [
-                $nombre,
-                $precio,
-                $cantidad,
-                $id_categoria,
-                $etiqueta,
-                $descripcion,
-                $id_producto,
-                $id_vendedor
-            ];
-        }
+            $stmt = $conexion->prepare($sql);
+            $stmt->execute($params);
 
-        // --- Ejecutar la consulta ---
-        $stmt = $conexion->prepare($sql);
-        return $stmt->execute($params);
+            return true;
+        } catch (Exception $e) {
+            return "Error al editar producto: " . $e->getMessage();
+        }
     }
+
+
 
 
     public static function eliminarProducto($conexion, $idProducto, $idVendedor)
     {
-        $sql = "DELETE FROM producto WHERE id_producto = ? AND id_vendedor = ?";
+        $sql = "DELETE FROM producto WHERE id_producto = :id AND id_vendedor = :vendedor";
         $stmt = $conexion->prepare($sql);
-        return $stmt->execute([$idProducto, $idVendedor]);
+        return $stmt->execute([
+            'id' => $idProducto,
+            'vendedor' => $idVendedor
+        ]);
     }
 }
